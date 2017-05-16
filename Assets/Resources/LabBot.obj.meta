@@ -7,11 +7,16 @@ ModelImporter:
   fileIDToRecycleName:
     100000: <MS3DRoot>
     100002: //RootNode
+    100004: default
     400000: <MS3DRoot>
     400002: //RootNode
+    400004: default
     2300000: <MS3DRoot>
+    2300002: default
     3300000: <MS3DRoot>
+    3300002: default
     4300000: <MS3DRoot>
+    4300002: default
   materials:
     importMaterials: 1
     materialName: 0
