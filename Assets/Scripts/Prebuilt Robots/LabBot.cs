@@ -7,7 +7,6 @@ using RobotComponents;
 public class LabBot : Robot, 
     IMotors,
     IPIDUsable,
-    IPosable,
     IPSDSensors,
     IServoSettable,
     IVWDrivable,
@@ -68,16 +67,17 @@ public class LabBot : Robot,
 
     public void SetPose(int x, int y, int phi)
     {
-        wheelController.Pos.x = x;
-        wheelController.Pos.z = y;
-        wheelController.Rot = phi;
+        wheelController.SetPosition((float)x, (float)y, (float)phi);
     }
 
-    public Pose GetPose()
+    public Int16[] GetPose()
     {
-        return new Pose(Convert.ToInt32(Math.Round(wheelController.Pos.x)), 
-            Convert.ToInt32(Math.Round(wheelController.Pos.z)), 
-            Convert.ToInt32(Math.Round(wheelController.Rot)));
+        Int16[] pos = new Int16[3];
+        float[] robPos = wheelController.GetPosition();
+        pos[0] = Convert.ToInt16(Math.Round(robPos[0] * 1000));
+        pos[1] = Convert.ToInt16(Math.Round(robPos[1] * 1000));
+        pos[2] = Convert.ToInt16(Math.Round(robPos[2]));
+        return pos;
     }
 
     public UInt16 GetPSD(int psd)

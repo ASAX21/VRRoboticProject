@@ -31,7 +31,6 @@ public class ObjectSelector : MonoBehaviour {
 
         isObjectSelected = true;
         selectedObject = newObject;
-        inspectorWindow.NewObjectSelected(newObject);
     }
 
     public void UnselectObject()

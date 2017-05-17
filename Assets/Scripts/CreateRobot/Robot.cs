@@ -23,6 +23,8 @@ public interface IPIDUsable
 public interface IVWDrivable
 {
     void InitalizeVW(int[] args);
+    Int16[] GetPose();
+    void SetPose(int x, int y, int phi);
     void VWSetVehicleSpeed(int linear, int angular);
     Speed VWGetVehicleSpeed();
     void VWDriveStraight(int distance, int speed);

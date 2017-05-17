@@ -45,12 +45,12 @@ public class RobotBuilder: MonoBehaviour, IFileReceiver{
 	}
 
 	public void process(string line){
-        Debug.Log(line);
+        
 		string[] args = line.Split (' ');
-		switch (args[0]) {
+        switch (args[0]) {
             case "name":
                 SetType(args[1]);
-                break;
+                break;  
 		    case "model":
 			    addModel(args[1]);
 			    break;
@@ -63,9 +63,11 @@ public class RobotBuilder: MonoBehaviour, IFileReceiver{
 				addPSD(args[1], args[2], position, rotation);
 			    break;
 		    case "wheel":
-				addWheels(float.Parse (args [1]) / 1000f, float.Parse(args[2]), int.Parse(args[3]), float.Parse (args [4]) / 1000f, 0);
+                Debug.Log("ADDING WHEEL");
+                addWheels(float.Parse (args [1]) / 1000f, float.Parse(args[2]), int.Parse(args[3]), float.Parse (args [4]) / 1000f, 0);
 			    break;
 			case "camera":
+                Debug.Log("ADDING CAMERA");
 				addCamera(new Vector3(float.Parse (args [2]) / 1000f, float.Parse (args [3]) / 1000f, float.Parse (args [1]) / 1000f), 
 						float.Parse (args [4]), float.Parse (args [5]), int.Parse (args [6]), int.Parse (args [7]));
 				break;
@@ -214,7 +216,7 @@ public class RobotBuilder: MonoBehaviour, IFileReceiver{
 			Transform CameraContainer = robotObject.transform.Find("CameraContainer");
 			if (CameraContainer == null)
 				CameraContainer = AddCameraContainer();
-
+            Debug.Log("addeing camear");
 			Object cameraPrefab = Resources.Load("CameraPrefab");
 			GameObject camera = Object.Instantiate(cameraPrefab) as GameObject;
 			camera.transform.SetParent(CameraContainer, false);

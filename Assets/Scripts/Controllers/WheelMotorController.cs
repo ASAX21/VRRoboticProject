@@ -46,7 +46,7 @@ public class WheelMotorController : MonoBehaviour
     private void Awake()
     {
        // wheels = new List<Wheel>();
-        Pos = new Vector3();
+        Pos = new Vector3(0,0,0);
     }
 
     // Set the local PID Parameters
@@ -130,6 +130,22 @@ public class WheelMotorController : MonoBehaviour
     public Speed GetSpeed()
     {
         return new Speed(v * 1000000, w * 1000);
+    }
+
+    public void SetPosition(float x, float y, float phi)
+    {
+        Pos.x = x;
+        Pos.z = y;
+        Rot = phi;
+    }
+
+    public float[] GetPosition()
+    {
+        float[] pos = new float[3];
+        pos[0] = Pos.x;
+        pos[1] = Pos.z;
+        pos[2] = Rot;
+        return pos;
     }
 
     private void updatePosition()

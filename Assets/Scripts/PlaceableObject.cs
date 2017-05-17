@@ -1,22 +1,26 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 // Object in the scene that can be placed with the ObjectManager
 // Robots, cans, cubes, etc.
-public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler
+public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public ObjectSelector objectSelector;
+    public ObjectManager objectManager;
 
     public bool isPlaced = false;
     public bool isSelected = false;
+    public bool locked = false;
     public int currLayer = 0;
 	public int collisionCount = 0;
 
     public int objectID;
 
     public Rigidbody rigidBody;
+    [SerializeField]
     protected Collider objCollider;
 
     public GameObject modelContainer;
@@ -43,6 +47,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler
     private void Start()
     {
         objectSelector = ObjectSelector.instance;
+        objectManager = ObjectManager.instance;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -72,15 +77,18 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (isPlaced)
+        if (eventData.button == PointerEventData.InputButton.Left)
         {
-            if (isSelected)
+            if (isPlaced)
             {
-                objectSelector.UnselectObject();
-            }
-            else
-            {
-                Select();
+                if (isSelected)
+                {
+                    objectSelector.UnselectObject();
+                }
+                else
+                {
+                    Select();
+                }
             }
         }
     }
@@ -118,6 +126,8 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler
 		collisionCount = 0;
         objCollider.isTrigger = true;
         rigidBody.isKinematic = true;
+        isPlaced = false;
+        isSelected = false;
     }
 
     public void PlaceObject()
@@ -131,5 +141,20 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler
         objCollider.isTrigger = false;
         rigidBody.isKinematic = false;
         isPlaced = true;
+    }
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        Debug.Log("DRAGGING!");
+        objectManager.AddObjectToMouse(this);
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        Debug.Log("NotDraging!");
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
     }
 }

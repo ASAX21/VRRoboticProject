@@ -110,25 +110,37 @@ public class Interpreter {
     // Get Vehicle Pose
     private void Command_q(byte[] recv, RobotConnection conn)
     {
-        if(conn.robot is IPosable)
+        if(conn.robot is IVWDrivable)
         {
-            Pose pose = (conn.robot as IPosable).GetPose();
-            Debug.Log("x: " + pose.x + " y: " + pose.y + " phi: " + pose.phi);
+            Int16[] pose = (conn.robot as IVWDrivable).GetPose();         
+            Packet packet = new Packet();
+            packet.packetType = PacketType.SERVER_MESSAGE;
+            packet.dataSize = 6;
+            packet.data = new byte[6];
+            for (int i = 0; i < 3; i++)
+            {
+                Debug.Log(i + "   " + pose[i]);
+                pose[i] = IPAddress.HostToNetworkOrder(pose[i]);
+                BitConverter.GetBytes(pose[i]).CopyTo(packet.data, 2 * i);
+            }
+            
+            serverManager.WritePacket(conn, packet);
         }
         else
         {
             Debug.Log("Requested pose from a non posable robot");
         }
     }
-    // Get Pose
+    // Set Pose
     private void Command_Q(byte[] recv, RobotConnection conn)
     {
-        if (conn.robot is IPosable)
+        if (conn.robot is IVWDrivable)
         {
             int x = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 1));
             int y = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 3));
             int phi = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 5));
-            (conn.robot as IPosable).SetPose(x, y, phi);
+            Debug.Log("Setting pose as x y phi: " + x + " " + y + " " + phi);
+            (conn.robot as IVWDrivable).SetPose(x, y, phi);
         }
         else
         {
@@ -187,10 +199,11 @@ public class Interpreter {
     {
         if (conn.robot is IVWDrivable)
         {
-            int speed = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 1));
-            int distance = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 3));
-            int angle = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 5));
+            int distance = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 1));
+            int angle = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 3));
+            int speed = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 5));     
             (conn.robot as IVWDrivable).VWDriveCurve(distance, angle, speed);
+            Debug.Log("Drive Curve: " + distance + " " + angle + " " + speed);
         }
     }
     // Get Speed

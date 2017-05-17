@@ -49,7 +49,7 @@ psd PSD_RIGHT 3 45 -27 40 -90
 # color camera sensor definition:
 # "camera", relative position to the robi center (x,y,z), default
 # pan-tilt-angle (pan, tilt), maximum image width and height in pixel
-camera	   40	  0	70	0	0	80	60
+camera 40 0 70 0 0 80 60
 
 # wheel diameter [mm], max. rotational velocity [deg/s], encoder ticks/rev., wheel-base distance [mm]
 wheel 45 3600 540 70

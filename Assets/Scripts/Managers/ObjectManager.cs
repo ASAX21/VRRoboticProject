@@ -22,6 +22,8 @@ public class ObjectManager : MonoBehaviour {
     // Specific object currently being placed (one at a time strict)
     public PlaceableObject objectOnMouse;
 
+    private Plane ground;
+
     private void Awake()
     {
         if (instance == null || instance == this)
@@ -37,6 +39,7 @@ public class ObjectManager : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
+        ground = new Plane(new Vector3(0, 1, 0), new Vector3(0, 0, 0));
     }
 
     public void AddTestObject()
@@ -60,11 +63,16 @@ public class ObjectManager : MonoBehaviour {
         newObject.AttachToMouse();
     }
 
-    public void PlaceObject()
+    public void TryPlaceObject()
     {
-		print ("placeit");
-        objectOnMouse.PlaceObject();
-        objectOnMouse = null;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        bool valid = objectOnMouse.updateValidity(Physics.Raycast(ray, out hit, 1000f, groundMask));
+        if (valid)
+        {
+            objectOnMouse.PlaceObject();
+            objectOnMouse = null;
+        }
     }
 
     private void Update()
@@ -72,17 +80,14 @@ public class ObjectManager : MonoBehaviour {
 		if (objectOnMouse != null)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-			Plane ground = new Plane (new Vector3 (0, 1, 0), new Vector3 (0, 0, 0));
 			float distance;
 			if(ground.Raycast(ray, out distance)){
 				Vector3 hitpoint = ray.GetPoint (distance);
 				objectOnMouse.transform.position = new Vector3(hitpoint.x, 0.03f, hitpoint.z);
-			}
-			bool valid = objectOnMouse.updateValidity (Physics.Raycast (ray, out hit, 1000f, groundMask));
-			if(Input.GetMouseButtonDown(0) && valid)
+			}	
+			if(Input.GetMouseButtonDown(0))
             {
-                PlaceObject();
+                TryPlaceObject();
             }
         }
     }
