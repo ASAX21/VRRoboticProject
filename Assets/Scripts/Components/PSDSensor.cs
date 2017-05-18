@@ -15,10 +15,10 @@ namespace RobotComponents
             Vector3 forward = transform.TransformDirection(Vector3.forward);
             RaycastHit hit;
 			Debug.DrawRay (transform.position, forward,Color.green);
-            if (Physics.Raycast(transform.position, forward, out hit, 200))
+            if (Physics.Raycast(transform.position, forward, out hit, 2000))
             {
-				if(hit.transform.tag == "wall")
-                	value = hit.distance;
+				//if(hit.transform.tag == "wall")
+                	value = hit.distance * 1000;
 					return;
             }
 			value = -1;

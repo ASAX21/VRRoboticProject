@@ -145,13 +145,14 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        Debug.Log("DRAGGING!");
-        objectManager.AddObjectToMouse(this);
+        if (!locked)
+        {
+            objectManager.AddObjectToMouse(this);
+        }
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        Debug.Log("NotDraging!");
     }
 
     public void OnDrag(PointerEventData eventData)
