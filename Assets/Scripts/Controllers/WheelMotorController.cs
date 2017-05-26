@@ -45,7 +45,6 @@ public class WheelMotorController : MonoBehaviour
 
     private void Awake()
     {
-       // wheels = new List<Wheel>();
         Pos = new Vector3(0,0,0);
     }
 
@@ -73,12 +72,6 @@ public class WheelMotorController : MonoBehaviour
     // Update visual of wheel on each frame
     private void FixedUpdate()
     {
-        if (drive)
-        { //for testing purposes
-            DriveCurve(1, 90, 0.1f);
-            drive = false;
-        }
-
         updatePosition();
         checkDrive();
     }

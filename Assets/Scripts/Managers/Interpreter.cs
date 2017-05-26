@@ -96,7 +96,6 @@ public class Interpreter {
             {
                 Array.Reverse(value);
             }
-            Debug.Log("Sending bytes:" + Convert.ToString(value[0], 2).PadLeft(8, '0') + " " + Convert.ToString(value[1], 2).PadLeft(8, '0'));
             Packet packet = new Packet();
             packet.packetType = PacketType.SERVER_MESSAGE;
             packet.dataSize = 2;
@@ -110,7 +109,7 @@ public class Interpreter {
         }
     }
     // Get Vehicle Pose
-    private void Command_q(byte[] recv, RobotConnection conn)
+    private void Command_q(byte[] recv, RobotConnection conn)   
     {
         if(conn.robot is IVWDrivable)
         {
