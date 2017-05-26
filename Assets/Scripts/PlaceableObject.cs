@@ -11,43 +11,39 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
     public ObjectSelector objectSelector;
     public ObjectManager objectManager;
 
+    public int objectID;
+
+    // Placement variables
     public bool isPlaced = false;
     public bool isSelected = false;
     public bool locked = false;
     public int currLayer = 0;
 	public int collisionCount = 0;
-
-    public int objectID;
-
-    public Rigidbody rigidBody;
     [SerializeField]
-    protected Collider objCollider;
-
-    public GameObject modelContainer;
-    [SerializeField]
-    private List<Material> defaultMats;
+    private List<MaterialContainer> matContainer;
     private Material validMat;
     private Material invalidMat;
+    
+    // Unity Components
+    [SerializeField]
+    protected Collider objCollider;
+    public Rigidbody rigidBody;
+
+    // UI Variables
+    public bool isWindowOpen = false;
 
     public void PostBuild()
     {
-        modelContainer = transform.Find("Model").gameObject;
         rigidBody = gameObject.GetComponent<Rigidbody>();
         objCollider = gameObject.GetComponent<Collider>();       
-        validMat = ObjectManager.instance.validMat;
-        invalidMat = ObjectManager.instance.invalidMat;
-        defaultMats = new List<Material>();
-        foreach (Transform child in modelContainer.transform)
-        {
-            Renderer childRend = child.GetComponent<Renderer>();
-            defaultMats.Add(childRend.material);
-        }
     }
 
     private void Start()
     {
         objectSelector = ObjectSelector.instance;
         objectManager = ObjectManager.instance;
+        validMat = ObjectManager.instance.validMat;
+        invalidMat = ObjectManager.instance.invalidMat;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -69,26 +65,39 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
 	public bool updateValidity(bool onGround){
 		bool valid = onGround && collisionCount == 0;
 		Material newMat = valid ? validMat : invalidMat;
-		foreach (Transform child in modelContainer.transform) {
-			child.GetComponent<Renderer> ().material = newMat;
-		}
-		return valid;
+        foreach (MaterialContainer mat in matContainer)
+        {
+            mat.modelRend.material = newMat;
+        }
+        return valid;
 	}
 
     public void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            if (isPlaced)
+            // Single or First click
+            if (eventData.clickCount == 1)
             {
-                if (isSelected)
+                if (isPlaced)
                 {
-                    objectSelector.UnselectObject();
+                    if (isSelected)
+                    {
+                        objectSelector.UnselectObject();
+                    }
+                    else
+                    {
+                        Select();
+                    }
                 }
-                else
-                {
-                    Select();
-                }
+            }
+            // Double click (or more)
+            else if (!isWindowOpen)
+            {
+                Select();
+                isWindowOpen = true;
+                if(this is Robot)
+                    objectSelector.DisplayRobotInfoWindow(this as Robot);
             }
         }
     }
@@ -119,11 +128,12 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
 
     public void AttachToMouse()
     {
-        foreach (Transform child in modelContainer.transform)
+        foreach (MaterialContainer mat in matContainer)
         {
-            child.GetComponent<Renderer>().material = validMat;
+            mat.modelRend.material = validMat;
         }
-		collisionCount = 0;
+
+        collisionCount = 0;
         objCollider.isTrigger = true;
         rigidBody.isKinematic = true;
         isPlaced = false;
@@ -132,11 +142,9 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
 
     public void PlaceObject()
     {
-        int i = 0;
-        foreach (Transform child in modelContainer.transform)
+        foreach (MaterialContainer mat in matContainer)
         {
-            child.GetComponent<Renderer>().material = defaultMats[i];
-            i++;
+            mat.modelRend.material = mat.defaultMat;
         }
         objCollider.isTrigger = false;
         rigidBody.isKinematic = false;
@@ -148,6 +156,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
         if (!locked)
         {
             objectManager.AddObjectToMouse(this);
+            Deselect();
         }
     }
 
@@ -158,4 +167,13 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
     public void OnDrag(PointerEventData eventData)
     {
     }
+}
+
+[Serializable]
+internal class MaterialContainer
+{
+    [SerializeField]
+    internal Material defaultMat;
+    [SerializeField]
+    internal Renderer modelRend;
 }

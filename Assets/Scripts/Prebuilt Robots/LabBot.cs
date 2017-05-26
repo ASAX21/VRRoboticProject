@@ -146,4 +146,9 @@ public class LabBot : Robot,
     {
         eyeCamController.SetResolution(camera, width, height);
     }
+
+    public EyeCamera GetCameraComponent(int camera)
+    {
+        return eyeCamController.cameras[camera];
+    }
 }

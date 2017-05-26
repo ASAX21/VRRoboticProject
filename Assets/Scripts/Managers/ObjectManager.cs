@@ -84,7 +84,11 @@ public class ObjectManager : MonoBehaviour {
 			if(ground.Raycast(ray, out distance)){
 				Vector3 hitpoint = ray.GetPoint (distance);
 				objectOnMouse.transform.position = new Vector3(hitpoint.x, 0.03f, hitpoint.z);
-			}	
+                if(Physics.Raycast(ray, 1000f, groundMask))
+                    objectOnMouse.updateValidity(true);
+                else
+                    objectOnMouse.updateValidity(false);
+            }	
 			if(Input.GetMouseButtonDown(0))
             {
                 TryPlaceObject();

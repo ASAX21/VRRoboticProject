@@ -6,11 +6,14 @@ public class ObjectSelector : MonoBehaviour {
 
     public static ObjectSelector instance;
 
-    public ObjectInspectorWindow inspectorWindow;
+    public Transform windowContainer;
 
     // Object currently selected
     public bool isObjectSelected = false;
     public PlaceableObject selectedObject;
+
+    // Create Object Windows
+    public RobotInspectorWindow robotWindowPrefab;
 
     // Enforce the singleton pattern
     private void Awake()
@@ -38,5 +41,10 @@ public class ObjectSelector : MonoBehaviour {
         selectedObject.Deselect();
         isObjectSelected = false;
         selectedObject = null;
+    }
+
+    public void DisplayRobotInfoWindow(Robot robot)
+    {
+        Instantiate(robotWindowPrefab, windowContainer, false).robot = robot;
     }
 }

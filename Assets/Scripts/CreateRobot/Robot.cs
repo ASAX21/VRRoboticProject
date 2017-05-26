@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using RobotComponents;
 
 public interface IPosable
 {
@@ -50,6 +51,7 @@ public interface ICameras
 {
     byte[] GetCameraOutput(int camera);
     void SetCameraResolution(int camera, int width, int height);
+    EyeCamera GetCameraComponent(int camera);
 }
 // Class used to pass data back to client
 public class Speed
