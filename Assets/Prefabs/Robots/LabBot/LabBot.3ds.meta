@@ -1,0 +1,190 @@
+fileFormatVersion: 2
+guid: 1b7bb16146f894159ab8e54bc33ed4fa
+timeCreated: 1495862625
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: <MS3DJointRoot>
+    100002: <MS3DRoot>_0
+    100004: <MS3DRoot>_1
+    100006: <MS3DRoot>_10
+    100008: <MS3DRoot>_11
+    100010: <MS3DRoot>_12
+    100012: <MS3DRoot>_13
+    100014: <MS3DRoot>_14
+    100016: <MS3DRoot>_15
+    100018: <MS3DRoot>_16
+    100020: <MS3DRoot>_17
+    100022: <MS3DRoot>_18
+    100024: <MS3DRoot>_19
+    100026: <MS3DRoot>_2
+    100028: <MS3DRoot>_20
+    100030: <MS3DRoot>_3
+    100032: <MS3DRoot>_4
+    100034: <MS3DRoot>_5
+    100036: <MS3DRoot>_6
+    100038: <MS3DRoot>_7
+    100040: <MS3DRoot>_8
+    100042: <MS3DRoot>_9
+    100044: CAMERA
+    100046: //RootNode
+    100048: MotA-L
+    100050: MotB-R
+    400000: <MS3DJointRoot>
+    400002: <MS3DRoot>_0
+    400004: <MS3DRoot>_1
+    400006: <MS3DRoot>_10
+    400008: <MS3DRoot>_11
+    400010: <MS3DRoot>_12
+    400012: <MS3DRoot>_13
+    400014: <MS3DRoot>_14
+    400016: <MS3DRoot>_15
+    400018: <MS3DRoot>_16
+    400020: <MS3DRoot>_17
+    400022: <MS3DRoot>_18
+    400024: <MS3DRoot>_19
+    400026: <MS3DRoot>_2
+    400028: <MS3DRoot>_20
+    400030: <MS3DRoot>_3
+    400032: <MS3DRoot>_4
+    400034: <MS3DRoot>_5
+    400036: <MS3DRoot>_6
+    400038: <MS3DRoot>_7
+    400040: <MS3DRoot>_8
+    400042: <MS3DRoot>_9
+    400044: CAMERA
+    400046: //RootNode
+    400048: MotA-L
+    400050: MotB-R
+    2300000: <MS3DRoot>_0
+    2300002: <MS3DRoot>_1
+    2300004: <MS3DRoot>_10
+    2300006: <MS3DRoot>_11
+    2300008: <MS3DRoot>_12
+    2300010: <MS3DRoot>_13
+    2300012: <MS3DRoot>_14
+    2300014: <MS3DRoot>_15
+    2300016: <MS3DRoot>_16
+    2300018: <MS3DRoot>_17
+    2300020: <MS3DRoot>_18
+    2300022: <MS3DRoot>_19
+    2300024: <MS3DRoot>_2
+    2300026: <MS3DRoot>_20
+    2300028: <MS3DRoot>_3
+    2300030: <MS3DRoot>_4
+    2300032: <MS3DRoot>_5
+    2300034: <MS3DRoot>_6
+    2300036: <MS3DRoot>_7
+    2300038: <MS3DRoot>_8
+    2300040: <MS3DRoot>_9
+    3300000: <MS3DRoot>_0
+    3300002: <MS3DRoot>_1
+    3300004: <MS3DRoot>_10
+    3300006: <MS3DRoot>_11
+    3300008: <MS3DRoot>_12
+    3300010: <MS3DRoot>_13
+    3300012: <MS3DRoot>_14
+    3300014: <MS3DRoot>_15
+    3300016: <MS3DRoot>_16
+    3300018: <MS3DRoot>_17
+    3300020: <MS3DRoot>_18
+    3300022: <MS3DRoot>_19
+    3300024: <MS3DRoot>_2
+    3300026: <MS3DRoot>_20
+    3300028: <MS3DRoot>_3
+    3300030: <MS3DRoot>_4
+    3300032: <MS3DRoot>_5
+    3300034: <MS3DRoot>_6
+    3300036: <MS3DRoot>_7
+    3300038: <MS3DRoot>_8
+    3300040: <MS3DRoot>_9
+    4300000: <MS3DRoot>_0
+    4300002: <MS3DRoot>_1
+    4300004: <MS3DRoot>_2
+    4300006: <MS3DRoot>_3
+    4300008: <MS3DRoot>_4
+    4300010: <MS3DRoot>_5
+    4300012: <MS3DRoot>_6
+    4300014: <MS3DRoot>_7
+    4300016: <MS3DRoot>_8
+    4300018: <MS3DRoot>_9
+    4300020: <MS3DRoot>_10
+    4300022: <MS3DRoot>_11
+    4300024: <MS3DRoot>_12
+    4300026: <MS3DRoot>_13
+    4300028: <MS3DRoot>_14
+    4300030: <MS3DRoot>_15
+    4300032: <MS3DRoot>_16
+    4300034: <MS3DRoot>_17
+    4300036: <MS3DRoot>_18
+    4300038: <MS3DRoot>_19
+    4300040: <MS3DRoot>_20
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
