@@ -424,5 +424,4 @@ public class FileBrowser
     {
         SetNewDirectory(Path.Combine(m_currentDirectory, m_nonMatchingDirectories[i]));
     }
-
 }

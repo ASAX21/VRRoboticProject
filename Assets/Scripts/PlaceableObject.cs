@@ -19,8 +19,8 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
     public bool locked = false;
     public int currLayer = 0;
 	public int collisionCount = 0;
-    [SerializeField]
-    private List<MaterialContainer> matContainer;
+
+    public List<MaterialContainer> matContainer;
     private Material validMat;
     private Material invalidMat;
     
@@ -32,18 +32,21 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
     // UI Variables
     public bool isWindowOpen = false;
 
-    public void PostBuild()
-    {
-        rigidBody = gameObject.GetComponent<Rigidbody>();
-        objCollider = gameObject.GetComponent<Collider>();       
-    }
-
     private void Start()
     {
         objectSelector = ObjectSelector.instance;
         objectManager = ObjectManager.instance;
         validMat = ObjectManager.instance.validMat;
         invalidMat = ObjectManager.instance.invalidMat;
+    }
+
+    // This function is called when a robot is build from a .robi file
+    // Initializes required variables (Prefab vars set in editor)
+    public void PostBuild()
+    {
+        rigidBody = gameObject.GetComponent<Rigidbody>();
+        objCollider = gameObject.GetComponent<Collider>();
+        matContainer = new List<MaterialContainer>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -72,32 +75,20 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
         return valid;
 	}
 
-    public void OnPointerClick(PointerEventData eventData)
+    public virtual void OnPointerClick(PointerEventData eventData)
     {
-        if (eventData.button == PointerEventData.InputButton.Left)
+        if ( eventData.button == PointerEventData.InputButton.Left && 
+             eventData.clickCount == 1 &&
+             isPlaced)
         {
-            // Single or First click
-            if (eventData.clickCount == 1)
+            if (isSelected)
             {
-                if (isPlaced)
-                {
-                    if (isSelected)
-                    {
-                        objectSelector.UnselectObject();
-                    }
-                    else
-                    {
-                        Select();
-                    }
-                }
+                objectSelector.UnselectObject();
+                Deselect();
             }
-            // Double click (or more)
-            else if (!isWindowOpen)
+            else
             {
                 Select();
-                isWindowOpen = true;
-                if(this is Robot)
-                    objectSelector.DisplayRobotInfoWindow(this as Robot);
             }
         }
     }
@@ -170,7 +161,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
 }
 
 [Serializable]
-internal class MaterialContainer
+public class MaterialContainer
 {
     [SerializeField]
     internal Material defaultMat;

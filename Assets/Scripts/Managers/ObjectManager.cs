@@ -7,7 +7,7 @@ using UnityEngine;
 // Allows placement of objects at run-time
 public class ObjectManager : MonoBehaviour {
 
-    public static ObjectManager instance = null;
+    public static ObjectManager instance { get; private set; }
 
     public int totalObjects = 0;
 
@@ -16,8 +16,9 @@ public class ObjectManager : MonoBehaviour {
     public Material validMat;
     public Material invalidMat;
 
-    public GameObject placeableCylinder;
-    public GameObject placeableCube;
+    // Placeable object prefabs - spawned from Add Object menu
+    public GameObject cokeCanPrefab;
+    public GameObject soccerBallPrefab;
 
     // Specific object currently being placed (one at a time strict)
     public PlaceableObject objectOnMouse;
@@ -42,20 +43,28 @@ public class ObjectManager : MonoBehaviour {
         ground = new Plane(new Vector3(0, 1, 0), new Vector3(0, 0, 0));
     }
 
-    public void AddTestObject()
+    // Add some object to scene
+    private void AddObjectToScene(GameObject prefab)
     {
-        GameObject testBot = Resources.Load("TestRobot") as GameObject;
-        objectOnMouse = Instantiate(testBot).GetComponent<PlaceableObject>();
+        PlaceableObject newObj = Instantiate(prefab).GetComponent<PlaceableObject>();
+        newObj.objectID = totalObjects;
+        totalObjects++;
+        AddObjectToMouse(newObj);
     }
 
-    public void AddCylinderToScene()
+    // Specific object creators - called from Add Object menu
+    public void AddCokeCanToScene()
     {
-        PlaceableObject newCyl = Instantiate(placeableCylinder).GetComponent<PlaceableObject>();
-        newCyl.PostBuild();
-        newCyl.objectID = totalObjects;
-        totalObjects++;
-        AddObjectToMouse(newCyl);
+        AddObjectToScene(cokeCanPrefab);
     }
+
+    public void AddSoccerBallToScene()
+    {
+        AddObjectToScene(soccerBallPrefab);
+    }
+
+
+    // ----- Handle placement of object via mouse -----
 
     public void AddObjectToMouse(PlaceableObject newObject)
     {
@@ -95,4 +104,5 @@ public class ObjectManager : MonoBehaviour {
             }
         }
     }
+ 
 }

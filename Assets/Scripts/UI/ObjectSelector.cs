@@ -14,6 +14,7 @@ public class ObjectSelector : MonoBehaviour {
 
     // Create Object Windows
     public RobotInspectorWindow robotWindowPrefab;
+    public WorldObjInspectorWindow worldObjWindowPrefab;
 
     // Enforce the singleton pattern
     private void Awake()
@@ -46,5 +47,10 @@ public class ObjectSelector : MonoBehaviour {
     public void DisplayRobotInfoWindow(Robot robot)
     {
         Instantiate(robotWindowPrefab, windowContainer, false).robot = robot;
+    }
+
+    public void DisplayWorldObjInfoWindow(WorldObject worldObj)
+    {
+        Instantiate(worldObjWindowPrefab, windowContainer, false).worldObj = worldObj;
     }
 }

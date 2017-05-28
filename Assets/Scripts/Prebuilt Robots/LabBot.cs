@@ -17,6 +17,7 @@ public class LabBot : Robot,
     public PSDController psdController;
     public ServoController servoController;
     public EyeCameraController eyeCamController;
+    public AudioController audioController;
 
     Action<RobotConnection> driveDoneDelegate;
 
@@ -150,5 +151,15 @@ public class LabBot : Robot,
     public EyeCamera GetCameraComponent(int camera)
     {
         return eyeCamController.cameras[camera];
+    }
+
+    public void AUBeep()
+    {
+        audioController.PlayBeep();
+    }
+
+    public void AUPlay(AudioClip clip)
+    {
+        audioController.PlayClip(clip);
     }
 }

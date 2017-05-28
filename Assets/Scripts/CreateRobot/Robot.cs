@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using RobotComponents;
-
-public interface IPosable
-{
-    void SetPose(int x, int y, int phi);
-    Pose GetPose();
-}
 
 public interface IMotors
 {
@@ -67,8 +60,18 @@ public class Speed
 }
 // Abstract robot
 // Universal functions
-public abstract class Robot : PlaceableObject
+public abstract class Robot : PlaceableObject, IPointerClickHandler
 {
     public int axels = 0;
     public RobotConnection myConnection = null;
+
+    override public void OnPointerClick(PointerEventData eventData)
+    {
+        if(eventData.clickCount > 1 && !isWindowOpen)
+        { 
+            isWindowOpen = true;
+            objectSelector.DisplayRobotInfoWindow(this);
+        }
+        base.OnPointerClick(eventData);
+    }
 }

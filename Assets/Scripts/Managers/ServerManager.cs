@@ -45,8 +45,7 @@ public class RobotConnection
 
 public class ServerManager : MonoBehaviour
 {
-    public static ServerManager instance = null;
-   // public PendingRobotPanel pendingRobotPanel;
+    public static ServerManager instance { get; private set; }
 
     List<RobotConnection> conns = new List<RobotConnection>();
 
