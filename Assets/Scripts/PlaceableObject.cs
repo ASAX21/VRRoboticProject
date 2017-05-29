@@ -14,6 +14,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
     public int objectID;
 
     // Placement variables
+    public bool isInit = false;
     public bool isPlaced = false;
     public bool isSelected = false;
     public bool locked = false;
@@ -140,6 +141,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
         objCollider.isTrigger = false;
         rigidBody.isKinematic = false;
         isPlaced = true;
+        isInit = true;
     }
 
     public void OnBeginDrag(PointerEventData eventData)

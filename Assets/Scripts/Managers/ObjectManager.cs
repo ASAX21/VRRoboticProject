@@ -16,9 +16,14 @@ public class ObjectManager : MonoBehaviour {
     public Material validMat;
     public Material invalidMat;
 
-    // Placeable object prefabs - spawned from Add Object menu
+    //  ----- Placeable object prefabs - spawned from Add Object menu -----
+    // World Object Prefabs
     public GameObject cokeCanPrefab;
     public GameObject soccerBallPrefab;
+
+    // Robot Prefabs
+    public GameObject labBotPrefab;
+    // ---------------------------------------------------------------------
 
     // Specific object currently being placed (one at a time strict)
     public PlaceableObject objectOnMouse;
@@ -49,6 +54,10 @@ public class ObjectManager : MonoBehaviour {
         PlaceableObject newObj = Instantiate(prefab).GetComponent<PlaceableObject>();
         newObj.objectID = totalObjects;
         totalObjects++;
+        if (newObj is Robot)
+            SimManager.instance.AddRobotToList(newObj as Robot);
+        else if (newObj is WorldObject)
+            SimManager.instance.AddWorldObjectToScene(newObj as WorldObject);
         AddObjectToMouse(newObj);
     }
 
@@ -63,7 +72,12 @@ public class ObjectManager : MonoBehaviour {
         AddObjectToScene(soccerBallPrefab);
     }
 
+    public void AddLabBotToScene()
+    {
+        AddObjectToScene(labBotPrefab);
 
+    }
+        
     // ----- Handle placement of object via mouse -----
 
     public void AddObjectToMouse(PlaceableObject newObject)
@@ -101,6 +115,14 @@ public class ObjectManager : MonoBehaviour {
 			if(Input.GetMouseButtonDown(0))
             {
                 TryPlaceObject();
+            }
+            else if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (!objectOnMouse.isInit)
+                {
+                    Destroy(objectOnMouse.gameObject);
+                    objectOnMouse = null;
+                }
             }
         }
     }

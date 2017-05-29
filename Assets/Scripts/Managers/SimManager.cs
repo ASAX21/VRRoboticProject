@@ -7,7 +7,8 @@ public class SimManager : MonoBehaviour {
 
     public ServerManager server;
 
-    public List<PlaceableObject> allObjects;
+    public List<Robot> allRobots;
+    public List<WorldObject> allWorldObjects;
 
     public GameObject world;
 
@@ -22,12 +23,21 @@ public class SimManager : MonoBehaviour {
     }
 
     private void Start() {
-        allObjects = new List<PlaceableObject>();
-	}
+        allRobots = new List<Robot>();
+        allWorldObjects = new List<WorldObject>();
+
+    }
     
+    // Find object by ID - Search robots first, then world objects
     public PlaceableObject GetObjectByID(int id)
     {
-        return allObjects.Find(x => x.objectID == id);
+        PlaceableObject toFind = allRobots.Find(x => x.objectID == id);
+        if(toFind == null)
+        {
+            toFind = allWorldObjects.Find(x => x.objectID == id);
+        }
+
+        return toFind;
     }
 
     public void SetSimulationSpeed(float simSpeed)
@@ -36,6 +46,17 @@ public class SimManager : MonoBehaviour {
         Time.timeScale = simSpeed;
         Time.fixedDeltaTime = 0.02f * Time.timeScale;
         Debug.Log(simSpeed);
+    }
+
+    public void AddRobotToList(Robot robot)
+    {
+        allRobots.Add(robot);
+        ViewRobotsWindow.instance.AddRobotToDisplayList(robot);
+    }
+
+    public void AddWorldObjectToScene(WorldObject worldObj)
+    {
+        allWorldObjects.Add(worldObj);
     }
 
     public void PauseSimulation()
