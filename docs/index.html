@@ -25,7 +25,7 @@
 
 <header>
   <div class="container">
-    <h2 class="lone-header">Virtual Reality EyeBot Simulator: System Requirements Document</h2>
+    <h2 class="lone-header">EyeBot VR Simulator: System Requirements Document</h2>
   </div>
 </header>
 <section>
@@ -69,13 +69,20 @@
         <p style="font-weight:bold;">Project:</p>
         <p>Designing a mobile robot simulator based on game engine Unity3D</p>
         <p style="font-weight:bold;">Client:</p>
-        <p>Dr Thomas Braunl, thomas.braunl@uwa.edu.au</p> 
-        <p>High influence, high involvement, he will require a working prototype for his 2017 semester 2 units</p>
+        <p>Dr Thomas Braunl, thomas.braunl@uwa.edu.au</p>
+        <ul>
+          <li>High influence, high involvement
+          <li>Requires working prototype for 2017 semester 2 units
+        </ul>
         <p style="font-weight:bold;">Mentor:</p>
         <p>Dr Mehdi Ravanabakhsh, mehdi.ravanbakhsh@mapizy.com</p>
-        <p style="font-weight:bold;">Team Supervisor:</p>
+        <p style="font-weight:bold;">Team Manager:</p>
         <p>Ghulam Mubashar Hassan, ghulam.hassan@research.uwa.edu.au</p>
-        <p>High influence, low involvement, oversees and assesses development of project</p>
+        <ul>
+          <li>High influence, low involvement
+          <li>Oversees and assesses development of project
+          <li>Provides additional project resources
+        </ul>
 
         <p style="font-weight:bold;">Project Team:</p> 
         <p>Robot VR Team: High influence and high involvement</p>
@@ -118,11 +125,11 @@
         </table>
         <p style="font-weight:bold;">Users:</p>
         <p>Students: low influence, high involvement, will be beta testing the product in second semester</p>
-        <p>Research Students: low influence, high involvement, will use the simulation for research and possibly expand on code.</p>
+        <p>Research Faculty: low influence, high involvement, will use the simulation for research and possibly expand on code.</p>
        
 
    <h3 id="About">About</h3>
-        <p>This document presents the desired requirements for developing a new mobile robot simulator based on game engine Unity 3D. In this, we describe the scope, purpose, functional and non-functional requirements of a mobile robot in the simulation environment. The primary goal of a mobile robot is to design and implement autonomous systems. The word autonomy is defined as the capability of a mobile robot to perform tasks which increases the complexity of game. For example, robot wants to move from point A to point B in the simulation environment. To do this task, robot needs to have some information about the simulation environment and knowledge about its own capabilities to sense, move and to execute motion tasks in such environment.  The main elements of a robot simulation environment are Platform, components, agent and programming environment.</p>
+        <p>This document presents the desired requirements for developing a new mobile robot simulator based on game engine Unity 3D. In this, we describe the scope, purpose, functional and non-functional requirements of a mobile robot simulation environment. The primary goal of a mobile robot is to design and implement autonomous systems. The word autonomy is defined as the capability of a mobile robot to perform tasks which increases the complexity of game. For example, robot wants to move from point A to point B in the simulation environment. To do this task, robot needs to have some information about the simulation environment and knowledge about its own capabilities to sense, move and to execute motion tasks in such environment.  The main elements of a robot simulation environment are Platform, components, agent and programming environment.</p>
         <p style="font-weight:bold;">Platform:</p>
         <p>Platform is a piece of software where smaller application programs are developed. Some of the elements in the platform are the sensors, the actuators, the computer, the operating system and any software relevant for the robot operation.</p>
         <p style="font-weight:bold;">Components:</p>
@@ -169,23 +176,19 @@
         <th>Operating systems</th>
         <th>OS Version</th> 
         <th>Prerequisites</th>
-        <th>Comands to run in terminal</th>
         </tr>
         <tr>
         <td>Windows</td>
         <td>Windows 7,8,10</td>
         <td>Install Cygwin and X11</td>
-        <td></td>
         </tr>
         <tr>
         <td>Mac OS</td>
         <td>10.10.X</td>
-        <td>Install Xcode, Cygwin and Xquartz</td>
-        <td></td>
+        <td>Install Xcode and Xquartz</td>
         </tr>
         <tr>
         <td>Linux</td>
-        <td></td>
         <td></td>
         <td></td>
         </tr>
@@ -224,44 +227,45 @@
         <tr>
           <td colspan=4>Simulator Functionality</td>
         </tr>
+        
         <tr id="done">
-        <td>Load Robot</td>
+        <td>Client Loading</td>
         <td></td>
         <td></td>
         <td></td>
         </tr>
         <tr id="done">
-        <td>Load Client</td>
+        <td>World Loading</td>
         <td></td>
         <td></td>
         <td></td>
         </tr>
         <tr id="done">
-        <td>Load World</td>
+        <td>Robot Placing</td>
         <td></td>
         <td></td>
         <td></td>
         </tr>
         <tr id="done">
-        <td>Load Object</td>
+        <td>Object Placing</td>
         <td></td>
         <td></td>
         <td></td>
         </tr>
         <tr id="done">
-        <td>Speedup Simulation</td>
+        <td>Simulation Speedup</td>
         <td></td>
         <td></td>
         <td></td>
         </tr>
         <tr id="done">
-        <td>Slowdown Simulation</td>
+        <td>Simulation Slowdown</td>
         <td></td>
         <td></td>
         <td></td>
         </tr>
         <tr id="done">
-        <td>Pause/Resume Simulation</td>
+        <td>Simulation Pausing/Resuming </td>
         <td></td>
         <td></td>
         <td></td>
@@ -305,17 +309,37 @@
           <td colspan=4>User Interface</td>
         </tr>
         <tr id="done">
-        <td>View Scene</td>
+        <td>Scene Viewing</td>
         <td></td>
         <td></td>
         <td></td>
         </tr>
-        <td>View Robot Parameters</td>
+        <tr id="done">
+        <td>Robot Parameter Viewing</td>
         <td></td>
         <td></td>
         <td></td>
         </tr>
-        <td>Edit Robot Parameters</td>
+        <tr>
+        <td>Robot Parameter Editing</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+        <tr id="done">
+        <td>Robot Interface Viewing</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+        <tr id="done">
+        <td>Robot Interface Interacting</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+        <tr>
+        <td>Robot Interface Minimising</td>
         <td></td>
         <td></td>
         <td></td>
@@ -325,13 +349,13 @@
           <td colspan=4>Virtual Reality</td>
         </tr>
         <tr>
-        <td>scene viewing</td>
+        <td>Scene Viewing</td>
         <td></td>
         <td></td>
         <td></td>
         </tr>
         <tr>
-        <td>object interaction</td>
+        <td>Object Interaction</td>
         <td></td>
         <td></td>
         <td></td>
