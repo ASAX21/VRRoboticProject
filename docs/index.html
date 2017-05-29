@@ -50,7 +50,7 @@
       <li class="separator"></li>  
       <li><strong>Non-Functional Requirements</strong></li>
       <li><a href="#Security" class="cc-active">Security</a></li>
-      <li><a href="#Platform_Requirements" class="cc-active">Platform Requirements</a></li>
+      <li><a href="#Compatibility" class="cc-active">Compatibility</a></li>
       <li><a href="#Usability" class="cc-active">Usability</a></li>
       <li><a href="#Performance" class="cc-active">Performance</a></li>
       <li><a href="#Reliability" class="cc-active">Reliability</a></li>
@@ -198,70 +198,188 @@
         <li>Online bug reporting, has been established</li>
      </ul> 
     
-    <h3 id="Assumptions_Dependencies">Assumptions and Dependencies</h3>     <p style="font-weight:bold;">Assumptions:</p>
+    <h3 id="Assumptions_Dependencies">Assumptions and Dependencies</h3>     
+      <p style="font-weight:bold;">Assumptions:</p>
         <ul>
         <li>Users have access to Command line interface of their operating systems.</li>
         <li>Users have X11 and Cygwin installed at the default directory.</li>
         </ul>
-        <p style="font-weight:bold;">Dependencies:</p>
+      <p style="font-weight:bold;">Dependencies:</p>
         <ul>
         <li> Windows: X11, Cygwin</li>
         <li> Mac: Xcode, XQUARTZ</li>
         </ul>
     
    <h3 id="Functional_Requirements">Functional Requirements</h3>
+        <h2 id="Features" style="font-weight:bold;">Features</h2>
+
+        <table style="width:100%">
+        <tr>
+        <th>Feature</th>
+        <th>Simplicity</th> 
+        <th>Importance</th>
+        <th>Priority</th>
+        </tr>
+
+        <tr>
+          <td colspan=4>Simulator Functionality</td>
+        </tr>
+        <tr id="done">
+        <td>Load Robot</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+        <tr id="done">
+        <td>Load Client</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+        <tr id="done">
+        <td>Load World</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+        <tr id="done">
+        <td>Load Object</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+        <tr id="done">
+        <td>Speedup Simulation</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+        <tr id="done">
+        <td>Slowdown Simulation</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+        <tr id="done">
+        <td>Pause/Resume Simulation</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+
+        <tr>
+          <td colspan=4>Robot Functionality</td>
+        </tr>
+        <tr id="done">
+        <td>Basic Driving</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+        <tr id="done">
+        <td>Velocity/Omega Driving</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+        <tr id="done">
+        <td>Camera Capture</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+        <tr>
+        <td>Servo Movement</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+        <tr>
+        <td>Radio Control</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+
+        <tr>
+          <td colspan=4>User Interface</td>
+        </tr>
+        <tr id="done">
+        <td>View Scene</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+        <td>View Robot Parameters</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+        <td>Edit Robot Parameters</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+
+        <tr>
+          <td colspan=4>Virtual Reality</td>
+        </tr>
+        <tr>
+        <td>scene viewing</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+        <tr>
+        <td>object interaction</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+
+
+        </table>
+
         <h2 id="Use_Cases" style="font-weight:bold;">Use cases</h2>
         <p><a href="/html/Use.docx">Use Cases</a></p>
     
     <h3 id="Non_Functional">Non-Functional Requirementss</h3>
-    <h3 id="Security">Security</h3>
+    <p id="Security" style="font-weight:bold;">Security</p>
         <ul>
         <li>The product itself doesn't contain any important or personal information and so doesn't require a large degree of security</li>
         <li>Our client has stated his desire to keep his RoBIOS source code private and so this aspect of the product will be hosted privately</li>
         </ul>
     
-    
-    <h3 id="Platform_Requirements">Platform Requirements</h3>
+    <p id="Compatibility" style="font-weight:bold;">Compatibility</p>
         <p>The product must be cross compatible (Windows, OSX, Linux), to allow all students to have easy access to the simulator.</p>
     
-      
-    <h3 id="Usability">Usability</h3>
+    
+    <p id="Usability" style="font-weight:bold;">Usability</p>
       <ul>
         <li>User interface should be standard and easy to interact with</li>
         <li> Users with no coding experience should be able to run code with as few instructions as possible</li>
         <li> Simulator should be able to run through batch commands or user interface</li>
       </ul>
     
-    
-    <h3 id="Performance">Performance</h3>
+    <p id="Performance" style="font-weight:bold;">Performance</p>
       <ul>
         <li>Simulator should run code in real time, to represent the robot functionality it is simulating</li>
         <li> The user interface should have little to no lag, namely when using the virtual reality headse</li>
       </ul>
     
-    
-    <h3 id="Reliability">Reliability</h3>
+    <p id="Reliability" style="font-weight:bold;">Reliability</p>
       <ul>
         <li>The product must be always accessible to as many students as possible, this will be done through publicly hosting the product and making it cross compatible</li>
         <li> In the event of an error the system can be restarted with little to no information lost</li>
       </ul>
     
-    
-    <h3 id="Upgradability">Upgradability</h3>
+    <p id="Upgradability" style="font-weight:bold;">Upgradability</p>
       <ul>
         <li>Our client has specified the ability to be able to import new custom environments and robots. This will be done by storing the data in editable text files</li>
         <li>  The source code will be developed so that it is understandable and simple, to allow future developers to easily extend on the simulations functionality</li>
       </ul>
     
-    
-    <h3 id="Implementation">Implementation</h3>
-      <ul>
-        <li>Our client has specified the ability to be able to import new custom environments and robots. This will be done by storing the data in editable text files</li>
-        <li>  The source code will be developed so that it is understandable and simple, to allow future developers to easily extend on the simulations functionality</li>
-      </ul>
-    
-    
-    <h3 id="Interaction">Interaction</h3>
+    <p id="Interaction" style="font-weight:bold;">Interaction</p>
       <ul>
         <li>The simulator is a closed system and does not require any internet connectivity or other integration type to functions</li>
         <li> Within the System are multiple applications running concurrently (unity and C executable) which must be tested to interact robustly</li>

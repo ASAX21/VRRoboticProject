@@ -15,7 +15,7 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: "Raleway", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    font-family: Helvetica, Arial, "Lucida Grande", sans-serif; 
     font-weight: 300;
     font-size: 18px;
 }
@@ -24,6 +24,7 @@ body {
     line-height: 2;
     color: #444;
     background: #ededed;
+    font-size: 16px;
 }
 
 img, iframe {
@@ -297,7 +298,9 @@ nav #menu-toggle {
 }
 
 
-
+table {
+    border-collapse: collapse;
+}
 
 
 
@@ -483,3 +486,7 @@ input:focus {
 
 }
 
+#done {
+    background-color: #73BE57;
+    color: #000000;
+}
