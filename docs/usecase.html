@@ -1,0 +1,2128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+
+<title>Robot VR</title>
+
+<link href="http://fonts.googleapis.com/css?family=Raleway:700,300" rel="stylesheet"type="text/css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/prettify.css">
+
+<style>
+     table, th, td {
+     border: 1px solid black;
+    } 
+    th,tr {
+     text-align: center;
+}
+    
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+
+
+<header>
+  <div class="container">
+    <h2 class="lone-header">Use Cases for VR Robot Simulator </h2>
+  </div>
+</header>
+<section>
+  <div id="float" class="container" style='position:fixed; z-index:100; top:5;'><a href="#top">
+    <ul class="docs-nav">
+      <li><a href="#use case 1" class="cc-active"> User want to start simulator
+		<li><a href="#use case 2" class="cc-active"> User wants to select robot</a>
+		<li><a href="#use case 3" class="cc-active"> User wants to start simulation</a></li>
+		<li><a href="#use case 4" class="cc-active">User wants to add errors</a></li>
+		<li><a href="#use case 5" class="cc-active">  User wants to load Environment</a></li>
+		<li><a href="#use case 6" class="cc-active">  User wants to select one demo script</a></li>
+		<li><a href="#use case 7" class="cc-active">  User wants to move camera</a></li>
+		<li><a href="#use case 8" class="cc-active">  User wants to adjust simulation speed</a></li>
+		<li><a href="#use case 9" class="cc-active">  User wants to stop simulation</a></li></div>
+    </ul>
+      
+      
+	<p class="MsoNormal" style="text-align:center;">
+		<br />
+	</p>
+	<div id="use case 1" ><div </div><p class="MsoNormal" align="justify" style="text-align:center;">
+		<b>Use case 1: User want to start simulator</b><b></b></div>
+	</p>
+	<p class="MsoNormal" align="justify" style="text-align:center;">
+		<b>&nbsp;</b>
+	</p>
+	<table class="15" align="center" style="text-align:center;width:337.4pt;">
+		<tbody>
+			<tr>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">USE CASE 1</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="399" valign="top" colspan="2" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Start Simulator</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Goal in Context</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="399" valign="top" colspan="2" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">User wants to start simulator to run simulation</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Scope &amp; Level</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="399" valign="top" colspan="2" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Simulator, Summary</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Preconditions</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="399" valign="top" colspan="2" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">User has simulator properly installed, user has access to command-line interface. User knows the location of the world/maze file and script file if he/she wants to provide them.</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Success End Condition</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="399" valign="top" colspan="2" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Both client side and server of simulator are running, simulator has created environment with user-intended world/maze file, and has access to the user-intended script file.</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Failed End Condition</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="399" valign="top" colspan="2" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Either client side or server of simulator won’t start,</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Simulator doesn’t create environment with intended world/maze file, simulator doesn’t get access to the intended script file.</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Primary,</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Secondary Actors</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="399" valign="top" colspan="2" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">User of this simulator</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Trigger</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="399" valign="top" colspan="2" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">User types start simulator command in command-line interface of laptop.</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">DESCRIPTION</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Step</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="236" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Action</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">1</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="236" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">User types in simulation command in command-line interface with locations of world/maze file and script file.</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">2</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="236" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Simulator locates the world/maze file and simulation script from user command.</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">3</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="236" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Simulator checks the world/maze file and script.</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">4</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="236" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Simulator builds 3D environment from the world/maze file provided by the user.</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">EXTENSIONS</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Step</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="236" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Branching Action</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">1a</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="236" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">User doesn’t provide world/maze file:</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">1a1. User select one of the demo word/maze files on UI (use case 5)</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">1b</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="236" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">User doesn’t provide script:</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">1b1. User select one of the demo scripts on UI (use case 6)</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">2a</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="236" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">User provided a wrong location for world/maze file or script file:</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">2a1. Simulator show error message of wrong location</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="162" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">3a</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="236" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Simulator found error in world/maze file or script:</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">3a1.Simulator show error message about the error of the file.</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<div id="use case 2"><p class="MsoNormal" style="text-align:center;">
+		&nbsp;
+	</p>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;
+	</p>
+	<p class="MsoNormal" style="text-align:center;">
+		<b>&nbsp;</b>
+	</p>
+	<p class="MsoNormal" style="text-align:center;">
+		<b>Use case 2: User wants to select robot</b></div>
+	</p>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;
+	</p>
+	<table class="15" align="center" style="text-align:center;width:337.7pt;">
+		<tbody>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">USE CASE 2</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Select Robot</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Goal in Context</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">User wants to select a robot in the robot list to run simulation</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Scope &amp; Level</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Simulator, Sub function</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Preconditions</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Simulator is running, environment has been created, script file is ready.</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Success End Condition</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Simulator gets the robot model selected by the user and places the robot at user-intended position</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Failed End Condition</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Simulator doesn’t get the robot model selected by the user, simulator doesn’t place the robot as intended by the user.</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Primary,</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Secondary Actors</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">User of this simulator</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Trigger</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Simulator has got environment ready and script ready.</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">DESCRIPTION</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="73" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Step</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="312" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Action</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="73" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">2</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="312" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Simulator shows a window with a list of robot models.</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="73" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">3</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="312" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">User select one of the robot by clicking one in the list.</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="73" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">4</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="312" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">User put in the x and y value as the initial coordinates of the robot.</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="73" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">5</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="312" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Simulator checks the provided coordinates and initialize the robot to the nearest possible position (in case the coordinates conflict with the walls)</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="73" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">6</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="312" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">User checks the position of the robot</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="73" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">7</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="312" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">User clicks “done” button on the robot selection window</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="73" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">8</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="312" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Simulator closes the robot selection window</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">EXTENSIONS</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="73" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Step</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="312" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">Branching Action</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="73" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">4a</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="312" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">User doesn’t input x nor y values or user only inputs one of x and y.</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">4a1.Simulator assign the missing value to 0 (using origin as coordinates if neither x or y is provided).</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="73" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">5a</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="312" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">X or y value is too large (exceeds the dimensions of floor) or x or y is not a number</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">5a1. Simulator show error messages</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="73" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">6a</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="312" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">User reselect a robot from the robot list</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">6a1. Simulator replace current robot model with the new selected one.</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="73" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">6b</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+				<td width="312" valign="top" style="border:1.0000pt solid windowtext;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">User changes the x or y coordinate of the robot.</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12pt;">6b1.Simulator checks the new coordinates and move the robot to the new spot.</span><span style="font-family:Calibri;font-size:12pt;"></span>
+					</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;&nbsp;
+	</p>
+	<div id="use case 3"><p class="MsoNormal" style="text-align:center;">
+		<b>Use case 3: </b><b>User wants to start simulation</b><b></b></div>
+	</p>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;
+	</p>
+	<table class="MsoNormalTable" align="center" style="text-align:center;width:338.15pt;">
+		<tbody>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">USE CASE 3</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Start Simulation</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Goal in Context</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User wants to start simulation with provided or demo world/maze file, and provided or demo script file.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Scope &amp; Level</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator, Primary Task</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Preconditions</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator is running, simulator has got the user-intended world/maze file and script file, robot has been selected by user.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Success End Condition</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator runs simulation per script.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Failed End Condition</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator doesn’t run simulation according to script.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Primary,</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Secondary Actors</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User of this simulator</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Trigger</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User click “start” button on simulator UI</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">DESCRIPTION</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Step</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Action</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">1</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User click “start simulation” button on UI to start the simulation</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">2</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator runs simulation per the script</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;
+	</p>
+	<div<p class="MsoNormal" style="text-align:center;">
+		<div id="use case 4"><b>Use case 4: </b><b>User wants to add errors</b><b></b><div>
+	</p>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;
+	</p>
+	<table class="MsoNormalTable" align="center" style="text-align:center;width:337.7pt;">
+		<tbody>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">USE CASE 4</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Add Errors</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Goal in Context</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User wants to add errors to simulation to make the simulation more realistic</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Scope &amp; Level</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator, Sub function</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Preconditions</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User has selected robot.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Success End Condition</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator runs the simulation with error as specified by the user.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Failed End Condition</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator doesn’t run the simulation with error as specified by the user.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Primary,</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Secondary Actors</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User of this simulator</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Trigger</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User clicks the “add error” button on UI</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">DESCRIPTION</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Step</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Action</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">1</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User clicks the “add error” button on UI</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">2</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator shows a list of errors for user to select</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">3</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User select one or more of the errors in the list to add</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">4</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User input the percentage of error in the input box on the side of each error.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">5</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator applies the errors and percentage for each error to the respective simulation algorithms</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">6</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator show “add error successfully” message</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<div id="use case 5"><p class="MsoNormal" style="text-align:center;">
+		&nbsp;
+	</p>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;<b>Use case 5: </b><b>User wants to load Environment</b><b></b></div>
+	</p>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;
+	</p>
+	<table class="MsoNormalTable" align="center" style="text-align:center;width:337.7pt;">
+		<tbody>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">USE CASE 5</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Load Environment</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Goal in Context</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User wants to select from one of the default word/maze files without having to provide one.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Scope &amp; Level</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator, Sub function</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Preconditions</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Both the client side and unity server are running; user has initiated simulation.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Success End Condition</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator gets the word/maze file &nbsp;selected by user and builds world environment accordingly</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Failed End Condition</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator doesn’t get the file; no environment is built.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Primary,</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Secondary Actors</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User of this simulator</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Trigger</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User’s simulation command didn’t provide a world/maze file.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">DESCRIPTION</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Step</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Action</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">1</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User types in simulation command without indicating a world/maze file in command-line.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">2</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator shows a window with a list of pre-defined world/maze files on UI.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">3</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User select one of the files by clicking one file in the list.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">4</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator build environment with the selected word/maze file.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">5</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User inspects the created environment</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">6</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User can reselect another world/maze file in the list</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">7</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">After user find the satisfactory word/maze file, user clicks “done” on simulator UI.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">8</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator closes the selection window.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;
+	</p>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;<div id="use case 6"><b>Use case 6: </b><b>User wants to select one demo script</b></div>
+	</p>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;
+	</p>
+	<table class="MsoNormalTable" align="center" style="text-align:center;width:337.7pt;">
+		<tbody>
+			<tr>
+				<td width="178" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">USE CASE 6</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="384" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Select Script</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="178" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Goal in Context</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="384" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User wants to select one demo script to run simulation without having to provide one.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="178" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Scope &amp; Level</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="384" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator, Sub function</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="178" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Preconditions</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="384" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Both the client side and unity server are running; user has initiated simulation.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="178" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Success End Condition</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="384" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator gets the demo script file selected by user.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="178" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Failed End Condition</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="384" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator doesn’t get script file.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="178" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Primary,</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Secondary Actors</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="384" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User of this simulator</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="178" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Trigger</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="384" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User’s simulation command didn’t provide a script file.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="178" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">DESCRIPTION</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Step</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="309" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Action</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="178" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">1</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="309" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User types in simulation command without indicating a script file in command-line.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="178" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">2</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="309" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator shows a window with a list of demo script files on UI.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="178" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">3</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="309" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User select one of the files by clicking one file in the list.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="178" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">4</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="309" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator closes the selection window.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;
+	</p>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;
+	</p>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;
+	</p>
+	<p class="MsoNormal" style="text-align:center;">
+		<div id="use case 7"><b>Use case 7: </b><b>User wants to move camera</b><b></b></div>
+	</p>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;
+	</p>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;
+	</p>
+	<table class="MsoNormalTable" align="center" style="text-align:center;width:337.7pt;">
+		<tbody>
+			<tr>
+				<td width="178" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">USE CASE 7</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="384" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Move Camera</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="178" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Goal in Context</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="384" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User wants to adjust the view camera during simulation</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="178" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Scope &amp; Level</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="384" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator, Sub function</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="178" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Preconditions</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="384" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator has started simulation, simulation is running.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="178" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Success End Condition</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="384" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator gets the view camera adjusted according to user control.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="178" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Failed End Condition</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="384" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator doesn’t adjust view camera according to user control.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="178" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Primary,</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Secondary Actors</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="384" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User of this simulator</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="178" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Trigger</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="384" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User uses mouse dragging during simulation to control view camera.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="178" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">DESCRIPTION</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Step</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="309" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Action</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="178" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">1</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="309" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User uses mouse dragging inside simulation window</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="178" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">2</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="309" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator adjusts simulation view camera according to user’s action.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;
+	</p>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;
+	</p>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;<div id="use case 8"><b>Use case 8: </b><b>User wants to adjust simulation speed</b><b></b></div>
+	</p>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;
+	</p>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;
+	</p>
+	<table class="MsoNormalTable" align="center" style="text-align:center;width:337.7pt;">
+		<tbody>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">USE CASE 8</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Adjust Simulation Speed</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Goal in Context</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User wants to adjust the speed during simulation</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Scope &amp; Level</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator, Sub function</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Preconditions</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator has started simulation, simulation is running</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Success End Condition</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator gets the simulation speed adjusted according to user control.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Failed End Condition</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator doesn’t adjust simulation speed according to user control.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Primary,</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Secondary Actors</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User of this simulator</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Trigger</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User adjusts the speed control bar in UI during simulation to control speed.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">DESCRIPTION</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Step</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Action</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">1</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User mouse drags the speed control bar during simulation.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">2</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator adjusts simulation speed per user’s action.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;
+	</p>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;<div id="use case 9"><b>Use case 9: </b><b>User wants to stop simulation</b><b></b></div>
+	</p>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;
+	</p>
+	<p class="MsoNormal" style="text-align:center;">
+		&nbsp;
+	</p>
+	<table class="MsoNormalTable" align="center" style="text-align:center;width:337.7pt;">
+		<tbody>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">USE CASE 9</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Stop simulation</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Goal in Context</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User wants to stop during simulation</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Scope &amp; Level</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator, Sub function</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Preconditions</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator has started simulation, simulation is running</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Success End Condition</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator stops the simulation.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Failed End Condition</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator doesn’t stop the simulation.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Primary,</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Secondary Actors</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User of this simulator</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Trigger</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="385" valign="top" colspan="2" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User clicks stop button during simulation to stop.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">DESCRIPTION</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Step</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Action</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">1</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">User clicks stop button in the UI.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+			<tr>
+				<td width="177" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">&nbsp;</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="74" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">2</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+				<td width="310" valign="top" style="border:1.0000pt solid #000000;">
+					<p class="MsoNormal">
+						<span style="font-family:Calibri;font-size:12.0000pt;">Simulator stops the simulation.</span><span style="font-family:Calibri;font-size:12.0000pt;"></span>
+					</p>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+    
+    
+	
+<footer>
+  <div class="">
+    <p> &copy; Copyright Robot VR Team. All Rights Reserved.</p>
+  </div>
+</footer>
+</div>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+/*
+*滚动条滑动，位置不变的DIV层
+*div_id：DIV的ID属性值，必填参数
+*offsetTop：滚动条滑动时DIV层距顶部的高度，可选参数
+*/
+function fixDiv(div_id, offsetTop) {
+var Obj = $('#' + div_id);
+//判断元素是否存在 何问起
+if (Obj.length != 1) { return false; }
+
+var offsetTop = arguments[1] ? arguments[1] : 0;
+var ObjTop = Obj.offset().top;
+
+
+$(window).scroll(function () {
+if ($(window).scrollTop() <= ObjTop) {
+Obj.css({
+'position': 'relative',
+"top": 0
+});
+} else {
+Obj.css({
+'position': 'fixed',
+'top': 0 + offsetTop + 'px',
+'z-index': 10
+});
+}
+});
+}
+fixDiv('floats', 5);//顶端浮动并于顶端保持5px的间距
+</body>
+</html>
