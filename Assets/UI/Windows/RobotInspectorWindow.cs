@@ -6,6 +6,10 @@ public class RobotInspectorWindow : MonoBehaviour {
 
     public Robot robot;
 
+    // Robot identifiers
+    [SerializeField]
+    private Text robotNumber, robotName, robotBinaryName;
+
     // Sensor variables
     [SerializeField]
     private Text psdFrontValue, psdLeftValue, psdRightValue;
@@ -18,6 +22,7 @@ public class RobotInspectorWindow : MonoBehaviour {
     [SerializeField]
     private InputField robotXValue, robotZValue, robotPhiValue;
 
+    // Icon Images
     public Image lockButtonImage;
     public Sprite lockedImage;
     public Sprite unlockedImage;
@@ -30,6 +35,8 @@ public class RobotInspectorWindow : MonoBehaviour {
             cameraTarget.texture = cameraToDisplay.rendTex;
         }
         lockButtonImage.sprite = robot.locked ? lockedImage : unlockedImage;
+        robotNumber.text = "ID # " + robot.objectID.ToString();
+        robotName.text = robot.name;
     }
 	
 	// Update is called once per frame
@@ -61,5 +68,10 @@ public class RobotInspectorWindow : MonoBehaviour {
     {
         robot.isWindowOpen = false;
         Destroy(gameObject);
+    }
+
+    public void AddRobotControl()
+    {
+        UIManager.instance.LoadControlProgram(robot);
     }
 }

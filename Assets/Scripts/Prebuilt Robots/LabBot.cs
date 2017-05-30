@@ -21,12 +21,6 @@ public class LabBot : Robot,
 
     Action<RobotConnection> driveDoneDelegate;
 
-    // Initialize commands
-    private void Awake()
-    {
-
-    }
-
     // This function sets the controllers for a newly created LabBot object
     // Used when a robot is created from file
     public void Initialize()

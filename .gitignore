@@ -23,7 +23,7 @@ ExportedObj/
 *.svd
 *.pdb
 
-!/Asset/Prefabs/*
+!/Asset/*
 
 # Unity3D generated meta files
 *.pidb.meta

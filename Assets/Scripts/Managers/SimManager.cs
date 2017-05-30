@@ -12,7 +12,7 @@ public class SimManager : MonoBehaviour {
 
     public GameObject world;
 
-    private int totalObjects = 0;
+    private int totalObjects = 1;
 
     private void Awake()
     {
@@ -43,13 +43,14 @@ public class SimManager : MonoBehaviour {
     public void SetSimulationSpeed(float simSpeed)
     {
         float newTimeScale = Mathf.Clamp(simSpeed, 0, 2.0f);
-        Time.timeScale = simSpeed;
-        Time.fixedDeltaTime = 0.02f * Time.timeScale;
+        Time.timeScale = newTimeScale;
+        //Time.fixedDeltaTime = 0.02f * Time.timeScale;
         Debug.Log(simSpeed);
     }
 
     public void AddRobotToList(Robot robot)
     {
+        robot.objectID = totalObjects;
         allRobots.Add(robot);
         ViewRobotsWindow.instance.AddRobotToDisplayList(robot);
     }
@@ -58,7 +59,8 @@ public class SimManager : MonoBehaviour {
     {
         allWorldObjects.Add(worldObj);
     }
-
+    
+    // TODO: Pause and Resume
     public void PauseSimulation()
     {
 
@@ -67,11 +69,5 @@ public class SimManager : MonoBehaviour {
     public void ResumeSimulation()
     {
 
-    }
-
-    public void CloseSimulator()
-    {
-        Debug.Log("Quitting");
-        Application.Quit();
     }
 }

@@ -98,4 +98,9 @@ public class MenuBarItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         if (!isSubmenuOpen)
             image.color = defaultColor;
     }
+
+    private void OnDisable()
+    {
+        image.color = defaultColor;
+    }
 }

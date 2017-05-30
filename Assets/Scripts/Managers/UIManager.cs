@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour {
 
     public FileFinder worldFileFinder;
     public FileFinder robotFileFinder;
+    public FileFinder controlFileFinder;
 
 	private Button loadworld;
 	private Button loadrobot;
@@ -52,4 +53,19 @@ public class UIManager : MonoBehaviour {
 		blockingPanel.SetActive(false);
 	}
 
+    public void LoadWorldFile()
+    {
+        worldFileFinder.OpenFileSelection();
+    }
+
+    public void LoadRobotFile()
+    {
+        robotFileFinder.OpenFileSelection();
+    }
+
+    public void LoadControlProgram(Robot robot)
+    {
+        controlFileFinder.Initialise("*.exe", robot);
+        controlFileFinder.OpenFileSelection();
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using RobotComponents;
@@ -60,10 +61,12 @@ public class Speed
 }
 // Abstract robot
 // Universal functions
-public abstract class Robot : PlaceableObject, IPointerClickHandler
+public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiver
 {
     public int axels = 0;
+
     public RobotConnection myConnection = null;
+    public string controlBinaryPath = "Unknown";
 
     override public void OnPointerClick(PointerEventData eventData)
     {
@@ -73,5 +76,17 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler
             objectSelector.DisplayRobotInfoWindow(this);
         }
         base.OnPointerClick(eventData);
+    }
+
+    // Exectue a control program - Receives path to control
+    public GameObject ReceiveFile(string filepath)
+    {
+        ProcessStartInfo startInfo = new ProcessStartInfo();
+        startInfo.EnvironmentVariables["DISPLAY"] = ":0";
+        startInfo.UseShellExecute = false;
+        startInfo.FileName = filepath;
+        ServerManager.instance.testBot = this;
+        Process.Start(startInfo);
+        return null;
     }
 }

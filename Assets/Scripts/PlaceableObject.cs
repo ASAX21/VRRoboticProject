@@ -21,6 +21,10 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
     public int currLayer = 0;
 	public int collisionCount = 0;
 
+    // Physics
+    public Vector3 centreOfMass;
+
+    // List of all materials
     public List<MaterialContainer> matContainer;
     private Material validMat;
     private Material invalidMat;
@@ -32,6 +36,14 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
 
     // UI Variables
     public bool isWindowOpen = false;
+
+    private void Awake()
+    {
+        if (centreOfMass != null)
+        {
+            GetComponent<Rigidbody>().centerOfMass = centreOfMass;
+        }
+    }
 
     private void Start()
     {

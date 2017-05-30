@@ -17,6 +17,8 @@ public class ViewRobotsWindow : MonoBehaviour {
             instance = this;
         else
             Destroy(this);
+
+        gameObject.SetActive(false);
     }
 
     private void Start()
@@ -26,6 +28,6 @@ public class ViewRobotsWindow : MonoBehaviour {
 
     public void AddRobotToDisplayList(Robot robot)
     {
-        GameObject newButton = Instantiate(robotButtonPrefab, robotWindow, false);
+        Instantiate(robotButtonPrefab, robotWindow, false);
     }
 }
