@@ -75,7 +75,8 @@ public class Interpreter {
         if(conn.robot is IServoSettable)
         {
             int servo = recv[1] - 1;
-            int angle = recv[2];
+            int angle = Convert.ToInt32((sbyte)recv[2]);
+            Debug.Log("interp receive servo: " + angle);
             (conn.robot as IServoSettable).SetServo(servo, angle);
         }
         else

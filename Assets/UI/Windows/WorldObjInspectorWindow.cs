@@ -37,6 +37,12 @@ public class WorldObjInspectorWindow : MonoBehaviour {
         objPhiValue.readOnly = worldObj.locked;
     }
 
+    public void DeleteObject()
+    {
+        Destroy(worldObj.gameObject);
+        Destroy(gameObject);
+    }
+
     public void CloseWindow()
     {
         worldObj.isWindowOpen = false;
