@@ -31,7 +31,7 @@
 <section>
   <div class="container" >
     <ul class="docs-nav">
-      <li><strong>Use Cases</strong></li>
+      <li><strong>User Perspective</strong></li>
       <li><a href="#StartSimulator" class="cc-active">Start Simulator</a></li>
       <li><a href="#SelectRobot" class="cc-active">Select Robot</a></li>
       <li><a href="#DeleteRobot" class="cc-active">Delete Robot</a></li>
@@ -45,6 +45,8 @@
       <li><a href="#PauseSimulation" class="cc-active">Pause Simulation</a></li>
       <li><a href="#ResumeSimulation" class="cc-active">Resume Simulation</a></li>
       <li><a href="#PlaceObjects" class="cc-active">Place Objects</a></li>
+      <li class="separator"></li> 
+      <li><strong>Advanced User Perspective</strong></li>
       <li><a href="#ExecuteSimulationScript" class="cc-active">Execute Simulation Script</a></li>
     </ul>
       
@@ -271,7 +273,15 @@ Branching Action
 </td>
 <td>
 X or y value is too large (exceeds the dimensions of floor) or x or y is not a number.
-5a1. Simulator show error messages
+</td>
+</tr>
+<tr>
+<td>
+  </td>
+<td>5a1
+  </td>
+<td>
+Simulator show error messages
 </td>
 </tr>
 <tr>
@@ -283,7 +293,15 @@ X or y value is too large (exceeds the dimensions of floor) or x or y is not a n
 </td>
 <td>
 User mouse cursor with robot is beyond the limits of environment when user clicks mouse button to place the robot.
-5b1. The robot becomes red, indicating the wrong place to put the robot.
+</td>
+</tr>
+<tr>
+<td>
+  </td>
+<td>5b1
+  </td>
+<td>
+The robot becomes red, indicating the wrong place to put the robot.
 </td>
 </tr>
 <tr>
@@ -293,7 +311,15 @@ User mouse cursor with robot is beyond the limits of environment when user click
 </td>
 <td>
 User want to delete the created robot by by right clicking the robot and click &ldquo;delete robot&rdquo; button.
-6a1. Use Case 5
+</td>
+</tr>
+<tr>
+<td>
+  </td>
+<td>6a1
+  </td>
+<td>
+Use Case 5
 </td>
 </tr>
 <tr>
@@ -305,7 +331,15 @@ User want to delete the created robot by by right clicking the robot and click &
 </td>
 <td>
 User inspect the current robot position by right clicking the robot.
-6b1. Use Case 6
+</td>
+</tr>
+<tr>
+<td>
+  </td>
+<td>6b1
+  </td>
+<td>
+Use Case 6
 </td>
 </tr>
 <tr>
@@ -317,7 +351,15 @@ User inspect the current robot position by right clicking the robot.
 </td>
 <td>
 User add client to the current robot by right clicking the robot and click &ldquo;add client&rdquo; button.
-6c1. Use Case 7
+</td>
+</tr>
+<tr>
+<td>
+  </td>
+<td>6c1
+  </td>
+<td>
+Use Case 7
 </td>
 </tr>
 <tr>
@@ -329,7 +371,15 @@ User add client to the current robot by right clicking the robot and click &ldqu
 </td>
 <td>
 User add script to the current robot by right clicking the robot and click &ldquo;add script&rdquo; button.
-6c1. Use Case 8
+</td>
+</tr>
+<tr>
+<td>
+  </td>
+<td>6c1
+  </td>
+<td>
+Use Case 8
 </td>
 </tr>
 <tr>
@@ -339,7 +389,15 @@ User add script to the current robot by right clicking the robot and click &ldqu
 </td>
 <td>
 User relocate the robot by right clicking the robot and input a new X and Y value.
-7a1. Use Case 9
+</td>
+</tr>
+<tr>
+<td>
+  </td>
+<td>7a1
+  </td>
+<td>
+Use Case 9
 </td>
 </tr>
 
@@ -823,7 +881,14 @@ Branching Action
 </td>
 <td>
 The selected script file doesn&rsquo;t pass the compilation.
-5a1. User gets notified with an error message.
+</td>
+</tr>
+<tr>
+<td>
+  </td>
+<td>5a1
+  </td>
+<td>User gets notified with an error message.
 </td>
 </tr>
 
@@ -973,7 +1038,14 @@ Branching Action
 </td>
 <td>
 X or y value is too large (exceeds the dimensions of floor) or x or y or phi is not a number.
-5a1. Simulator show error messages
+</td>
+</tr>
+<tr>
+<td>
+  </td>
+<td>5a1
+  </td>
+<td>Simulator show error messages
 </td>
 </tr>
 
@@ -1092,11 +1164,46 @@ Branching Action
 </td>
 <td>
 User opens client window and click client buttons
-1a1 User right click on the robot and inspector window is showing
-1a2 User click the &ldquo;show client&rdquo; button in the inspector window
-1a3 Simulator pops up a client window showing LCD screen and 4 buttons
-1a4 User can interact with robot by clicking on the 4 buttons if programed in the script.
-1a5 Robot behaves responding to client button clicking. 
+</td>
+</tr>
+<tr>
+<td>
+  </td>
+<td>1a1
+  </td>
+<td>User right click on the robot and inspector window is showing
+</td>
+</tr>
+<tr>
+<td>
+  </td>
+<td>1a2
+  </td>
+<td>User click the &ldquo;show client&rdquo; button in the inspector window
+</td>
+</tr>
+<tr>
+<td>
+  </td>
+<td>1a3
+  </td>
+<td>Simulator pops up a client window showing LCD screen and 4 buttons
+</td>
+</tr>
+<tr>
+<td>
+  </td>
+<td>1a4
+  </td>
+<td>User can interact with robot by clicking on the 4 buttons if programed in the script.
+</td>
+</tr>
+<tr>
+<td>
+  </td>
+<td>1a5
+  </td>
+<td>Robot behaves responding to client button clicking. 
 </td>
 </tr>
 
@@ -1821,7 +1928,14 @@ Branching Action
 </td>
 <td>
 X or y value is too large (exceeds the dimensions of floor) or x or y is not a number.
-6a1. Simulator show error messages
+</td>
+</tr>
+<tr>
+<td>
+  </td>
+<td>6a1
+  </td>
+<td>Simulator show error messages
 </td>
 </tr>
 <tr>
@@ -1833,7 +1947,14 @@ X or y value is too large (exceeds the dimensions of floor) or x or y is not a n
 </td>
 <td>
 User mouse cursor with object is beyond the limits of environment when user clicks mouse button to place the object.
-6b1. The object becomes red, indicating the wrong place to put the robot.
+</td>
+</tr>
+<tr>
+<td>
+  </td>
+<td>6b1
+  </td>
+<td>The object becomes red, indicating the wrong place to put the robot.
 </td>
 </tr>
 
