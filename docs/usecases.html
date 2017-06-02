@@ -321,7 +321,7 @@ User want to delete the created robot by double clicking the robot and click &ld
 <td>6a1
   </td>
 <td>
-Use Case 5
+Use Case 3
 </td>
 </tr>
 <tr>
@@ -341,7 +341,7 @@ User inspect the current robot position by double clicking the robot.
 <td>6b1
   </td>
 <td>
-Use Case 6
+Use Case 4
 </td>
 </tr>
 <tr>
@@ -361,7 +361,7 @@ User add client to the current robot by double clicking the robot and click &ldq
 <td>6c1
   </td>
 <td>
-Use Case 6
+Use Case 5
 </td>
 </tr>
 <tr>
@@ -370,7 +370,7 @@ Use Case 6
 7a
 </td>
 <td>
-User relocate the robot by right clicking the robot and input a new X and Y value.
+User relocate the robot by double clicking the robot and input a new X and Y value.
 </td>
 </tr>
 <tr>
@@ -379,7 +379,7 @@ User relocate the robot by right clicking the robot and input a new X and Y valu
 <td>7a1
   </td>
 <td>
-Use Case 8
+Use Case 6
 </td>
 </tr>
 
@@ -450,7 +450,7 @@ Normal User of this simulator
 Trigger
 </td>
 <td colspan="2">
-User clicks the &ldquo;delete robot &ldquo; button on the inspector panel showing after right click the target robot.
+User clicks the &ldquo;delete robot &ldquo; button on the inspector panel showing after double clicking the target robot.
 </td>
 </tr>
 <tr>
@@ -468,7 +468,7 @@ Action
 1
 </td>
 <td>
-User opens the inspector panel by right clicking the robot.
+User opens the inspector panel by double clicking the robot.
 </td>
 </tr>
 <tr>
@@ -558,7 +558,7 @@ Normal User of this simulator
 Trigger
 </td>
 <td colspan="2">
-User right clicks a robot in the environment.
+User double clicks a robot in the environment.
 </td>
 </tr>
 <tr>
@@ -576,7 +576,7 @@ Action
 1
 </td>
 <td>
-User opens the inspector panel by right clicking the robot.
+User opens the inspector panel by double clicking the robot.
 </td>
 </tr>
 <tr>
@@ -597,6 +597,7 @@ Simulator pops up a inspector panel showing the current (x, y) coordinates and r
 User inspects the current position of the robot
 </td>
 </tr>
+
 
 </table>
 
@@ -666,7 +667,7 @@ Normal User of this simulator
 Trigger
 </td>
 <td colspan="2">
-User clicks the &ldquo;add client&ldquo; button on the inspector panel showing after right click the target robot.
+User clicks the &ldquo;add client&ldquo; button on the inspector panel showing after double click the target robot.
 </td>
 </tr>
 <tr>
@@ -684,7 +685,7 @@ Action
 1
 </td>
 <td>
-User opens the inspector panel by right clicking the robot.
+User opens the inspector panel by double clicking the robot.
 </td>
 </tr>
 <tr>
@@ -702,7 +703,63 @@ User clicks the button &ldquo;add client&rdquo; on the panel.
 3
 </td>
 <td>
-Simulator will add client to the current robot.
+User select one script in the default demo script folder  to run using the file picker.
+</td>
+</tr>
+<tr>
+<td></td>
+<td>
+4
+</td>
+<td>
+User can also select the script file created by the User.
+</td>
+</tr>
+</tr>
+<tr>
+<td></td>
+<td>
+5
+</td>
+<td>
+Simulator checks the script and compile it.
+</td>
+</tr>
+</tr>
+<tr>
+<td></td>
+<td>
+6
+</td>
+<td>
+Simulator attaches the script to the robot.
+</td>
+</tr>
+<tr>
+<td>
+EXTENSIONS
+</td>
+<td style="width:8%">Step</td>
+<td>
+Branching Action
+</td>
+</tr>
+<tr>
+<td></td>
+<td>
+5a
+</td>
+<td>
+The selected script file doesn’t pass the compilation.
+</td>
+</tr>
+<tr>
+<td></td>
+<td>
+5a1
+</td>
+<td>
+User gets notified with an error message.
 </td>
 </tr>
 
@@ -777,7 +834,7 @@ Normal User of this simulator
 Trigger
 </td>
 <td colspan="2">
-User put in new coordinate values (x, y) and(or) new rotation phi, on the inspector panel showing after right click the target robot.
+User put in new coordinate values (x, y) and(or) new rotation phi, on the inspector panel showing after double clicking the target robot.
 </td>
 </tr>
 <tr>
@@ -795,7 +852,7 @@ Action
 1
 </td>
 <td>
-User opens the inspector panel by right clicking the robot.
+User opens the inspector panel by double clicking the robot.
 </td>
 </tr>
 <tr>
@@ -899,7 +956,7 @@ Simulator, Primary Task
 Preconditions
 </td>
 <td colspan="2">
-Simulator is running, simulator has got the user-intended world/maze file, robot has been selected by user, script file and client has been attached to the robot.
+Simulator is running, simulator has got the user-intended world/maze file, robot has been selected by user, client has been attached to the robot.
 </td>
 </tr>
 <tr>
@@ -974,12 +1031,11 @@ Branching Action
 </td>
 </tr>
 <tr>
-<td></td>
 <td>
-1a
-</td>
-<td>
-User opens client window and click client buttons
+  </td>
+<td>1a
+  </td>
+<td>User double click on the robot and inspector window is showing
 </td>
 </tr>
 <tr>
@@ -987,7 +1043,7 @@ User opens client window and click client buttons
   </td>
 <td>1a1
   </td>
-<td>User right click on the robot and inspector window is showing
+<td>Simulator pops up a client window showing LCD screen and 4 buttons
 </td>
 </tr>
 <tr>
@@ -995,29 +1051,13 @@ User opens client window and click client buttons
   </td>
 <td>1a2
   </td>
-<td>User click the &ldquo;show client&rdquo; button in the inspector window
-</td>
-</tr>
-<tr>
-<td>
-  </td>
-<td>1a3
-  </td>
-<td>Simulator pops up a client window showing LCD screen and 4 buttons
-</td>
-</tr>
-<tr>
-<td>
-  </td>
-<td>1a4
-  </td>
 <td>User can interact with robot by clicking on the 4 buttons if programed in the script.
 </td>
 </tr>
 <tr>
 <td>
   </td>
-<td>1a5
+<td>1a3
   </td>
 <td>Robot behaves responding to client button clicking. 
 </td>
@@ -2030,7 +2070,7 @@ Simulator stops simulation after script is finished.
 </tr>
 <tr>
 <td>Trigger</td>
-<td colspan="2">User clicks the &ldquo;add trace &ldquo; button on the inspector panel showing after right click the target robot.</td>
+<td colspan="2">User clicks the &ldquo;add trace &ldquo; button on the inspector panel showing after double clicking the target robot.</td>
 </tr>
 <tr>
 <td>DESCRIPTION</td>
@@ -2040,7 +2080,7 @@ Simulator stops simulation after script is finished.
 <tr>
 <td>&nbsp;</td>
 <td>1</td>
-<td>User opens the inspector panel by right clicking the robot.</td>
+<td>User opens the inspector panel by double clicking the robot.</td>
 </tr>
 <tr>
 <td>&nbsp;</td>
