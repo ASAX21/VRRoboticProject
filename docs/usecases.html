@@ -44,6 +44,7 @@
       <li><a href="#AdjustSimulationSpeed" class="cc-active">Adjust Simulation Speed</a></li>
       <li><a href="#PauseSimulation" class="cc-active">Pause Simulation</a></li>
       <li><a href="#ResumeSimulation" class="cc-active">Resume Simulation</a></li>
+      <li><a href="#StopSimulation" class="cc-active">Stop Simulation</a></li>
       <li><a href="#PlaceObjects" class="cc-active">Place Objects</a></li>
       <li class="separator"></li> 
       <li><strong>Advanced User Perspective</strong></li>
@@ -360,7 +361,7 @@ User add client to the current robot by right clicking the robot and click &ldqu
 <td>6c1
   </td>
 <td>
-Use Case 7
+Use Case 6
 </td>
 </tr>
 <tr>
@@ -380,7 +381,7 @@ User add script to the current robot by right clicking the robot and click &ldqu
 <td>6c1
   </td>
 <td>
-Use Case 8
+Use Case 7
 </td>
 </tr>
 <tr>
@@ -398,7 +399,7 @@ User relocate the robot by right clicking the robot and input a new X and Y valu
 <td>7a1
   </td>
 <td>
-Use Case 9
+Use Case 8
 </td>
 </tr>
 
@@ -727,180 +728,14 @@ Simulator will add client to the current robot.
 
 </table>
 
-<h3 id="AddScript"> Add Script</h3>
-    <table style="width:100%">
 
-<tr>
-<th style="width:30%">
-Use Case 6
-</th>
-<th colspan="2">
-Add Script
-</th>
-</tr>
-<tr>
-<td>
-Goal in Context
-</td>
-<td colspan="2">
-User wants to add script to selected robot
-
-</td>
-</tr>
-<tr>
-<td>
-Scope &amp; Level
-</td>
-<td colspan="2">
-Simulator, Sub function
-</td>
-</tr>
-<tr>
-<td>
-Preconditions
-</td>
-<td colspan="2">
-Robot has been selected and placed in environment.
-</td>
-</tr>
-<tr>
-<td>
-Success End Condition
-</td>
-<td colspan="2">
-Simulator checks the script and attaches a script to the specified robot.
-</td>
-</tr>
-<tr>
-<td>
-Failed End Condition
-</td>
-<td colspan="2">
-Simulator doesn&rsquo;t attach a script to the robot.
-Simulator doesn&rsquo;t check the script properly, it causes some internal errors.
-</td>
-</tr>
-<tr>
-<td>
-Primary,
-Secondary Actors
-</td>
-<td colspan="2">
-Normal User of this simulator
-</td>
-</tr>
-<tr>
-<td>
-Trigger
-</td>
-<td colspan="2">
-User clicks the &ldquo;add script&ldquo; button on the inspector panel showing after right click the target robot.
-</td>
-</tr>
-<tr>
-<td>
-DESCRIPTION
-</td>
-<td style="width:8%">Step</td>
-<td>
-Action
-</td>
-</tr>
-<tr>
-<td></td>
-<td>
-1
-</td>
-<td>
-User opens the inspector panel by right clicking the robot.
-</td>
-</tr>
-<tr>
-<td></td>
-<td>
-2
-</td>
-<td>
-User clicks the button &ldquo;add script&rdquo; on the panel.
-</td>
-</tr>
-<tr>
-<td></td>
-<td>
-3
-</td>
-<td>
-User select one script in the default demo script folder to run using the file picker.
-</td>
-</tr>
-<tr>
-<td>
-
-</td>
-<td>
-4
-</td>
-<td>
-User can also select the script file created by the User.
-</td>
-</tr>
-<tr>
-<td>
-
-</td>
-<td>
-5
-</td>
-<td>
-Simulator checks the script and compile it.
-</td>
-</tr>
-<tr>
-<td>
-
-</td>
-<td>
-6
-</td>
-<td>
-Simulator attaches the script to the robot.
-</td>
-</tr>
-<tr>
-<td>
-EXTENSIONS
-</td>
-<td style="width:8%">Step</td>
-<td>
-Branching Action
-</td>
-</tr>
-<tr>
-<td></td>
-<td>
-5a
-</td>
-<td>
-The selected script file doesn&rsquo;t pass the compilation.
-</td>
-</tr>
-<tr>
-<td>
-  </td>
-<td>5a1
-  </td>
-<td>User gets notified with an error message.
-</td>
-</tr>
-
-</table>
 
 <h3 id="EditRobotParameters">Edit Robot Parameters</h3>
     <table style="width:100%">
 
 <tr>
 <th style="width:30%">
-Use Case 7
+Use Case 6
 </th>
 <th colspan="2">
 Edit Robot Parameters
@@ -1057,7 +892,7 @@ X or y value is too large (exceeds the dimensions of floor) or x or y or phi is 
 
 <tr>
 <th style="width:30%">
-Use Case 8
+Use Case 7
 </th>
 <th colspan="2">
 Start Simulation
@@ -1215,7 +1050,7 @@ User opens client window and click client buttons
 
 <tr>
 <th style="width:30%">
-Use Case 9
+Use Case 8
 </th>
 <th colspan="2">
 Add Errors
@@ -1349,7 +1184,7 @@ Simulator show &ldquo;add error successfully&rdquo; message
 
 <tr>
 <th style="width:30%">
-Use Case 10
+Use Case 9
 </th>
 <th colspan="2">
 Move Camera
@@ -1447,7 +1282,7 @@ Simulator adjusts simulation view camera according to user&rsquo;s action.
 
 <tr>
 <th style="width:30%">
-Use Case 11
+Use Case 10
 </th>
 <th colspan="2">
 Adjust Simulation Speed
@@ -1545,7 +1380,7 @@ Simulator adjusts simulation speed according to user&rsquo;s action.
 
 <tr>
 <th style="width:30%">
-Use Case 12
+Use Case 11
 </th>
 <th colspan="2">
 Pause Simulation
@@ -1654,7 +1489,7 @@ The &ldquo;pause&rdquo; button in the UI becomes &ldquo;resume&rdquo; button
 
 <tr>
 <th style="width:30%">
-Use Case 13
+Use Case 12
 </th>
 <th colspan="2">
 Resume Simulation
@@ -1758,12 +1593,112 @@ The &ldquo;resume&rdquo; button on the UI becomes &ldquo;pause&rdquo; button
 
 </table>
 
-<h3 id="PlaceObjects">Place Objects</h3>
+<h3 id="StopSimulation"> Stop Simulation</h3>
     <table style="width:100%">
 
 <tr>
 <th style="width:30%">
 Use Case 14
+</th>
+<th colspan="2">
+Stop Simulation
+</th>
+</tr>
+<tr>
+<td>
+Goal in Context
+</td>
+<td colspan="2">
+User wants to stop during simulation
+</td>
+</tr>
+<tr>
+<td>
+Scope &amp; Level
+</td>
+<td colspan="2">
+Simulator, Sub function
+</td>
+</tr>
+<tr>
+<td>
+Preconditions
+</td>
+<td colspan="2">
+Simulator has started simulation, simulation is running
+</td>
+</tr>
+<tr>
+<td>
+Success End Condition
+</td>
+<td colspan="2">
+Simulator stops the simulation.
+</td>
+</tr>
+<tr>
+<td>
+Failed End Condition
+</td>
+<td colspan="2">
+Simulator doesn&rsquo;t stop the simulation.
+</td>
+</tr>
+<tr>
+<td>
+Primary,
+Secondary Actors
+</td>
+<td colspan="2">
+User of this simulator
+</td>
+</tr>
+<tr>
+<td>
+Trigger
+</td>
+<td colspan="2">
+User clicks stop button during simulation to stop.
+</td>
+</tr>
+<tr>
+<td>
+DESCRIPTION
+</td>
+<td style="width:8%">
+Step
+</td>
+<td>
+Action
+</td>
+</tr>
+<tr>
+<td></td>
+<td>
+1
+</td>
+<td>
+User clicks stop button in the UI.
+</td>
+</tr>
+<tr>
+<td></td>
+<td>
+2
+</td>
+<td>
+Simulator stops the simulation.
+</td>
+</tr>
+
+</table>
+
+<h3 id="PlaceObjects">Place Objects</h3>
+    <table style="width:100%">
+
+<tr>
+<th style="width:30%">
+Use Case 13
 </th>
 <th colspan="2">
 Place Objects
@@ -1961,112 +1896,14 @@ User mouse cursor with object is beyond the limits of environment when user clic
 
 </table>
 
-<h3 id="StopSimulation"> Stop Simulation</h3>
-    <table style="width:100%">
 
-<tr>
-<th style="width:30%">
-Use Case 15
-</th>
-<th colspan="2">
-Stop Simulation
-</th>
-</tr>
-<tr>
-<td>
-Goal in Context
-</td>
-<td colspan="2">
-User wants to stop during simulation
-</td>
-</tr>
-<tr>
-<td>
-Scope &amp; Level
-</td>
-<td colspan="2">
-Simulator, Sub function
-</td>
-</tr>
-<tr>
-<td>
-Preconditions
-</td>
-<td colspan="2">
-Simulator has started simulation, simulation is running
-</td>
-</tr>
-<tr>
-<td>
-Success End Condition
-</td>
-<td colspan="2">
-Simulator stops the simulation.
-</td>
-</tr>
-<tr>
-<td>
-Failed End Condition
-</td>
-<td colspan="2">
-Simulator doesn&rsquo;t stop the simulation.
-</td>
-</tr>
-<tr>
-<td>
-Primary,
-Secondary Actors
-</td>
-<td colspan="2">
-User of this simulator
-</td>
-</tr>
-<tr>
-<td>
-Trigger
-</td>
-<td colspan="2">
-User clicks stop button during simulation to stop.
-</td>
-</tr>
-<tr>
-<td>
-DESCRIPTION
-</td>
-<td style="width:8%">
-Step
-</td>
-<td>
-Action
-</td>
-</tr>
-<tr>
-<td></td>
-<td>
-1
-</td>
-<td>
-User clicks stop button in the UI.
-</td>
-</tr>
-<tr>
-<td></td>
-<td>
-2
-</td>
-<td>
-Simulator stops the simulation.
-</td>
-</tr>
-
-</table>
 
 <h3 id="ExecuteSimulationScript">Execute Simulation Script</h3>
     <table style="width:100%">
 
 <tr>
 <th style="width:30%">
-Use Case 16
+Use Case 15
 </th>
 <th colspan="2">
 Execute Simulation Script
@@ -2184,7 +2021,7 @@ Simulator stops simulation after script is finished.
 <h3 id="AddTrace">Add Trace</h3>
     <table style="width:100%">
 <tr>
-<th>Use Case 17</th>
+<th>Use Case 16</th>
 <th colspan="2">Add trace</th>
 </tr>
 <tr>
