@@ -64,27 +64,23 @@ public class MenuBarItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (hasSubmenu)
+		if (isSubmenuItem)
         {
-            OpenSubMenu();
-            currentOpenSubmenu = this;
+            parentItem.CloseSubMenu();
+            parentMenu.CloseMenu(); 
         }
-        else
-        {
-            if (isSubmenuItem)
-            {
-                parentItem.CloseSubMenu();
-                parentMenu.CloseMenu();
-                
-            }
-            image.color = defaultColor;
-            callback.Invoke();
-        }
+        image.color = defaultColor;
+        callback.Invoke();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (!isSubmenuItem)
+		if (hasSubmenu)
+		{
+			OpenSubMenu();
+			currentOpenSubmenu = this;
+		}
+        else if (!isSubmenuItem)
         {
             if(currentOpenSubmenu != null)
                 currentOpenSubmenu.CloseSubMenu();
@@ -94,6 +90,11 @@ public class MenuBarItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerExit(PointerEventData eventData)
     {
+		if (hasSubmenu)
+		{
+			CloseSubMenu();
+			currentOpenSubmenu = null;
+		}
         if (!isSubmenuOpen)
             image.color = defaultColor;
     }
