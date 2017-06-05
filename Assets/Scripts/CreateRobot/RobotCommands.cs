@@ -68,13 +68,6 @@ namespace RobotCommands
         UInt16 GetPSDValue(int psd);
     }
 
-    // Has internal Pose
-    public interface IPoseControl
-    {
-        void SetVehiclePose(int x, int y, int phi);
-        Pose GetVehiclePose();
-    }
-
     // ----- CONCRETE COMMANDS -----
 
     // Drive Motor
@@ -165,40 +158,6 @@ namespace RobotCommands
         }
     }
 
-    public class GetVehiclePoseCommand : ICommand<int>
-    {
-        private readonly IPoseControl _posable;
-        public Pose _pose { get; private set; }
-
-        public GetVehiclePoseCommand(IPoseControl posable)
-        {
-            _posable = posable;
-        }
-
-        public void Execute(int none)
-        {
-            // Capture return pose
-            _pose = _posable.GetVehiclePose();
-        }
-    }
-
-    public class SetVehiclePoseCommand : ICommand<int[]>
-    {
-        private readonly IPoseControl _posable;
-
-        public SetVehiclePoseCommand(IPoseControl posable)
-        {
-            _posable = posable;
-        }
-
-        public void Execute(int[] args)
-        {
-            // 0: x
-            // 1: y
-            // 2: phi
-            _posable.SetVehiclePose(args[0], args[1], args[2]);
-        }
-    }
     /*
     public class InitalizeVWControlCommand : ICommand<int[]>
     {

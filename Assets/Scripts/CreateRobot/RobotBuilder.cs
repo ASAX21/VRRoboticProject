@@ -21,7 +21,6 @@ public class RobotBuilder: MonoBehaviour, IFileReceiver{
     public GameObject ReceiveFile(string filepath)
     {
 		robotObject = new GameObject("Robot");
-		GameObject.Find ("UIManagers").GetComponent<UIManager> ().addButton (robotObject);
 		Rigidbody rb = robotObject.AddComponent<Rigidbody>();
 		rb.interpolation = RigidbodyInterpolation.None;
 		rb.mass = 1500;

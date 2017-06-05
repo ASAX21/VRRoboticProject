@@ -14,7 +14,7 @@ namespace RobotComponents
         public float value = 0;
 		public Camera cameraComponent;
    
-        private RenderTexture rendTex;
+        public RenderTexture rendTex;
         private Texture2D tex;
         private Rect rect;
 

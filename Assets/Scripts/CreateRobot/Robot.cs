@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
-
-public interface IPosable
-{
-    void SetPose(int x, int y, int phi);
-    Pose GetPose();
-}
+using UnityEngine.EventSystems;
+using RobotComponents;
 
 public interface IMotors
 {
@@ -50,6 +45,7 @@ public interface ICameras
 {
     byte[] GetCameraOutput(int camera);
     void SetCameraResolution(int camera, int width, int height);
+    EyeCamera GetCameraComponent(int camera);
 }
 // Class used to pass data back to client
 public class Speed
@@ -65,8 +61,32 @@ public class Speed
 }
 // Abstract robot
 // Universal functions
-public abstract class Robot : PlaceableObject
+public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiver
 {
     public int axels = 0;
+
     public RobotConnection myConnection = null;
+    public string controlBinaryPath = "Unknown";
+
+    override public void OnPointerClick(PointerEventData eventData)
+    {
+        if(eventData.clickCount > 1 && !isWindowOpen)
+        { 
+            isWindowOpen = true;
+            objectSelector.DisplayRobotInfoWindow(this);
+        }
+        base.OnPointerClick(eventData);
+    }
+
+    // Exectue a control program - Receives path to control
+    public GameObject ReceiveFile(string filepath)
+    {
+        ProcessStartInfo startInfo = new ProcessStartInfo();
+        startInfo.EnvironmentVariables["DISPLAY"] = ":0";
+        startInfo.UseShellExecute = false;
+        startInfo.FileName = filepath;
+        ServerManager.instance.testBot = this;
+        Process.Start(startInfo);
+        return null;
+    }
 }

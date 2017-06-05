@@ -1,18 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class SimManager : MonoBehaviour {
 
-    public static SimManager instance = null;
+    public static SimManager instance { get; private set; }
 
-	public ServerManager server;
+    public ServerManager server;
 
-    public List<PlaceableObject> allObjects;
+    public List<Robot> allRobots;
+    public List<WorldObject> allWorldObjects;
 
     public GameObject world;
 
-    private int totalObjects = 0;
+    private int totalObjects = 1;
 
     private void Awake()
     {
@@ -23,11 +23,51 @@ public class SimManager : MonoBehaviour {
     }
 
     private void Start() {
-        allObjects = new List<PlaceableObject>();
-	}
+        allRobots = new List<Robot>();
+        allWorldObjects = new List<WorldObject>();
+
+    }
     
+    // Find object by ID - Search robots first, then world objects
     public PlaceableObject GetObjectByID(int id)
     {
-        return allObjects.Find(x => x.objectID == id);
+        PlaceableObject toFind = allRobots.Find(x => x.objectID == id);
+        if(toFind == null)
+        {
+            toFind = allWorldObjects.Find(x => x.objectID == id);
+        }
+
+        return toFind;
+    }
+
+    public void SetSimulationSpeed(float simSpeed)
+    {
+        float newTimeScale = Mathf.Clamp(simSpeed, 0, 2.0f);
+        Time.timeScale = newTimeScale;
+        //Time.fixedDeltaTime = 0.02f * Time.timeScale;
+        Debug.Log(simSpeed);
+    }
+
+    public void AddRobotToList(Robot robot)
+    {
+        robot.objectID = totalObjects;
+        allRobots.Add(robot);
+        ViewRobotsWindow.instance.AddRobotToDisplayList(robot);
+    }
+
+    public void AddWorldObjectToScene(WorldObject worldObj)
+    {
+        allWorldObjects.Add(worldObj);
+    }
+    
+    // TODO: Pause and Resume
+    public void PauseSimulation()
+    {
+
+    }
+
+    public void ResumeSimulation()
+    {
+
     }
 }

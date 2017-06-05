@@ -4,22 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using RobotComponents;
 
-// Robot Pose
-[System.Serializable]
-public class Pose
-{
-    public int x;
-    public int y;
-    public int phi;
-
-    public Pose(int x, int y, int phi)
-    {
-        this.x = x;
-        this.y = y;
-        this.phi = phi;
-    }
-}
-
 public class WheelMotorController : MonoBehaviour
 {
     public List<Wheel> wheels; // the information about each individual wheel  
@@ -46,6 +30,16 @@ public class WheelMotorController : MonoBehaviour
     private void Awake()
     {
         Pos = new Vector3(0,0,0);
+    }
+
+    private void Update()
+    {
+        if (DriveDoneDelegate != null && !checkActive)
+        {
+            DriveDoneDelegate();
+            DriveDoneDelegate = null;
+        }
+
     }
 
     // Set the local PID Parameters
@@ -76,21 +70,29 @@ public class WheelMotorController : MonoBehaviour
         checkDrive();
     }
 
+    // Distance determines direction, always use absolute value of velocity
     public void DriveStraight(float distance, float velocity)
     {
         resetController();
         targetDist = distance;
         checkType = "distance";
-        SetSpeed(velocity, 0);
+        if (distance >= 0)
+            SetSpeed(Mathf.Abs(velocity), 0);
+        else
+            SetSpeed(-Mathf.Abs(velocity), 0);
         checkActive = true;
     }
 
+    // Positive rotation - anti-clockwise
     public void DriveTurn(float rotation, float velocity)
     {
         resetController();
         targetRot = rotation;
         checkType = "rotation";
-        SetSpeed(0, velocity);
+        if(rotation >= 0)
+            SetSpeed(0, -Mathf.Abs(velocity));
+        else
+            SetSpeed(0, Mathf.Abs(velocity));
         checkActive = true;
     }
 
@@ -185,7 +187,7 @@ public class WheelMotorController : MonoBehaviour
                     return;
                 break;
             case "rotation":
-                travelledRot += w;
+                travelledRot -= w;
                 if (Mathf.Sign(targetRot) * (targetRot - travelledRot) > 0)
                     return;
                 break;
@@ -197,9 +199,5 @@ public class WheelMotorController : MonoBehaviour
         SetSpeed(0, 0);
         checkActive = false;
         resetController();
-        if (DriveDoneDelegate != null)
-        {
-            DriveDoneDelegate();
-        }
     }
 }

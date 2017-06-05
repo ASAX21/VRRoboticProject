@@ -7,7 +7,7 @@ using UnityEngine;
 // Allows placement of objects at run-time
 public class ObjectManager : MonoBehaviour {
 
-    public static ObjectManager instance = null;
+    public static ObjectManager instance { get; private set; }
 
     public int totalObjects = 0;
 
@@ -16,8 +16,14 @@ public class ObjectManager : MonoBehaviour {
     public Material validMat;
     public Material invalidMat;
 
-    public GameObject placeableCylinder;
-    public GameObject placeableCube;
+    //  ----- Placeable object prefabs - spawned from Add Object menu -----
+    // World Object Prefabs
+    public GameObject cokeCanPrefab;
+    public GameObject soccerBallPrefab;
+
+    // Robot Prefabs
+    public GameObject labBotPrefab;
+    // ---------------------------------------------------------------------
 
     // Specific object currently being placed (one at a time strict)
     public PlaceableObject objectOnMouse;
@@ -42,20 +48,37 @@ public class ObjectManager : MonoBehaviour {
         ground = new Plane(new Vector3(0, 1, 0), new Vector3(0, 0, 0));
     }
 
-    public void AddTestObject()
+    // Add some object to scene
+    private void AddObjectToScene(GameObject prefab)
     {
-        GameObject testBot = Resources.Load("TestRobot") as GameObject;
-        objectOnMouse = Instantiate(testBot).GetComponent<PlaceableObject>();
+        PlaceableObject newObj = Instantiate(prefab).GetComponent<PlaceableObject>();
+        newObj.objectID = totalObjects;
+        totalObjects++;
+        if (newObj is Robot)
+            SimManager.instance.AddRobotToList(newObj as Robot);
+        else if (newObj is WorldObject)
+            SimManager.instance.AddWorldObjectToScene(newObj as WorldObject);
+        AddObjectToMouse(newObj);
     }
 
-    public void AddCylinderToScene()
+    // Specific object creators - called from Add Object menu
+    public void AddCokeCanToScene()
     {
-        PlaceableObject newCyl = Instantiate(placeableCylinder).GetComponent<PlaceableObject>();
-        newCyl.PostBuild();
-        newCyl.objectID = totalObjects;
-        totalObjects++;
-        AddObjectToMouse(newCyl);
+        AddObjectToScene(cokeCanPrefab);
     }
+
+    public void AddSoccerBallToScene()
+    {
+        AddObjectToScene(soccerBallPrefab);
+    }
+
+    public void AddLabBotToScene()
+    {
+        AddObjectToScene(labBotPrefab);
+
+    }
+        
+    // ----- Handle placement of object via mouse -----
 
     public void AddObjectToMouse(PlaceableObject newObject)
     {
@@ -84,11 +107,24 @@ public class ObjectManager : MonoBehaviour {
 			if(ground.Raycast(ray, out distance)){
 				Vector3 hitpoint = ray.GetPoint (distance);
 				objectOnMouse.transform.position = new Vector3(hitpoint.x, 0.03f, hitpoint.z);
-			}	
+                if(Physics.Raycast(ray, 1000f, groundMask))
+                    objectOnMouse.updateValidity(true);
+                else
+                    objectOnMouse.updateValidity(false);
+            }	
 			if(Input.GetMouseButtonDown(0))
             {
                 TryPlaceObject();
             }
+            else if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (!objectOnMouse.isInit)
+                {
+                    Destroy(objectOnMouse.gameObject);
+                    objectOnMouse = null;
+                }
+            }
         }
     }
+ 
 }

@@ -75,7 +75,8 @@ public class Interpreter {
         if(conn.robot is IServoSettable)
         {
             int servo = recv[1] - 1;
-            int angle = recv[2];
+            int angle = Convert.ToInt32((sbyte)recv[2]);
+            Debug.Log("interp receive servo: " + angle);
             (conn.robot as IServoSettable).SetServo(servo, angle);
         }
         else
@@ -91,7 +92,6 @@ public class Interpreter {
         {
             int psd = recv[1] - 1;
             byte[] value = BitConverter.GetBytes((conn.robot as IPSDSensors).GetPSD(psd));
-            Debug.Log("PSD = " + recv[1] + " value: " + BitConverter.ToUInt16(value, 0));
             if (BitConverter.IsLittleEndian)
             {
                 Array.Reverse(value);
@@ -235,11 +235,22 @@ public class Interpreter {
             p.dataSize = 1;
             p.data = BitConverter.GetBytes(done);
             serverManager.WritePacket(conn, p);
-            (conn.robot as IVWDrivable).VWDriveWait(ReturnDriveDone);
         }
         else
         {
             Debug.Log("Requested drive done from a non VW drivable robot");
+        }
+    }
+    //Drive Wait
+    private void Command_L(byte[] recv, RobotConnection conn)
+    {
+        if (conn.robot is IVWDrivable)
+        {
+            (conn.robot as IVWDrivable).VWDriveWait(ReturnDriveDone);
+        }
+        else
+        {
+            Debug.Log("Requested drive wait from a non VW drivable robot");
         }
     }
     // Drive Remaining
@@ -319,6 +330,10 @@ public class Interpreter {
             // Drive Done or Stalled
             case 'Z':
                 Command_Z(recv, conn);
+                break;
+            // Drive Wait
+            case 'L':
+                Command_L(recv, conn);
                 break;
             // Drive Remaining
             case 'z':

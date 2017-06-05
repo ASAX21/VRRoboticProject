@@ -9,38 +9,22 @@ public class UIManager : MonoBehaviour {
 
     public GameObject fileFinderPrefab;
 
+    // Front windows must be closed before anything else can be interacted with
+    // Front blocking panel prevents opening menus
     public bool windowOpen = false;
+    public GameObject blockingPanel;
 
     private WorldBuilder worldBuilder;
     private RobotBuilder robotBuilder;
 
-    private FileFinder worldFileFinder;
-    private FileFinder robotFileFinder;
+    public FileFinder worldFileFinder;
+    public FileFinder robotFileFinder;
+    public FileFinder controlFileFinder;
 
 	private Button loadworld;
 	private Button loadrobot;
-	private GameObject blockingPanel;
 	private Transform robotList;
 	private Transform clientList;
-
-    private void CreateButtons()
-    {
-		Transform canvas = GameObject.Find ("Canvas").transform;
-		robotList = canvas.GetChild(0).FindChild ("Robots");
-		robotList.GetChild (0).GetChild (0).GetComponent<RectTransform> ().localPosition = Vector3.zero;
-		clientList = canvas.GetChild(0).FindChild ("Clients");
-		blockingPanel = canvas.GetChild(0).FindChild("BlockingPanel").gameObject;
-
-		Transform worldObj = canvas.GetChild(0).FindChild ("LoadWorld");
-		worldFileFinder = worldObj.GetComponent<FileFinder>().Initialise("*.wld", "Load World", worldBuilder, 10, 10);
-		worldObj.GetComponent<Button> ().onClick.AddListener (() => {worldFileFinder.OpenFileSelection();});
-        worldObj.name = "WorldFileFinder";
-
-		Transform robotObj = canvas.GetChild(0).FindChild ("LoadRobot");
-        robotFileFinder = robotObj.GetComponent<FileFinder>().Initialise("*.robi", "Load Robot", robotBuilder, 120, 10);
-		robotObj.GetComponent<Button> ().onClick.AddListener (() => {robotFileFinder.OpenFileSelection();});
-        robotObj.name = "RobotFilefinder";
-    }
 
     // Enforce singleton
     void Awake()
@@ -49,6 +33,14 @@ public class UIManager : MonoBehaviour {
             instance = this;
         else if (instance != null)
             Destroy(this);
+    }
+
+    void Start()
+    {
+        worldBuilder = WorldBuilder.instance;
+        robotBuilder = RobotBuilder.instance;
+        worldFileFinder.Initialise("*.wld", worldBuilder);
+        robotFileFinder.Initialise("*.robi", robotBuilder);
     }
 
 	public void openWindow(){
@@ -61,31 +53,19 @@ public class UIManager : MonoBehaviour {
 		blockingPanel.SetActive(false);
 	}
 
-    void Start()
+    public void LoadWorldFile()
     {
-        worldBuilder = WorldBuilder.instance;
-        robotBuilder = RobotBuilder.instance;
-        CreateButtons();    
+        worldFileFinder.OpenFileSelection();
     }
 
-	public void addButton(GameObject objectLink){
-		Transform button = ((GameObject)Instantiate (Resources.Load ("RobotButton"))).transform;
-		button.SetParent(robotList.GetChild(0).GetChild(0),false);
-		button.GetChild(1).GetComponent<Button> ().onClick.AddListener (() => {GameObject.Destroy(objectLink);removeButton(button.gameObject);});
-		updateButtons ();
-	}
+    public void LoadRobotFile()
+    {
+        robotFileFinder.OpenFileSelection();
+    }
 
-	void updateButtons(){
-		Transform content = robotList.GetChild (0).GetChild (0);
-		content.GetComponent<RectTransform> ().sizeDelta = new Vector2 (content.GetComponent<RectTransform> ().sizeDelta.x, content.childCount * 30);
-		for (int i = 0; i < content.childCount; i++) {
-			Vector3 pos = content.GetChild (i).GetComponent<RectTransform> ().localPosition;
-			content.GetChild (i).GetComponent<RectTransform> ().localPosition = new Vector3 (pos.x, -15 - 30 * i, pos.z);
-		}
-	}
-
-	void removeButton(GameObject button){
-		DestroyImmediate (button);
-		updateButtons ();
-	}
+    public void LoadControlProgram(Robot robot)
+    {
+        controlFileFinder.Initialise("*.exe", robot);
+        controlFileFinder.OpenFileSelection();
+    }
 }

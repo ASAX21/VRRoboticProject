@@ -45,8 +45,7 @@ public class RobotConnection
 
 public class ServerManager : MonoBehaviour
 {
-    public static ServerManager instance = null;
-   // public PendingRobotPanel pendingRobotPanel;
+    public static ServerManager instance { get; private set; }
 
     List<RobotConnection> conns = new List<RobotConnection>();
 
@@ -169,17 +168,13 @@ public class ServerManager : MonoBehaviour
             instance = this;
         else if (instance != this)
             Destroy(gameObject);
+
         interpreter = new Interpreter();
         interpreter.serverManager = this;
         listener = new TcpListener(localAddr, port);
         listener.Start();
         StartCoroutine(CheckConnections());
         Debug.Log("Server Started");
-    }
-
-    void Start()
-    {
-
     }
 
     // Update is called once per frame

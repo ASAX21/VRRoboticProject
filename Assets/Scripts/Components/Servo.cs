@@ -24,6 +24,7 @@ namespace RobotComponents
         // This could be done with the hinge joint component itself
         public void SetPosition(int pos)
         {
+            Debug.Log("Setting servo " + pos);
             desiredPosition = Mathf.Clamp((float)pos, minAngle, maxAngle);
         }
 

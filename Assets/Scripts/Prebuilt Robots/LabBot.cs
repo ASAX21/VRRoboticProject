@@ -17,14 +17,9 @@ public class LabBot : Robot,
     public PSDController psdController;
     public ServoController servoController;
     public EyeCameraController eyeCamController;
+    public AudioController audioController;
 
     Action<RobotConnection> driveDoneDelegate;
-
-    // Initialize commands
-    private void Awake()
-    {
-
-    }
 
     // This function sets the controllers for a newly created LabBot object
     // Used when a robot is created from file
@@ -145,5 +140,20 @@ public class LabBot : Robot,
     public void SetCameraResolution(int camera, int width, int height)
     {
         eyeCamController.SetResolution(camera, width, height);
+    }
+
+    public EyeCamera GetCameraComponent(int camera)
+    {
+        return eyeCamController.cameras[camera];
+    }
+
+    public void AUBeep()
+    {
+        audioController.PlayBeep();
+    }
+
+    public void AUPlay(AudioClip clip)
+    {
+        audioController.PlayClip(clip);
     }
 }

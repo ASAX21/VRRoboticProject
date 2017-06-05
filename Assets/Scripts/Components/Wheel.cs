@@ -65,11 +65,8 @@ namespace RobotComponents
         // SetSpeed sets the translational speed of the wheel
 
 		public void SetSpeed(float speed)
-
         {
-
 			SetMotorSpeed (speed / Mathf.PI / diameter * 360);
-
 		}
 
 
