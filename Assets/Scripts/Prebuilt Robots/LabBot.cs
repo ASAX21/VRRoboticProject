@@ -82,7 +82,7 @@ public class LabBot : Robot,
 
     public void VWSetVehicleSpeed(int linear, int angular)
     {
-        throw new NotImplementedException();
+        wheelController.SetSpeed(linear, angular);
     }
 
     public Speed VWGetVehicleSpeed()
@@ -147,7 +147,7 @@ public class LabBot : Robot,
         return eyeCamController.cameras[camera];
     }
 
-    public void AUBeep()
+    public void PlayBeep()
     {
         audioController.PlayBeep();
     }

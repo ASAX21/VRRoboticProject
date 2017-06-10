@@ -15,8 +15,6 @@ public class WheelMotorController : MonoBehaviour
     public Vector3 Pos;
     public float v;
 
-    public bool drive = false; // for testing purposes
-
     //vw parameters
     public float targetDist;
     public float travelledDist;
@@ -39,7 +37,6 @@ public class WheelMotorController : MonoBehaviour
             DriveDoneDelegate();
             DriveDoneDelegate = null;
         }
-
     }
 
     // Set the local PID Parameters

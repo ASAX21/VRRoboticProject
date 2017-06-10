@@ -47,6 +47,11 @@ public interface ICameras
     void SetCameraResolution(int camera, int width, int height);
     EyeCamera GetCameraComponent(int camera);
 }
+
+public interface IAudio
+{
+    void PlayBeep();
+}
 // Class used to pass data back to client
 public class Speed
 {

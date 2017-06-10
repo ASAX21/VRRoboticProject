@@ -224,6 +224,16 @@ public class Interpreter {
             serverManager.WritePacket(conn, p);
         }
     }
+    // Set Speed
+    private void Command_x(byte[] recv, RobotConnection conn)
+    {
+        if(conn.robot is IVWDrivable)
+        {
+            int linSpeed = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 1));
+            int angSpeed = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 3));
+            (conn.robot as IVWDrivable).VWSetVehicleSpeed(linSpeed, angSpeed);
+        }
+    }
     // Drive Done
     private void Command_Z(byte[] recv, RobotConnection conn)
     {
@@ -256,7 +266,7 @@ public class Interpreter {
     // Drive Remaining
     private void Command_z(byte[] recv, RobotConnection conn)
     {
-        if(conn.robot is IVWDrivable)
+        if (conn.robot is IVWDrivable)
         {
             bool done = (conn.robot as IVWDrivable).VWDriveDone();
             Packet p = new Packet();
@@ -264,6 +274,14 @@ public class Interpreter {
             p.dataSize = 1;
             p.data = BitConverter.GetBytes(done);
             serverManager.WritePacket(conn, p);
+        }
+    }
+    private void Command_b(byte[] recv, RobotConnection conn)
+    {
+        if(conn.robot is IAudio)
+        {
+            Debug.Log("playinga BEEP");
+            (conn.robot as IAudio).PlayBeep();
         }
     }
 
@@ -327,6 +345,10 @@ public class Interpreter {
             case 'X':
                 Command_X(recv, conn);
                 break;
+            // VW Set Speed
+            case 'x':
+                Command_x(recv, conn);
+                break;
             // Drive Done or Stalled
             case 'Z':
                 Command_Z(recv, conn);
@@ -338,6 +360,10 @@ public class Interpreter {
             // Drive Remaining
             case 'z':
                 Command_z(recv, conn);
+                break;
+            // Play beep
+            case 'b':
+                Command_b(recv, conn);
                 break;
             default:
                 Debug.Log("unknown : " + Convert.ToChar(recv[0]));
