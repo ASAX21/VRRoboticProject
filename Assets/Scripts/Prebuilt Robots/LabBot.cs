@@ -10,7 +10,8 @@ public class LabBot : Robot,
     IPSDSensors,
     IServoSettable,
     IVWDrivable,
-    ICameras
+    ICameras,
+    IAudio
 {
     // Controllers
     public WheelMotorController wheelController;

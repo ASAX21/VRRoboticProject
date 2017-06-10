@@ -278,15 +278,18 @@ public class Interpreter {
     }
     private void Command_b(byte[] recv, RobotConnection conn)
     {
-        if(conn.robot is IAudio)
+        Debug.Log("playinga BEEP");
+        if (conn.robot is IAudio)
         {
-            Debug.Log("playinga BEEP");
+            
             (conn.robot as IAudio).PlayBeep();
         }
     }
 
     public void ReceiveCommand(byte[] recv, RobotConnection conn)
     {
+
+        Debug.Log(" Received: " + (char)recv[0]);
         
         switch ((char)recv[0])
         {
