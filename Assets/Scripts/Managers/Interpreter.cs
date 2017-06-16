@@ -21,7 +21,6 @@ public class Interpreter {
         Packet p = new Packet();
         p.packetType = PacketType.DRIVE_DONE;
         p.dataSize = 0;
-        Debug.Log("writing back drive done!");
         serverManager.WritePacket(conn, p);
     }
 
@@ -276,9 +275,9 @@ public class Interpreter {
             serverManager.WritePacket(conn, p);
         }
     }
+    // Play Beep
     private void Command_b(byte[] recv, RobotConnection conn)
     {
-        Debug.Log("playinga BEEP");
         if (conn.robot is IAudio)
         {
             
@@ -287,10 +286,7 @@ public class Interpreter {
     }
 
     public void ReceiveCommand(byte[] recv, RobotConnection conn)
-    {
-
-        Debug.Log(" Received: " + (char)recv[0]);
-        
+    {       
         switch ((char)recv[0])
         {
             // Motor Drive Uncontrolled

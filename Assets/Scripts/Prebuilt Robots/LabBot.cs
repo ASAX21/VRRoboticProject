@@ -63,7 +63,7 @@ public class LabBot : Robot,
 
     public void SetPose(int x, int y, int phi)
     {
-        wheelController.SetPosition((float)x, (float)y, (float)phi);
+        wheelController.SetPosition(x, y, phi);
     }
 
     public Int16[] GetPose()
@@ -78,12 +78,12 @@ public class LabBot : Robot,
 
     public UInt16 GetPSD(int psd)
     {
-        return psdController.GetPSDValue(psd);
+        return psdController.GetPSDValue(psd - 1);
     }
 
     public void VWSetVehicleSpeed(int linear, int angular)
     {
-        wheelController.SetSpeed(linear, angular);
+        wheelController.SetSpeed(linear/1000.0f, angular);
     }
 
     public Speed VWGetVehicleSpeed()
@@ -98,7 +98,6 @@ public class LabBot : Robot,
 
     public void VWDriveTurn(int rotation, int velocity)
     {
-        Debug.Log("Turn " + rotation + " degrees with speed " + velocity);
 		wheelController.DriveTurn (rotation, velocity);
     }
 
@@ -114,6 +113,7 @@ public class LabBot : Robot,
 
     public bool VWDriveDone()
     {
+        Debug.Log("VWDriveDone");
 		return wheelController.DriveDone ();
     }
 

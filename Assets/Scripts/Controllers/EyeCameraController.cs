@@ -16,6 +16,7 @@ public class EyeCameraController : MonoBehaviour {
 
     public void SetResolution(int camera, int width, int height)
     {
+        Debug.Log("Set Resolution: " + width + " " + height);
         cameras[camera].SetResolution(width, height);
     }
 }
