@@ -24,41 +24,4 @@ public class MenuBarManager : MonoBehaviour {
         else
             Destroy(this);
     }
-
-    /*
-    public void BeginOpenMenu(MenuBarButton button)
-    {
-        currentActive = button;
-        blockingPanel.SetActive(true);
-    }
-
-    public void OpenSubMenu(MenuBarItem submenu)
-    {
-        if (currentSubmenu != null)
-            currentSubmenu.CloseSubMenu();
-        currentSubmenu = submenu;
-    }
-
-    public void CloseSubMenu()
-    {
-        if (currentSubmenu != null)
-            currentSubmenu.CloseSubMenu();
-     }
-
-    public void CloseAllMenus()
-    {
-        currentActive.CloseMenu();
-        isMenuOpen = false;
-        currentActive = null;
-        currentSubmenu = null;
-        blockingPanel.SetActive(false);
-    }
-
-    public void HoverOverButton(MenuBarButton button)
-    {
-        currentActive.CloseMenu();
-        button.OpenMenu();
-        currentActive = button;     
-    }
-    */
 }

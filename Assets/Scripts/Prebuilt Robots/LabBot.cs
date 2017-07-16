@@ -78,7 +78,7 @@ public class LabBot : Robot,
 
     public UInt16 GetPSD(int psd)
     {
-        return psdController.GetPSDValue(psd - 1);
+        return psdController.GetPSDValue(psd);
     }
 
     public void VWSetVehicleSpeed(int linear, int angular)

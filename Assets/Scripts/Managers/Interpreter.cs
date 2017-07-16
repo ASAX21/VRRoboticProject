@@ -15,7 +15,6 @@ public class Interpreter {
 
     public ServerManager serverManager;
 
-
     public void ReturnDriveDone(RobotConnection conn)
     {
         Packet p = new Packet();
@@ -119,7 +118,6 @@ public class Interpreter {
             packet.data = new byte[6];
             for (int i = 0; i < 3; i++)
             {
-                Debug.Log(i + "   " + pose[i]);
                 pose[i] = IPAddress.HostToNetworkOrder(pose[i]);
                 BitConverter.GetBytes(pose[i]).CopyTo(packet.data, 2 * i);
             }
@@ -139,7 +137,6 @@ public class Interpreter {
             int x = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 1));
             int y = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 3));
             int phi = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 5));
-            Debug.Log("Setting pose as x y phi: " + x + " " + y + " " + phi);
             (conn.robot as IVWDrivable).SetPose(x, y, phi);
         }
         else

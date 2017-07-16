@@ -48,7 +48,6 @@ public class MenuBarButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         if (isMenuOpen)
         {
-            //menuBarManager.HoverOverButton(this);
             currentOpenMenu.CloseMenu();
             OpenMenu();
             currentOpenMenu = this;

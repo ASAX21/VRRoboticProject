@@ -14,9 +14,17 @@ public class UIManager : MonoBehaviour {
     public bool windowOpen = false;
     public GameObject blockingPanel;
 
+    // Game Windows
+    [Header("Game Windows")]
+    [SerializeField]
+    ViewRobotsWindow viewRobotsWindow;
+
+    // Builders
     private WorldBuilder worldBuilder;
     private RobotBuilder robotBuilder;
 
+    // FileFinder
+    [Header("File Finders")]
     public FileFinder worldFileFinder;
     public FileFinder robotFileFinder;
     public FileFinder controlFileFinder;
@@ -67,5 +75,13 @@ public class UIManager : MonoBehaviour {
     {
         controlFileFinder.Initialise("*.exe", robot);
         controlFileFinder.OpenFileSelection();
+    }
+
+    public void OpenViewRobotWindow()
+    {
+        if (viewRobotsWindow.gameObject.activeInHierarchy)
+            viewRobotsWindow.transform.SetAsFirstSibling();
+        else
+            viewRobotsWindow.gameObject.SetActive(true);
     }
 }

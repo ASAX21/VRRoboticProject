@@ -1,12 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
+// Controller for the View Robots window; displays all robots currently in the scene
 public class ViewRobotsWindow : MonoBehaviour {
 
     public static ViewRobotsWindow instance { get; private set; }
-
-    private SimManager simManager;
 
     public Transform robotWindow;
     public GameObject robotButtonPrefab;
@@ -21,13 +21,9 @@ public class ViewRobotsWindow : MonoBehaviour {
         gameObject.SetActive(false);
     }
 
-    private void Start()
-    {
-        simManager = SimManager.instance;
-    }
-
     public void AddRobotToDisplayList(Robot robot)
     {
-        Instantiate(robotButtonPrefab, robotWindow, false);
+        GameObject newbutton = Instantiate(robotButtonPrefab, robotWindow, false);
+        newbutton.GetComponent<Button>().onClick.AddListener(robot.OpenInfoWindow);
     }
 }
