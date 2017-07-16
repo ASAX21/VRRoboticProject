@@ -30,15 +30,6 @@ public class WheelMotorController : MonoBehaviour
         Pos = new Vector3(0,0,0);
     }
 
-    private void Update()
-    {
-        if (DriveDoneDelegate != null && !checkActive)
-        {
-            DriveDoneDelegate();
-            DriveDoneDelegate = null;
-        }
-    }
-
     // Set the local PID Parameters
     public void SetPIDParams(int motor, int p, int i, int d)
     {
@@ -65,6 +56,12 @@ public class WheelMotorController : MonoBehaviour
     {
         updatePosition();
         checkDrive();
+
+        if (DriveDoneDelegate != null && !checkActive)
+        {
+            DriveDoneDelegate();
+            DriveDoneDelegate = null;
+        }
     }
 
     // Distance determines direction, always use absolute value of velocity
