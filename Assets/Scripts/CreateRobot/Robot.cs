@@ -47,6 +47,11 @@ public interface ICameras
     void SetCameraResolution(int camera, int width, int height);
     EyeCamera GetCameraComponent(int camera);
 }
+
+public interface IAudio
+{
+    void PlayBeep();
+}
 // Class used to pass data back to client
 public class Speed
 {
@@ -68,14 +73,14 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
     public RobotConnection myConnection = null;
     public string controlBinaryPath = "Unknown";
 
-    override public void OnPointerClick(PointerEventData eventData)
+    // Open the info window for this robot
+    public void OpenInfoWindow()
     {
-        if(eventData.clickCount > 1 && !isWindowOpen)
-        { 
+        if (!isWindowOpen)
+        {
             isWindowOpen = true;
             objectSelector.DisplayRobotInfoWindow(this);
         }
-        base.OnPointerClick(eventData);
     }
 
     // Exectue a control program - Receives path to control
@@ -83,10 +88,25 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
     {
         ProcessStartInfo startInfo = new ProcessStartInfo();
         startInfo.EnvironmentVariables["DISPLAY"] = ":0";
+        startInfo.WorkingDirectory = "cygmin\bin";
         startInfo.UseShellExecute = false;
         startInfo.FileName = filepath;
-        ServerManager.instance.testBot = this;
+        ServerManager.instance.activeRobot = this;
         Process.Start(startInfo);
         return null;
+    }
+
+    // Callback to ServerManager Disconnect with this robot's connection
+    public void DisconnectRobot()
+    {
+        ServerManager.instance.DisconnectRobot(myConnection);
+    }
+
+    // Handle OnClick event
+    override public void OnPointerClick(PointerEventData eventData)
+    {
+        if (eventData.clickCount > 1 && !isWindowOpen)
+            OpenInfoWindow();
+        base.OnPointerClick(eventData);
     }
 }

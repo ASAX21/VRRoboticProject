@@ -8,8 +8,8 @@ using UnityEngine.EventSystems;
 // Robots, cans, cubes, etc.
 public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    public ObjectSelector objectSelector;
-    public ObjectManager objectManager;
+    protected ObjectSelector objectSelector;
+    protected ObjectManager objectManager;
 
     public int objectID;
 
@@ -18,7 +18,8 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
     public bool isPlaced = false;
     public bool isSelected = false;
     public bool locked = false;
-    public int currLayer = 0;
+
+    private LayerMask currLayer = 0;
 	public int collisionCount = 0;
 
     // Physics

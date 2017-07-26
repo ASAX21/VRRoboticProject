@@ -49,7 +49,6 @@ namespace RobotComponents
         // Change the resolution of the renderer
         public void SetResolution(int width, int height)
         {
-            Debug.Log("Set Resolution: " + width + "x" + height);
             rendTex = new RenderTexture(width, height, 16);
             Destroy(tex);
             tex = new Texture2D(rendTex.width, rendTex.height, TextureFormat.RGB24, false);

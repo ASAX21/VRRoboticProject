@@ -55,7 +55,7 @@ public class ObjectManager : MonoBehaviour {
         newObj.objectID = totalObjects;
         totalObjects++;
         if (newObj is Robot)
-            SimManager.instance.AddRobotToList(newObj as Robot);
+            SimManager.instance.AddRobotToScene(newObj as Robot);
         else if (newObj is WorldObject)
             SimManager.instance.AddWorldObjectToScene(newObj as WorldObject);
         AddObjectToMouse(newObj);

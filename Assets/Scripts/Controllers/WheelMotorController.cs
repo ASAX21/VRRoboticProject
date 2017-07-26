@@ -15,8 +15,6 @@ public class WheelMotorController : MonoBehaviour
     public Vector3 Pos;
     public float v;
 
-    public bool drive = false; // for testing purposes
-
     //vw parameters
     public float targetDist;
     public float travelledDist;
@@ -39,7 +37,6 @@ public class WheelMotorController : MonoBehaviour
             DriveDoneDelegate();
             DriveDoneDelegate = null;
         }
-
     }
 
     // Set the local PID Parameters
@@ -90,9 +87,9 @@ public class WheelMotorController : MonoBehaviour
         targetRot = rotation;
         checkType = "rotation";
         if(rotation >= 0)
-            SetSpeed(0, -Mathf.Abs(velocity));
-        else
             SetSpeed(0, Mathf.Abs(velocity));
+        else
+            SetSpeed(0, -Mathf.Abs(velocity));
         checkActive = true;
     }
 
@@ -112,14 +109,14 @@ public class WheelMotorController : MonoBehaviour
 
     public bool DriveDone()
     {
-        return checkActive;
+        return !checkActive;
     }
 
     //set translational and rotational target velocities
     public void SetSpeed(float setv, float setw)
     {
-        wheels[0].SetSpeed(setv + setw * wheelDist / 2 * Mathf.Deg2Rad);
-        wheels[1].SetSpeed(setv - setw * wheelDist / 2 * Mathf.Deg2Rad);
+        wheels[0].SetSpeed(setv - setw * wheelDist / 2 * Mathf.Deg2Rad);
+        wheels[1].SetSpeed(setv + setw * wheelDist / 2 * Mathf.Deg2Rad);
     }
 
     public Speed GetSpeed()
@@ -136,11 +133,7 @@ public class WheelMotorController : MonoBehaviour
 
     public float[] GetPosition()
     {
-        float[] pos = new float[3];
-        pos[0] = Pos.x;
-        pos[1] = Pos.z;
-        pos[2] = Rot;
-        return pos;
+        return new float[3] { Pos.x, Pos.z, Rot };
     }
 
     private void updatePosition()

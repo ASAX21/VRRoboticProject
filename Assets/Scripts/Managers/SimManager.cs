@@ -25,7 +25,6 @@ public class SimManager : MonoBehaviour {
     private void Start() {
         allRobots = new List<Robot>();
         allWorldObjects = new List<WorldObject>();
-
     }
     
     // Find object by ID - Search robots first, then world objects
@@ -40,21 +39,24 @@ public class SimManager : MonoBehaviour {
         return toFind;
     }
 
+    // Control simulation speed - BUGGY
     public void SetSimulationSpeed(float simSpeed)
     {
         float newTimeScale = Mathf.Clamp(simSpeed, 0, 2.0f);
         Time.timeScale = newTimeScale;
-        //Time.fixedDeltaTime = 0.02f * Time.timeScale;
         Debug.Log(simSpeed);
     }
 
-    public void AddRobotToList(Robot robot)
+    // Add a robot
+    public void AddRobotToScene(Robot robot)
     {
-        robot.objectID = totalObjects;
+        robot.objectID = totalObjects++;
         allRobots.Add(robot);
         ViewRobotsWindow.instance.AddRobotToDisplayList(robot);
+        ServerManager.instance.activeRobot = robot;
     }
 
+    // Add a world object
     public void AddWorldObjectToScene(WorldObject worldObj)
     {
         allWorldObjects.Add(worldObj);

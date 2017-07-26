@@ -49,8 +49,7 @@ public class ServerManager : MonoBehaviour
 
     List<RobotConnection> conns = new List<RobotConnection>();
 
-    // TESTING
-    public Robot testBot;
+    public Robot activeRobot;
     private int robotIDs = 1;
 
     TcpListener listener = null;
@@ -62,6 +61,26 @@ public class ServerManager : MonoBehaviour
     byte[] recvBuf = new byte[1024];
     string data = null;
 
+    void Awake()
+    {
+        if (instance == null || instance == this)
+            instance = this;
+        else if (instance != this)
+            Destroy(gameObject);
+
+        // Create an interpreter for RoBIOS Commands
+        interpreter = new Interpreter();
+        interpreter.serverManager = this;
+
+        // Listener for TCP connections
+        listener = new TcpListener(localAddr, port);
+        listener.Start();
+
+        // Periodically check if connections are active
+        StartCoroutine(CheckConnections());
+        Debug.Log("Server Started");
+    }
+
     // Terminate a connection, and remove form the connection list
     private void CloseConnection(RobotConnection conn)
     {
@@ -70,6 +89,7 @@ public class ServerManager : MonoBehaviour
             Debug.Log("Failed to remove connection");
     }
 
+    // Handshake connection with control program
     private void ReplyHandshake(RobotConnection conn)
     {
         Packet p = new Packet();
@@ -86,14 +106,48 @@ public class ServerManager : MonoBehaviour
     // Accept a pending connection
     private void AcceptConnection()
     {
-        TcpClient client = listener.AcceptTcpClient();
-        RobotConnection newClient = new RobotConnection(client, robotIDs);
-        newClient.robot = testBot;
-        testBot.myConnection = newClient;
-        conns.Add(newClient);
-        robotIDs++;
-        Debug.Log("Accepted a connection");
-        ReplyHandshake(newClient);
+        // Check if there is a robot ready to receive control
+        if (activeRobot == null)
+        {
+            Debug.Log("Control program connected but no robot active");
+            return;
+        }
+        else
+        {
+            // Create a new TcpClient to receive messages
+            TcpClient client = listener.AcceptTcpClient();
+            RobotConnection newClient = new RobotConnection(client, robotIDs);
+
+            // Associate the RobotConnection 
+            newClient.robot = activeRobot;
+            activeRobot.myConnection = newClient;
+            conns.Add(newClient);
+            robotIDs++;
+            
+            // Reply to the robot to begin control
+            Debug.Log("Accepted a connection");
+            ReplyHandshake(newClient);
+        }
+    }
+
+    // Write a packet to a connection
+    internal void WritePacket(RobotConnection conn, Packet packet)
+    {
+        byte[] sendBuf = new byte[packet.dataSize + 5];
+        UInt32 size = packet.dataSize;
+
+        if (BitConverter.IsLittleEndian)
+            size = RobotFunction.ReverseBytes(size);
+
+        sendBuf[0] = Convert.ToByte(packet.packetType);
+        BitConverter.GetBytes(size).CopyTo(sendBuf, 1);
+        if (packet.dataSize > 0)
+        {
+            packet.data.CopyTo(sendBuf, 5);
+        }
+
+        NetworkStream stream = conn.tcpClient.GetStream();
+        stream.Write(sendBuf, 0, ((int)packet.dataSize) + 5);
     }
 
     // Read a packet from a connection
@@ -138,46 +192,20 @@ public class ServerManager : MonoBehaviour
             case PacketType.CLIENT_MESSAGE:
                 interpreter.ReceiveCommand(recvBuf, conn);
                 break;
+            case PacketType.CLIENT_DISCONNECT:
+                DisconnectRobot(conn);
+                break;
             default:
                 break;
         }
     }
 
-    internal void WritePacket(RobotConnection conn, Packet packet)
+    public void DisconnectRobot(RobotConnection conn)
     {
-        byte[] sendBuf = new byte[packet.dataSize + 5];
-        UInt32 size = packet.dataSize;
-
-        if (BitConverter.IsLittleEndian)
-            size = RobotFunction.ReverseBytes(size);
-
-        sendBuf[0] = Convert.ToByte(packet.packetType);
-        BitConverter.GetBytes(size).CopyTo(sendBuf, 1);
-        if (packet.dataSize > 0)
-        {
-            packet.data.CopyTo(sendBuf, 5);
-        }
-
-        NetworkStream stream = conn.tcpClient.GetStream();
-        stream.Write(sendBuf, 0, ((int)packet.dataSize) + 5);
+        conn.robot.myConnection = null;
+        conns.Remove(conn);
     }
 
-    void Awake()
-    {
-        if (instance == null)
-            instance = this;
-        else if (instance != this)
-            Destroy(gameObject);
-
-        interpreter = new Interpreter();
-        interpreter.serverManager = this;
-        listener = new TcpListener(localAddr, port);
-        listener.Start();
-        StartCoroutine(CheckConnections());
-        Debug.Log("Server Started");
-    }
-
-    // Update is called once per frame
     void Update ()
     {
         if (listener.Pending())

@@ -10,7 +10,8 @@ public class LabBot : Robot,
     IPSDSensors,
     IServoSettable,
     IVWDrivable,
-    ICameras
+    ICameras,
+    IAudio
 {
     // Controllers
     public WheelMotorController wheelController;
@@ -62,7 +63,7 @@ public class LabBot : Robot,
 
     public void SetPose(int x, int y, int phi)
     {
-        wheelController.SetPosition((float)x, (float)y, (float)phi);
+        wheelController.SetPosition(x, y, phi);
     }
 
     public Int16[] GetPose()
@@ -82,7 +83,7 @@ public class LabBot : Robot,
 
     public void VWSetVehicleSpeed(int linear, int angular)
     {
-        throw new NotImplementedException();
+        wheelController.SetSpeed(linear/1000.0f, angular);
     }
 
     public Speed VWGetVehicleSpeed()
@@ -97,7 +98,6 @@ public class LabBot : Robot,
 
     public void VWDriveTurn(int rotation, int velocity)
     {
-        Debug.Log("Turn " + rotation + " degrees with speed " + velocity);
 		wheelController.DriveTurn (rotation, velocity);
     }
 
@@ -113,6 +113,7 @@ public class LabBot : Robot,
 
     public bool VWDriveDone()
     {
+        Debug.Log("VWDriveDone");
 		return wheelController.DriveDone ();
     }
 
@@ -147,7 +148,7 @@ public class LabBot : Robot,
         return eyeCamController.cameras[camera];
     }
 
-    public void AUBeep()
+    public void PlayBeep()
     {
         audioController.PlayBeep();
     }
