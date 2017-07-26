@@ -39,7 +39,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
 
     private void Awake()
     {
-        if (centreOfMass != null)
+        if (centreOfMass != Vector3.zero)
         {
             GetComponent<Rigidbody>().centerOfMass = centreOfMass;
         }

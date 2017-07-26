@@ -162,7 +162,7 @@ public class RobotBuilder: MonoBehaviour, IFileReceiver{
 	// Add Wheels adds a pair of wheels on an axis
 	public void addWheels(float diameter, float vel, int enc, float wBase, int axel)
 	{
-		Transform axelTransform = robotObject.transform.FindChild("Axel" + axel);
+		Transform axelTransform = robotObject.transform.Find("Axel" + axel);
 		if(axelTransform == null)
 		{
 			Debug.Log("Trying to attach wheels to a non existand axels");

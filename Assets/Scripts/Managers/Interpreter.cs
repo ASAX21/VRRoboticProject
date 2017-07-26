@@ -266,6 +266,26 @@ public class Interpreter {
             serverManager.WritePacket(conn, p);
         }
     }
+    // Get Robot Pose
+    private void Command_1(byte[] recv, RobotConnection conn)
+    {
+
+    }
+    // Set Robot Pose
+    private void Command_2(byte[] recv, RobotConnection conn)
+    {
+
+    }
+    // Get Object Pose
+    private void Command_3(byte[] recv, RobotConnection conn)
+    {
+
+    }
+    // Set Robot Pose
+    private void Command_4(byte[] recv, RobotConnection conn)
+    {
+
+    }
 
     public void ReceiveCommand(byte[] recv, RobotConnection conn)
     {
@@ -339,6 +359,19 @@ public class Interpreter {
             case 'z':
                 Command_z(recv, conn);
                 break;
+            // Sim Get Pose
+            case '1':
+                break;
+            // Sim Set Pose
+            case '2':
+                break;
+            // Sim Get Object (position)
+            case '3':
+                break;
+            // Sim Set Object (position)
+            case '4':
+                break;
+            
             default:
                 Debug.Log("unknown : " + Convert.ToChar(recv[0]));
                 Debug.Log("Received an unknown command.");
