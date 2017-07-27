@@ -16,4 +16,5 @@ public static class PacketType  {
     public const byte SERVER_CAMIMG = 0x0B;
     public const byte CLIENT_CAMGET = 0x0C;
     public const byte DRIVE_DONE = 0x0D;
+    public const byte RADIO_MESSAGE = 0x0E;
 }

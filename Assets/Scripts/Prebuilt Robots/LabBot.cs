@@ -11,7 +11,8 @@ public class LabBot : Robot,
     IServoSettable,
     IVWDrivable,
     ICameras,
-    IAudio
+    IAudio,
+    IRadio
 {
     // Controllers
     public WheelMotorController wheelController;
@@ -19,8 +20,10 @@ public class LabBot : Robot,
     public ServoController servoController;
     public EyeCameraController eyeCamController;
     public AudioController audioController;
+    public RadioController radioController;
 
     Action<RobotConnection> driveDoneDelegate;
+    Action<RobotConnection, byte[]> radioMessageDelegate;
 
     // This function sets the controllers for a newly created LabBot object
     // Used when a robot is created from file
@@ -30,6 +33,9 @@ public class LabBot : Robot,
         psdController = gameObject.AddComponent<PSDController>();
         servoController = gameObject.AddComponent<ServoController>();
         eyeCamController = gameObject.AddComponent<EyeCameraController>();
+        audioController = gameObject.AddComponent<AudioController>();
+        radioController = gameObject.AddComponent<RadioController>();
+
         wheelController.wheels = new List<Wheel>();
         psdController.sensors = new List<PSDSensor>();
         servoController.servos = new List<Servo>();
@@ -113,7 +119,6 @@ public class LabBot : Robot,
 
     public bool VWDriveDone()
     {
-        Debug.Log("VWDriveDone");
 		return wheelController.DriveDone ();
     }
 
@@ -156,5 +161,26 @@ public class LabBot : Robot,
     public void AUPlay(AudioClip clip)
     {
         audioController.PlayClip(clip);
+    }
+
+    public void AddMessageToBuffer(int id, byte[] msg)
+    {
+        radioController.QueueMessage(msg);
+    }
+
+    public byte[] RetrieveMessageFromBuffer()
+    {
+        return radioController.DequeueMessage();
+    }
+
+    public void RadioReceivedCallback(byte[] msg)
+    {
+        radioMessageDelegate(myConnection, msg);
+    }
+
+    public void WaitForRadioMessage(Action<RobotConnection, byte[]> radioDelegate)
+    {
+        radioMessageDelegate = radioDelegate;
+        radioController.receivedCallback = RadioReceivedCallback;
     }
 }

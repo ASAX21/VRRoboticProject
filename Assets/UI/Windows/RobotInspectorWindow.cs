@@ -20,7 +20,7 @@ public class RobotInspectorWindow : MonoBehaviour {
 
     // Position variables
     [SerializeField]
-    private InputField robotXValue, robotZValue, robotPhiValue;
+    private Text robotXValue, robotZValue, robotPhiValue;
 
     // Icon Images
     public Image lockButtonImage;
@@ -47,21 +47,15 @@ public class RobotInspectorWindow : MonoBehaviour {
             psdFrontValue.text = (robot as IPSDSensors).GetPSD(1).ToString();
             psdRightValue.text = (robot as IPSDSensors).GetPSD(2).ToString();
         }
-        if (robot.locked)
-        {
-            robotXValue.text = robot.transform.position.x.ToString();
-            robotZValue.text = robot.transform.position.z.ToString();
-            robotPhiValue.text = robot.transform.rotation.eulerAngles.y.ToString();
-        }
+        robotXValue.text = (1000f * robot.transform.position.x).ToString("N2");
+        robotZValue.text = (1000f *robot.transform.position.z).ToString("N2");
+        robotPhiValue.text = robot.transform.rotation.eulerAngles.y.ToString("N2");
 	}
 
     public void LockButton()
     {
         robot.locked = !robot.locked;
         lockButtonImage.sprite = robot.locked ? lockedImage : unlockedImage;
-        robotXValue.readOnly = robot.locked;
-        robotZValue.readOnly = robot.locked;
-        robotPhiValue.readOnly = robot.locked;
     }
 
     public void CloseWindow()
