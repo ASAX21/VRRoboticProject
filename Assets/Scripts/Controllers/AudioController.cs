@@ -12,6 +12,7 @@ public class AudioController : MonoBehaviour {
     // Use this for initialization
     void Start () {
         beep = AudioClip.Create("MySinusoid", samplerate/2, 1, samplerate, false, OnAudioRead);
+		audioSource = gameObject.AddComponent<AudioSource> ();
         audioSource.volume = 0.01f;
     }
 	
