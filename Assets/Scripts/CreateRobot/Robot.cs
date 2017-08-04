@@ -55,7 +55,7 @@ public interface IAudio
 
 public interface IRadio
 {
-    void AddMessageToBuffer(int id, byte[] msg);
+    void AddMessageToBuffer(byte[] msg);
     byte[] RetrieveMessageFromBuffer();
     void WaitForRadioMessage(Action<RobotConnection, byte[]> radioDelegate);
 }

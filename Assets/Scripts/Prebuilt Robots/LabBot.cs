@@ -163,7 +163,7 @@ public class LabBot : Robot,
         audioController.PlayClip(clip);
     }
 
-    public void AddMessageToBuffer(int id, byte[] msg)
+    public void AddMessageToBuffer(byte[] msg)
     {
         radioController.QueueMessage(msg);
     }

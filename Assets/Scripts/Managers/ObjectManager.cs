@@ -102,6 +102,7 @@ public class ObjectManager : MonoBehaviour {
     {
 		if (objectOnMouse != null)
         {
+            // Anchor object to the ground plane
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			float distance;
 			if(ground.Raycast(ray, out distance)){
@@ -111,11 +112,13 @@ public class ObjectManager : MonoBehaviour {
                     objectOnMouse.updateValidity(true);
                 else
                     objectOnMouse.updateValidity(false);
-            }	
+            }
+            // Left click
 			if(Input.GetMouseButtonDown(0))
             {
                 TryPlaceObject();
             }
+            // Escape - If object isn't initalized (has never been placed), destroy it.
             else if (Input.GetKeyDown(KeyCode.Escape))
             {
                 if (!objectOnMouse.isInit)
@@ -123,6 +126,15 @@ public class ObjectManager : MonoBehaviour {
                     Destroy(objectOnMouse.gameObject);
                     objectOnMouse = null;
                 }
+            }
+            // Rotate using - and + keys
+            else if (Input.GetKey(KeyCode.Minus))
+            {
+                objectOnMouse.transform.Rotate(new Vector3(0f, -2f, 0f));
+            }
+            else if (Input.GetKey(KeyCode.Equals))
+            {
+                objectOnMouse.transform.Rotate(new Vector3(0f, 2f, 0f));
             }
         }
     }

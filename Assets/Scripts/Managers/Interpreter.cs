@@ -310,18 +310,26 @@ public class Interpreter {
     private void Command_R(byte[] recv, RobotConnection conn){     
         if(conn.robot is IRadio)
         {
+            Debug.Log("Radio Receive");
+            // Get ID of sender, and length of null-terminated string
             int id = BitConverter.ToInt32(recv, 1);
-            int size = BitConverter.ToInt32(recv, 5);
+            int strlen = Array.IndexOf(recv, (byte)0, 5) - 4;
+            Debug.Log("Strlen: " + strlen);
             id = IPAddress.NetworkToHostOrder(id);
-            size = IPAddress.NetworkToHostOrder(size);
+            if (strlen <= 0)
+            {
+                byte[] test = new byte[13];
+                return;
+            }
+            // Forward message to robot as id | string
             Robot receiver = SimManager.instance.GetRobotByID(id);
             if ( (receiver != null) && (receiver is IRadio) )
             {
                 Debug.Log("Send Radio");
-                byte[] msg = new byte[size + 4];
-                BitConverter.GetBytes(size).CopyTo(msg, 0);
-                Array.Copy(recv, 9, msg, 4, size);
-                (receiver as IRadio).AddMessageToBuffer(conn.robot.objectID, msg);
+                byte[] msg = new byte[4 + strlen];
+                BitConverter.GetBytes(id).CopyTo(msg, 0);
+                Array.Copy(recv, 5, msg, 4, strlen);
+                (receiver as IRadio).AddMessageToBuffer(msg);
             }
         }
     }
@@ -397,7 +405,7 @@ public class Interpreter {
     }
 
     public void ReceiveCommand(byte[] recv, RobotConnection conn)
-    {       
+    {
         switch ((char)recv[0])
         {
             // Motor Drive Uncontrolled

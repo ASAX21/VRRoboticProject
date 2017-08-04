@@ -1,4 +1,9 @@
-﻿using System.Collections.Generic;
+﻿/* Sim manager is responsible for maintaining the list of Robots, Objects,
+ * and the state of the current World. It also handles launching and termination
+ * of the simulation program
+ */
+
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SimManager : MonoBehaviour {
@@ -7,11 +12,14 @@ public class SimManager : MonoBehaviour {
 
     public ServerManager server;
 
+    private WindowsOSManager windowsOS;
+
+    // Current robots, objects, and world
     public List<Robot> allRobots;
     public List<WorldObject> allWorldObjects;
-
     public GameObject world;
 
+    // Record number of total objects, used to assign ID
     private int totalObjects = 1;
 
     private void Awake()
@@ -25,6 +33,10 @@ public class SimManager : MonoBehaviour {
     private void Start() {
         allRobots = new List<Robot>();
         allWorldObjects = new List<WorldObject>();
+        if (Application.platform == RuntimePlatform.WindowsPlayer)
+        {
+            windowsOS = new WindowsOSManager();
+        }
     }
 
     // Search only robots

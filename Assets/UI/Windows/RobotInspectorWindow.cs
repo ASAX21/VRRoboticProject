@@ -7,22 +7,27 @@ public class RobotInspectorWindow : MonoBehaviour {
     public Robot robot;
 
     // Robot identifiers
+    [Header("Identifier Text Displays")]
     [SerializeField]
     private Text robotNumber, robotName, robotBinaryName;
 
     // Sensor variables
+    [Header("PSD Text Displays")]
     [SerializeField]
     private Text psdFrontValue, psdLeftValue, psdRightValue;
 
+    [Header("Camera")]
     [SerializeField]
     private RawImage cameraTarget;
     public EyeCamera cameraToDisplay;
 
     // Position variables
+    [Header("Position Text Displays")]
     [SerializeField]
     private Text robotXValue, robotZValue, robotPhiValue;
 
     // Icon Images
+    [Header("Icons")]
     public Image lockButtonImage;
     public Sprite lockedImage;
     public Sprite unlockedImage;

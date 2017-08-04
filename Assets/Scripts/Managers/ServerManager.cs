@@ -53,7 +53,7 @@ public class ServerManager : MonoBehaviour
     private int robotIDs = 1;
 
     TcpListener listener = null;
-    int port = 8888;
+    int port = 34721;
     IPAddress localAddr = IPAddress.Parse("127.0.0.1");
     
     public Interpreter interpreter;
