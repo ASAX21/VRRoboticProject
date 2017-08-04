@@ -16,6 +16,7 @@ public class DragPanel : MonoBehaviour, IPointerDownHandler, IDragHandler {
 	}
 	
 	public void OnPointerDown (PointerEventData data) {
+        transform.parent.SetAsLastSibling();
 		originalPanelLocalPosition = panelRectTransform.localPosition;
 		RectTransformUtility.ScreenPointToLocalPointInRectangle (parentRectTransform, data.position, data.pressEventCamera, out originalLocalPointerPosition);
 	}

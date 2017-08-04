@@ -52,6 +52,13 @@ public interface IAudio
 {
     void PlayBeep();
 }
+
+public interface IRadio
+{
+    void AddMessageToBuffer(int id, byte[] msg);
+    byte[] RetrieveMessageFromBuffer();
+    void WaitForRadioMessage(Action<RobotConnection, byte[]> radioDelegate);
+}
 // Class used to pass data back to client
 public class Speed
 {
@@ -72,6 +79,22 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
 
     public RobotConnection myConnection = null;
     public string controlBinaryPath = "Unknown";
+    public TrailRenderer trail;
+
+    // Set the robots absolute position along the ground plane
+    // Dangerous: Could result in extreme behaviour with physics engine
+    public void SetRobotPosition(int x, int z, int phi)
+    {
+        transform.SetPositionAndRotation(new Vector3(x, 0.1f, z), Quaternion.Euler(new Vector3(0f, phi, 0f)));
+    }
+
+    public void ToggleTrail()
+    {
+        if(trail != null)
+        {
+            trail.enabled = !trail.enabled;
+        }
+    }
 
     // Open the info window for this robot
     public void OpenInfoWindow()
@@ -99,7 +122,7 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
     // Callback to ServerManager Disconnect with this robot's connection
     public void DisconnectRobot()
     {
-        ServerManager.instance.DisconnectRobot(myConnection);
+        ServerManager.instance.CloseConnection(myConnection);
     }
 
     // Handle OnClick event

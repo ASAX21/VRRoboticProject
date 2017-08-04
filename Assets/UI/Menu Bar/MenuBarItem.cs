@@ -64,11 +64,14 @@ public class MenuBarItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        if (hasSubmenu)
+            return;
+
 		if (isSubmenuItem)
         {
             parentItem.CloseSubMenu();
-            parentMenu.CloseMenu(); 
         }
+        parentMenu.CloseMenu();
         image.color = defaultColor;
         callback.Invoke();
     }

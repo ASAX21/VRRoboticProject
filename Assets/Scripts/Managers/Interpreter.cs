@@ -10,6 +10,7 @@ using UnityEngine;
 /// on the robot. Input commands are of the form xABCD, where x is an ASCII character,
 ///  A,B,C,D are 1 or 2 byte integers, depending on the command.
 /// </summary>
+/// 
 
 public class Interpreter {
 
@@ -23,7 +24,17 @@ public class Interpreter {
         serverManager.WritePacket(conn, p);
     }
 
-    // Motor Drive Uncontrolled
+    public void ForwardRadioMessage(RobotConnection conn, byte[] msg)
+    {
+        Debug.Log("Forwarding a Packet");
+        Packet p = new Packet();
+        p.packetType = PacketType.RADIO_MESSAGE;
+        p.dataSize = (uint) msg.Length;
+        p.data = msg;
+        serverManager.WritePacket(conn, p);
+    }
+
+    // Drive Motor Uncontrolled
     private void Command_m(byte[] recv, RobotConnection conn)
     {
         if (conn.robot is IMotors)
@@ -37,6 +48,7 @@ public class Interpreter {
             Debug.Log("Drive Command received for a non drivable robot");
         }
     }
+
     // Motor Drive Controlled
     private void Command_M(byte[] recv, RobotConnection conn)
     {
@@ -51,6 +63,7 @@ public class Interpreter {
             Debug.Log("Drive Command received for a non drivable robot");
         }
     }
+
     // Set Motor PID
     private void Command_d(byte[] recv, RobotConnection conn)
     {
@@ -67,6 +80,7 @@ public class Interpreter {
             Debug.Log("Set PID Command received for a non drivable robot");
         }
     }
+
     // Set Servo position
     private void Command_s(byte[] recv, RobotConnection conn)
     {
@@ -81,8 +95,8 @@ public class Interpreter {
         {
             Debug.Log("Set Servo Command received for a non servo settable robot");
         }
-
     }
+
     // Get PSD Value
     private void Command_p(byte[] recv, RobotConnection conn)
     {
@@ -102,10 +116,10 @@ public class Interpreter {
             serverManager.WritePacket(conn, packet);
         }
         else
-        {
-            Debug.Log("Get PSD Command from a robot without PSDs");
+        {           Debug.Log("Get PSD Command from a robot without PSDs");
         }
     }
+
     // Get Vehicle Pose
     private void Command_q(byte[] recv, RobotConnection conn)   
     {
@@ -121,7 +135,6 @@ public class Interpreter {
                 pose[i] = IPAddress.HostToNetworkOrder(pose[i]);
                 BitConverter.GetBytes(pose[i]).CopyTo(packet.data, 2 * i);
             }
-            
             serverManager.WritePacket(conn, packet);
         }
         else
@@ -129,6 +142,7 @@ public class Interpreter {
             Debug.Log("Requested pose from a non posable robot");
         }
     }
+
     // Set Pose
     private void Command_Q(byte[] recv, RobotConnection conn)
     {
@@ -158,6 +172,7 @@ public class Interpreter {
             serverManager.WritePacket(conn, packet);
         }
     }
+
     // Set Camera
     private void Command_F(byte[] recv, RobotConnection conn)
     {
@@ -169,9 +184,11 @@ public class Interpreter {
             (conn.robot as ICameras).SetCameraResolution(camera, width, height);
         }
     }
+
     // VW Drive Straight
     private void Command_y(byte[] recv, RobotConnection conn)
     {
+        Debug.Log("VWStraight : " + recv.Length);
         if(conn.robot is IVWDrivable)
         {
             // Velocity is first byte, distance is second byte
@@ -181,6 +198,7 @@ public class Interpreter {
             (conn.robot as IVWDrivable).VWDriveStraight(distance, speed);
         }
     }
+
     // VW Drive Turn
     private void Command_Y(byte[] recv, RobotConnection conn)
     {
@@ -191,6 +209,7 @@ public class Interpreter {
             (conn.robot as IVWDrivable).VWDriveTurn(angle, velocity);
         }
     }
+
     // VW Drive Curve
     private void Command_C(byte[] recv, RobotConnection conn)
     {
@@ -203,6 +222,7 @@ public class Interpreter {
             Debug.Log("Drive Curve: " + distance + " " + angle + " " + speed);
         }
     }
+
     // Get Speed
     private void Command_X(byte[] recv, RobotConnection conn)
     {
@@ -220,6 +240,7 @@ public class Interpreter {
             serverManager.WritePacket(conn, p);
         }
     }
+
     // Set Speed
     private void Command_x(byte[] recv, RobotConnection conn)
     {
@@ -230,6 +251,7 @@ public class Interpreter {
             (conn.robot as IVWDrivable).VWSetVehicleSpeed(linSpeed, angSpeed);
         }
     }
+
     // Drive Done
     private void Command_Z(byte[] recv, RobotConnection conn)
     {
@@ -247,6 +269,7 @@ public class Interpreter {
             Debug.Log("Requested drive done from a non VW drivable robot");
         }
     }
+
     //Drive Wait
     private void Command_L(byte[] recv, RobotConnection conn)
     {
@@ -259,6 +282,7 @@ public class Interpreter {
             Debug.Log("Requested drive wait from a non VW drivable robot");
         }
     }
+
     // Drive Remaining
     private void Command_z(byte[] recv, RobotConnection conn)
     {
@@ -272,14 +296,104 @@ public class Interpreter {
             serverManager.WritePacket(conn, p);
         }
     }
+
     // Play Beep
     private void Command_b(byte[] recv, RobotConnection conn)
     {
         if (conn.robot is IAudio)
         {
-            
             (conn.robot as IAudio).PlayBeep();
         }
+    }
+
+    // Send Radio Message (Add to receiver's buffer)
+    private void Command_R(byte[] recv, RobotConnection conn){     
+        if(conn.robot is IRadio)
+        {
+            int id = BitConverter.ToInt32(recv, 1);
+            int size = BitConverter.ToInt32(recv, 5);
+            id = IPAddress.NetworkToHostOrder(id);
+            size = IPAddress.NetworkToHostOrder(size);
+            Robot receiver = SimManager.instance.GetRobotByID(id);
+            if ( (receiver != null) && (receiver is IRadio) )
+            {
+                Debug.Log("Send Radio");
+                byte[] msg = new byte[size + 4];
+                BitConverter.GetBytes(size).CopyTo(msg, 0);
+                Array.Copy(recv, 9, msg, 4, size);
+                (receiver as IRadio).AddMessageToBuffer(conn.robot.objectID, msg);
+            }
+        }
+    }
+
+    // Receive Radio Message (Send to receiver)
+    private void Command_r(byte[] recv, RobotConnection conn) {
+        if(conn.robot is IRadio)
+        {
+            Debug.Log("Receive Radio");
+            byte[] msg = (conn.robot as IRadio).RetrieveMessageFromBuffer();
+            if (msg == null)
+            {
+                (conn.robot as IRadio).WaitForRadioMessage(ForwardRadioMessage);
+                return;
+            }
+            ForwardRadioMessage(conn, msg);
+        }
+    }
+
+    // Check the Radio Message Buffer
+    private void Command_c(byte[] recv, RobotConnection conn)
+    {
+    }
+
+    // Get Robot Pose
+    private void Command_1(byte[] recv, RobotConnection conn)
+    {
+        int xPos = (int) Mathf.Round( 1000 * conn.robot.transform.position.x);
+        int yPos = (int) Mathf.Round( 1000 * conn.robot.transform.position.z);
+
+        Packet p = new Packet();
+        p.packetType = PacketType.SERVER_MESSAGE;
+        p.dataSize = sizeof(int) * 2;
+        p.data = new byte[p.dataSize];
+        BitConverter.GetBytes(IPAddress.HostToNetworkOrder(xPos)).CopyTo(p.data, 0);
+        BitConverter.GetBytes(IPAddress.HostToNetworkOrder(yPos)).CopyTo(p.data, 4);
+        serverManager.WritePacket(conn, p);
+    }
+
+    // Set Robot Pose
+    private void Command_2(byte[] recv, RobotConnection conn)
+    {
+        int xPos = BitConverter.ToInt32(recv, 1);
+        int yPos = BitConverter.ToInt32(recv, 5);
+        int phi = BitConverter.ToInt32(recv, 9);
+        xPos = IPAddress.NetworkToHostOrder(xPos);
+        yPos = IPAddress.NetworkToHostOrder(yPos);
+
+        conn.robot.SetRobotPosition(xPos, yPos, phi);
+    }
+
+    // Get Object Pose
+    private void Command_3(byte[] recv, RobotConnection conn)
+    {
+        int obj = BitConverter.ToInt32(recv, 1);
+        obj = IPAddress.NetworkToHostOrder(obj);
+
+        int[] pose = SimManager.instance.GetObjectPoseByID(obj);
+        Packet p = new Packet();
+        p.packetType = PacketType.SERVER_MESSAGE;
+        p.dataSize = sizeof(int) * 3;
+        p.data = new byte[p.dataSize];
+        BitConverter.GetBytes(pose[0]).CopyTo(p.data, 0);
+        BitConverter.GetBytes(pose[1]).CopyTo(p.data, 4);
+        BitConverter.GetBytes(pose[2]).CopyTo(p.data, 8);
+        serverManager.WritePacket(conn, p);
+    }
+
+    // Set Object Pose
+    private void Command_4(byte[] recv, RobotConnection conn)
+    {
+        
     }
 
     public void ReceiveCommand(byte[] recv, RobotConnection conn)
@@ -356,6 +470,29 @@ public class Interpreter {
             // Drive Remaining
             case 'z':
                 Command_z(recv, conn);
+                break;
+            // Send Radio Message
+            case 'R':
+                Command_R(recv, conn);
+                break;
+            // Receive Radio message
+            case 'r':
+                Command_r(recv, conn);
+                break;
+            case 'c':
+                Command_c(recv, conn);
+                break;
+            // Sim Get Pose
+            case '1':
+                break;
+            // Sim Set Pose
+            case '2':
+                break;
+            // Sim Get Object (position)
+            case '3':
+                break;
+            // Sim Set Object (position)
+            case '4':
                 break;
             // Play beep
             case 'b':

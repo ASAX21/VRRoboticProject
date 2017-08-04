@@ -82,8 +82,9 @@ public class ServerManager : MonoBehaviour
     }
 
     // Terminate a connection, and remove form the connection list
-    private void CloseConnection(RobotConnection conn)
+    public void CloseConnection(RobotConnection conn)
     {
+        conn.robot.myConnection = null;
         conn.tcpClient.Close();
         if (!conns.Remove(conn))
             Debug.Log("Failed to remove connection");
@@ -103,6 +104,15 @@ public class ServerManager : MonoBehaviour
         WritePacket(conn, p);
     }
 
+    // Reject a connection (due to no robot present)
+    private void RejectConnection(TcpClient client)
+    {
+        byte[] reply = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00 };
+        reply[0] = PacketType.SERVER_DISCONNECT;
+        client.GetStream().Write(reply, 0, 5);
+        client.Close();
+    }
+
     // Accept a pending connection
     private void AcceptConnection()
     {
@@ -110,6 +120,8 @@ public class ServerManager : MonoBehaviour
         if (activeRobot == null)
         {
             Debug.Log("Control program connected but no robot active");
+            TcpClient client = listener.AcceptTcpClient();
+            RejectConnection(client);
             return;
         }
         else
@@ -193,17 +205,11 @@ public class ServerManager : MonoBehaviour
                 interpreter.ReceiveCommand(recvBuf, conn);
                 break;
             case PacketType.CLIENT_DISCONNECT:
-                DisconnectRobot(conn);
+                CloseConnection(conn);
                 break;
             default:
                 break;
         }
-    }
-
-    public void DisconnectRobot(RobotConnection conn)
-    {
-        conn.robot.myConnection = null;
-        conns.Remove(conn);
     }
 
     void Update ()

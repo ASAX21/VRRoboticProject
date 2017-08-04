@@ -26,6 +26,13 @@ public class SimManager : MonoBehaviour {
         allRobots = new List<Robot>();
         allWorldObjects = new List<WorldObject>();
     }
+
+    // Search only robots
+    public Robot GetRobotByID(int id)
+    {
+        Robot toFind = allRobots.Find(x => x.objectID == id);
+        return toFind;
+    }
     
     // Find object by ID - Search robots first, then world objects
     public PlaceableObject GetObjectByID(int id)
@@ -38,6 +45,18 @@ public class SimManager : MonoBehaviour {
 
         return toFind;
     }
+
+    // Get the pose of an object by ID
+    public int[] GetObjectPoseByID(int id)
+    {
+        PlaceableObject obj = GetObjectByID(id);
+        int[] pose = new int[3];
+        pose[0] = (int)Mathf.Round(1000 * obj.transform.position.x);
+        pose[1] = (int)Mathf.Round(1000 * obj.transform.position.x);
+        pose[2] = (int)obj.transform.eulerAngles.y;
+
+        return pose;
+    } 
 
     // Control simulation speed - BUGGY
     public void SetSimulationSpeed(float simSpeed)
