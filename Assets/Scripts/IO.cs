@@ -36,6 +36,10 @@ public class IO{
 		return theReader.ReadLine();
 	}
 
+	public string extension(string filePath) {
+		return Path.GetExtension (filePath);
+	}
+
 	public void printToCVS(string line){
 		
 		System.IO.File.AppendAllText("/Users/JoelFrewin/Documents/RobotVR/outputcsv.csv", "\n" + line);

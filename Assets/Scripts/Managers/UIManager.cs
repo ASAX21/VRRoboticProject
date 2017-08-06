@@ -47,7 +47,7 @@ public class UIManager : MonoBehaviour {
     {
         worldBuilder = WorldBuilder.instance;
         robotBuilder = RobotBuilder.instance;
-        worldFileFinder.Initialise("*.wld", worldBuilder);
+		worldFileFinder.Initialise("*", worldBuilder);
         robotFileFinder.Initialise("*.robi", robotBuilder);
     }
 
