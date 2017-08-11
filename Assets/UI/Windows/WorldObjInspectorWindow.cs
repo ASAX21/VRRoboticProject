@@ -5,10 +5,21 @@ public class WorldObjInspectorWindow : MonoBehaviour {
 
     public WorldObject worldObj;
 
-    // Position variables
+    // Object identifiers
+    [Header("Identifier Text Display")]
     [SerializeField]
-    private InputField objXValue, objzValue, objPhiValue;
+    private Text objNumber;
+    [SerializeField]
+    private Text objName;
 
+    // Position variables
+    [Header("Position Text Displays")]
+    [SerializeField]
+    private InputField objXValue;
+    [SerializeField]
+    private InputField objYValue, objPhiValue;
+
+    [Header("Icons")]
     public Image lockButtonImage;
     public Sprite lockedImage;
     public Sprite unlockedImage;
@@ -16,30 +27,75 @@ public class WorldObjInspectorWindow : MonoBehaviour {
     // Use this for initialization
     void Start () {
         lockButtonImage.sprite = worldObj.locked ? lockedImage : unlockedImage;
+        objNumber.text = "ID # " + worldObj.objectID.ToString();
+        objName.text = worldObj.name;
+
+        objXValue.interactable = SimManager.instance.isPaused;
+        objYValue.interactable = SimManager.instance.isPaused;
+        objPhiValue.interactable = SimManager.instance.isPaused;
+
+        SimManager.instance.OnPause += OnSimPaused;
+        SimManager.instance.OnResume += OnSimResumed;
     }
-	
-	// Update is called once per frame
-	void Update () {
-        if (worldObj.locked)
+
+    void OnDestroy()
+    {
+        SimManager.instance.OnPause -= OnSimPaused;
+        SimManager.instance.OnResume -= OnSimResumed;
+    }
+
+    // Update is called once per frame
+    void Update () {
+        if (!SimManager.instance.isPaused)
         {
-            objXValue.text = worldObj.transform.position.x.ToString();
-            objzValue.text = worldObj.transform.position.z.ToString();
-            objPhiValue.text = worldObj.transform.rotation.eulerAngles.y.ToString();
+            objXValue.text = (1000f * worldObj.transform.position.x).ToString("N2");
+            objYValue.text = (1000f * worldObj.transform.position.z).ToString("N2");
+            objPhiValue.text = worldObj.transform.rotation.eulerAngles.y.ToString("N2");
         }
+    }
+
+    public void SetXPosition(string x)
+    {
+        Vector3 pos = worldObj.transform.position;
+        pos.x = float.Parse(x) / 1000f;
+        worldObj.transform.position = pos;
+    }
+
+    public void SetYPosition(string y)
+    {
+        Vector3 pos = worldObj.transform.position;
+        pos.z = float.Parse(y) / 1000f;
+        worldObj.transform.position = pos;
+    }
+
+    public void SetPhiPosition(string phi)
+    {
+        worldObj.transform.rotation = Quaternion.Euler(0, float.Parse(phi), 0);
+    }
+
+    public void OnSimPaused()
+    {
+        objXValue.interactable = true;
+        objYValue.interactable = true;
+        objPhiValue.interactable = true;
+    }
+
+    public void OnSimResumed()
+    {
+        objXValue.interactable = false;
+        objYValue.interactable = false;
+        objPhiValue.interactable = false;
     }
 
     public void LockButton()
     {
         worldObj.locked = !worldObj.locked;
         lockButtonImage.sprite = worldObj.locked ? lockedImage : unlockedImage;
-        objXValue.readOnly = worldObj.locked;
-        objzValue.readOnly = worldObj.locked;
-        objPhiValue.readOnly = worldObj.locked;
     }
 
-    public void DeleteObject()
+    public void DeleteButton()
     {
-        Destroy(worldObj.gameObject);
+        SimManager.instance.RemoveWorldObjectFromScene(worldObj);
         Destroy(gameObject);
     }
 

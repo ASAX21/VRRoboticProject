@@ -7,6 +7,9 @@ public class MenuBarItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public static MenuBarItem currentOpenSubmenu;
 
+    // Can the button be pressed
+    public bool isDisabled;
+
     // Variables for colors
     private MenuBarManager menuBarManager;
     private Color hoverColor;
@@ -46,6 +49,10 @@ public class MenuBarItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             menuBarManager = MenuBarManager.instance;
         hoverColor = menuBarManager.selectedColor;
         defaultColor = menuBarManager.menuItemColor;
+        if (isDisabled)
+        {
+            transform.GetChild(0).GetComponent<Text>().color = Color.gray;
+        }
     }
 
     public void OpenSubMenu()
@@ -64,7 +71,7 @@ public class MenuBarItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (hasSubmenu)
+        if (isDisabled || hasSubmenu)
             return;
 
 		if (isSubmenuItem)
@@ -78,7 +85,11 @@ public class MenuBarItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-		if (hasSubmenu)
+        if (isDisabled)
+            return;
+
+        image.color = hoverColor;
+        if (hasSubmenu)
 		{
 			OpenSubMenu();
 			currentOpenSubmenu = this;
@@ -88,11 +99,14 @@ public class MenuBarItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
             if(currentOpenSubmenu != null)
                 currentOpenSubmenu.CloseSubMenu();
         }
-        image.color = hoverColor;
+     
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        if (isDisabled)
+            return;
+
 		if (hasSubmenu)
 		{
 			CloseSubMenu();

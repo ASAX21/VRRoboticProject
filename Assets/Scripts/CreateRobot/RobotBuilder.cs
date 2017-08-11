@@ -38,7 +38,7 @@ public class RobotBuilder: MonoBehaviour, IFileReceiver{
 			}
 		}
         robot.PostBuild();
-        ObjectManager.instance.AddObjectToMouse(robotObject.GetComponent<PlaceableObject>());
+        ObjectManager.instance.AddObjectToMouse(robotObject.GetComponent<PlaceableObject>(), 0);
         ServerManager.instance.activeRobot = robot;
 		return robotObject;
 	}

@@ -40,6 +40,18 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 		return world;
 	}
 
+    public GameObject CreateBox()
+    {
+        Destroy(GameObject.Find("World"));
+        world = new GameObject("World");
+        addFloor(0f, 0f, 2f, 2f);
+        addWall(0, 0, 0, 2f);
+        addWall(0, 2f, 2f, 2f);
+        addWall(2f, 0, 2f, 2f);
+        addWall(0, 0, 2f, 0);
+        return world;
+    }
+
 	public void processwld (){
 		string line;
 		while ((line = io.readLine()) != "ENDOFFILE") {
@@ -58,8 +70,6 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 			}
 		}
 	}
-
-
 
 	public void processmaz (){
 		string line;
@@ -97,9 +107,10 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 	void addWall (float x1, float y1, float x2, float y2) {
 		GameObject wall = Instantiate(Resources.Load("Cube")) as GameObject;
 		wall.name = "wall";
+        wall.layer = 0;
 		Vector2 start = new Vector2(x1, y1);
 		Vector2 end = new Vector2(x2, y2);
-		wall.transform.localScale = new Vector3 (Vector2.Distance(start, end),0.1f,0.01f);
+		wall.transform.localScale = new Vector3 (Vector2.Distance(start, end),0.3f,0.01f);
 		wall.transform.position = new Vector3 ((end.x+start.x)/2,0.05f,(end.y+start.y)/2);
 		wall.transform.rotation = Quaternion.Euler (0,Mathf.Atan2(end.y-start.y,end.x-start.x)/Mathf.PI*180,0);
 		wall.transform.SetParent (world.transform);
@@ -108,6 +119,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 	void addFloor (float xpos, float ypos, float width, float height) {
 		GameObject floor = Instantiate(Resources.Load("Cube")) as GameObject;
 		floor.name = "floor";
+        floor.layer = Layers.GroundLayer;
 		floor.transform.localScale = new Vector3 (width,0.1f,height);
 		floor.transform.position = new Vector3 (xpos + width/2,-0.05f,ypos + height/2);
 		floor.transform.SetParent (world.transform);

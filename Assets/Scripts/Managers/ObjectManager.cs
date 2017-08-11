@@ -27,6 +27,7 @@ public class ObjectManager : MonoBehaviour {
 
     // Specific object currently being placed (one at a time strict)
     public PlaceableObject objectOnMouse;
+    public float verticalOffset;
 
     private Plane ground;
 
@@ -49,40 +50,45 @@ public class ObjectManager : MonoBehaviour {
     }
 
     // Add some object to scene
-    private void AddObjectToScene(GameObject prefab)
+    private void AddObjectToScene(PlaceableObject newObj)
     {
-        PlaceableObject newObj = Instantiate(prefab).GetComponent<PlaceableObject>();
         newObj.objectID = totalObjects;
         totalObjects++;
         if (newObj is Robot)
             SimManager.instance.AddRobotToScene(newObj as Robot);
         else if (newObj is WorldObject)
             SimManager.instance.AddWorldObjectToScene(newObj as WorldObject);
-        AddObjectToMouse(newObj);
+        AddObjectToMouse(newObj, 0f);
     }
 
     // Specific object creators - called from Add Object menu
     public void AddCokeCanToScene()
     {
-        AddObjectToScene(cokeCanPrefab);
+        PlaceableObject newObj = Instantiate(cokeCanPrefab).GetComponent<PlaceableObject>();
+        newObj.name = "Coke Can";
+        AddObjectToScene(newObj);
     }
 
     public void AddSoccerBallToScene()
     {
-        AddObjectToScene(soccerBallPrefab);
+        PlaceableObject newObj = Instantiate(soccerBallPrefab).GetComponent<PlaceableObject>();
+        newObj.name = "Soccer Ball";
+        AddObjectToScene(newObj);
     }
 
     public void AddLabBotToScene()
     {
-        AddObjectToScene(labBotPrefab);
-
+        PlaceableObject newObj = Instantiate(labBotPrefab).GetComponent<PlaceableObject>();
+        newObj.name = "Lab Bot";
+        AddObjectToScene(newObj);
     }
         
     // ----- Handle placement of object via mouse -----
 
-    public void AddObjectToMouse(PlaceableObject newObject)
+    public void AddObjectToMouse(PlaceableObject newObject, float vert)
     {
         objectOnMouse = newObject;
+        verticalOffset = vert;
         newObject.AttachToMouse();
     }
 
@@ -107,7 +113,7 @@ public class ObjectManager : MonoBehaviour {
 			float distance;
 			if(ground.Raycast(ray, out distance)){
 				Vector3 hitpoint = ray.GetPoint (distance);
-				objectOnMouse.transform.position = new Vector3(hitpoint.x, 0.03f, hitpoint.z);
+				objectOnMouse.transform.position = new Vector3(hitpoint.x, 0.03f + verticalOffset, hitpoint.z);
                 if(Physics.Raycast(ray, 1000f, groundMask))
                     objectOnMouse.updateValidity(true);
                 else

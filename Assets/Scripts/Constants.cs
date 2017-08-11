@@ -18,3 +18,8 @@ public static class PacketType  {
     public const byte DRIVE_DONE = 0x0D;
     public const byte RADIO_MESSAGE = 0x0E;
 }
+
+public static class Layers
+{
+    public const int GroundLayer = 10;
+}

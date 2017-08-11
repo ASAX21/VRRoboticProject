@@ -310,22 +310,16 @@ public class Interpreter {
     private void Command_R(byte[] recv, RobotConnection conn){     
         if(conn.robot is IRadio)
         {
-            Debug.Log("Radio Receive");
             // Get ID of sender, and length of null-terminated string
             int id = BitConverter.ToInt32(recv, 1);
             int strlen = Array.IndexOf(recv, (byte)0, 5) - 4;
-            Debug.Log("Strlen: " + strlen);
             id = IPAddress.NetworkToHostOrder(id);
-            if (strlen <= 0)
-            {
-                byte[] test = new byte[13];
+            if (strlen <= 0)     
                 return;
-            }
             // Forward message to robot as id | string
             Robot receiver = SimManager.instance.GetRobotByID(id);
             if ( (receiver != null) && (receiver is IRadio) )
             {
-                Debug.Log("Send Radio");
                 byte[] msg = new byte[4 + strlen];
                 BitConverter.GetBytes(id).CopyTo(msg, 0);
                 Array.Copy(recv, 5, msg, 4, strlen);

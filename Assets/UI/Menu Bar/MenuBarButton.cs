@@ -46,6 +46,9 @@ public class MenuBarButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (isSelected)
+            return;
+
         if (isMenuOpen)
         {
             currentOpenMenu.CloseMenu();

@@ -29,11 +29,9 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
     public List<MaterialContainer> matContainer;
     private Material validMat;
     private Material invalidMat;
-    
+
     // Unity Components
-    [SerializeField]
-    protected Collider objCollider;
-    public Rigidbody rigidBody;
+    public List<PhysicalContainer> physContainer;
 
     // UI Variables
     public bool isWindowOpen = false;
@@ -58,9 +56,9 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
     // Initializes required variables (Prefab vars set in editor)
     public void PostBuild()
     {
-        rigidBody = gameObject.GetComponent<Rigidbody>();
-        objCollider = gameObject.GetComponent<Collider>();
-        matContainer = new List<MaterialContainer>();
+       // rigidBody = gameObject.GetComponent<Rigidbody>();
+       // objCollider = gameObject.GetComponent<Collider>();
+       // matContainer = new List<MaterialContainer>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -138,9 +136,13 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
             mat.modelRend.material = validMat;
         }
 
+        foreach(PhysicalContainer phys in physContainer)
+        {
+            phys.collider.isTrigger = true;
+            phys.rigidBody.isKinematic = true;
+        }
+
         collisionCount = 0;
-        objCollider.isTrigger = true;
-        rigidBody.isKinematic = true;
         isPlaced = false;
         isSelected = false;
     }
@@ -151,17 +153,21 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
         {
             mat.modelRend.material = mat.defaultMat;
         }
-        objCollider.isTrigger = false;
-        rigidBody.isKinematic = false;
+        foreach (PhysicalContainer phys in physContainer)
+        {
+            phys.collider.isTrigger = false;
+            if(!SimManager.instance.isPaused)
+                phys.rigidBody.isKinematic = false;
+        }
         isPlaced = true;
         isInit = true;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (!locked)
+        if (!locked && objectManager.objectOnMouse == null)
         {
-            objectManager.AddObjectToMouse(this);
+            objectManager.AddObjectToMouse(this, transform.position.y);
             Deselect();
         }
     }
@@ -175,6 +181,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
     }
 }
 
+// Container class for rendering components associated with robot
 [Serializable]
 public class MaterialContainer
 {
@@ -182,4 +189,14 @@ public class MaterialContainer
     internal Material defaultMat;
     [SerializeField]
     internal Renderer modelRend;
+}
+
+// Container class for physical components associated with robot
+[Serializable]
+public class PhysicalContainer
+{
+    [SerializeField]
+    internal Collider collider;
+    [SerializeField]
+    internal Rigidbody rigidBody;
 }
