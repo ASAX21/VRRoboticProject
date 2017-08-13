@@ -29,7 +29,7 @@ public class Interpreter {
         Debug.Log("Forwarding a Packet");
         Packet p = new Packet();
         p.packetType = PacketType.RADIO_MESSAGE;
-        p.dataSize = (uint) msg.Length;
+        p.dataSize =  msg.Length;
         p.data = msg;
         serverManager.WritePacket(conn, p);
     }
@@ -167,7 +167,7 @@ public class Interpreter {
             byte[] img = (conn.robot as ICameras).GetCameraOutput(0);
             Packet packet = new Packet();
             packet.packetType = PacketType.SERVER_CAMIMG;
-            packet.dataSize = (UInt32)img.Length;
+            packet.dataSize = img.Length;
             packet.data = img;
             serverManager.WritePacket(conn, packet);
         }
@@ -346,6 +346,55 @@ public class Interpreter {
     // Check the Radio Message Buffer
     private void Command_c(byte[] recv, RobotConnection conn)
     {
+        if (conn.robot is IRadio)
+        {
+            int numMsgs = (conn.robot as IRadio).GetNumberOfMessages();
+            Debug.Log("num msgs = " + numMsgs);
+            numMsgs = IPAddress.HostToNetworkOrder(numMsgs);
+
+            Packet p = new Packet();
+            p.packetType = PacketType.SERVER_MESSAGE;
+            p.dataSize = 4;
+            p.data = new byte[p.dataSize];
+            BitConverter.GetBytes(numMsgs).CopyTo(p.data, 0);
+            serverManager.WritePacket(conn, p);
+        }
+        else
+        {
+            Debug.Log("Radio Check on a non radio robot");
+        }
+    }
+    // Get own ID
+    private void Command_i(byte[] recv, RobotConnection conn)
+    {
+        int id = conn.robot.objectID;
+        id = IPAddress.HostToNetworkOrder(id);
+
+        Packet p = new Packet();
+        p.packetType = PacketType.SERVER_MESSAGE;
+        p.dataSize = 4;
+        p.data = new byte[p.dataSize];
+        BitConverter.GetBytes(id).CopyTo(p.data, 0);
+        serverManager.WritePacket(conn, p);
+    }
+    // Get all other IDs
+    private void Command_I(byte[] recv, RobotConnection conn)
+    {
+        int numBots = SimManager.instance.allRobots.Count;
+
+        Packet p = new Packet();
+        p.packetType = PacketType.SERVER_MESSAGE;
+        p.dataSize = 4 + (numBots * 4);
+        p.data = new byte[p.dataSize];
+        // Get ID of each robot
+        for (int i = 0; i < numBots; i++)
+        {
+            BitConverter.GetBytes(IPAddress.HostToNetworkOrder(SimManager.instance.allRobots[i].objectID))
+                .CopyTo(p.data, 4 * (i + 1));
+        }
+        // Write number of robots
+        BitConverter.GetBytes(IPAddress.HostToNetworkOrder(numBots)).CopyTo(p.data, 0);
+        serverManager.WritePacket(conn, p);
     }
 
     // Get Robot Pose
@@ -395,7 +444,7 @@ public class Interpreter {
     // Set Object Pose
     private void Command_4(byte[] recv, RobotConnection conn)
     {
-        
+
     }
 
     public void ReceiveCommand(byte[] recv, RobotConnection conn)
@@ -481,8 +530,17 @@ public class Interpreter {
             case 'r':
                 Command_r(recv, conn);
                 break;
+            // Radio Check
             case 'c':
                 Command_c(recv, conn);
+                break;
+            // Get ID
+            case 'i':
+                Command_i(recv, conn);
+                break;
+            // Get all other IDs
+            case 'I':
+                Command_I(recv, conn);
                 break;
             // Sim Get Pose
             case '1':

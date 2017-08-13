@@ -16,7 +16,7 @@ internal class Packet
 {
     // 5 bytes header
     internal byte packetType;
-    internal UInt32 dataSize;
+    internal int dataSize;
     // payload
     internal byte[] data;
 }
@@ -49,12 +49,14 @@ public class ServerManager : MonoBehaviour
 
     List<RobotConnection> conns = new List<RobotConnection>();
 
+    // The active robot is the robot that will execute the next control program
     public Robot activeRobot;
     private int robotIDs = 1;
 
-    TcpListener listener = null;
-    int port = 34721;
-    IPAddress localAddr = IPAddress.Parse("127.0.0.1");
+    private TcpListener listener = null;
+    private int port = 34721;
+    private IPAddress localAddr = IPAddress.Parse("127.0.0.1");
+    private bool connsChanged;
     
     public Interpreter interpreter;
 
@@ -88,6 +90,10 @@ public class ServerManager : MonoBehaviour
         conn.tcpClient.Close();
         if (!conns.Remove(conn))
             Debug.Log("Failed to remove connection");
+        else
+        {
+            connsChanged = true;
+        }
     }
 
     // Handshake connection with control program
@@ -146,10 +152,9 @@ public class ServerManager : MonoBehaviour
     internal void WritePacket(RobotConnection conn, Packet packet)
     {
         byte[] sendBuf = new byte[packet.dataSize + 5];
-        UInt32 size = packet.dataSize;
+        int size = packet.dataSize;
 
-        if (BitConverter.IsLittleEndian)
-            size = RobotFunction.ReverseBytes(size);
+        size = IPAddress.HostToNetworkOrder(size);
 
         sendBuf[0] = Convert.ToByte(packet.packetType);
         BitConverter.GetBytes(size).CopyTo(sendBuf, 1);
@@ -224,7 +229,20 @@ public class ServerManager : MonoBehaviour
             NetworkStream stream = conn.tcpClient.GetStream();
             if (stream.DataAvailable)
                 ReadPacket(conn);
+            // If the operation causes the list to be modified, break out of current loop
+            if (connsChanged)
+            {
+                connsChanged = false;
+                break;
+            }
         }
+    }
+
+    private void OnApplicationQuit()
+    {
+        foreach(RobotConnection conn in conns)
+            CloseConnection(conn);
+        listener.Stop();
     }
 
     // Check each open connection every 5 seconds

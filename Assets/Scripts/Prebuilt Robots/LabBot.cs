@@ -183,4 +183,9 @@ public class LabBot : Robot,
         radioMessageDelegate = radioDelegate;
         radioController.receivedCallback = RadioReceivedCallback;
     }
+
+    public int GetNumberOfMessages()
+    {
+        return radioController.numMessages;
+    }
 }

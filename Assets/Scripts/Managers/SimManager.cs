@@ -2,7 +2,7 @@
  * and the state of the current World. It also handles launching and termination
  * of the simulation program
  */
-
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -35,13 +35,33 @@ public class SimManager : MonoBehaviour {
     }
 
     private void Start() {
-        if (Application.platform == RuntimePlatform.WindowsPlayer)
+        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
         {
             windowsOS = new WindowsOSManager();
         }
         allRobots = new List<Robot>();
         allWorldObjects = new List<WorldObject>();
         world = WorldBuilder.instance.CreateBox();
+    }
+
+    private void OnApplicationQuit()
+    {
+        if (windowsOS != null)
+            windowsOS.Terminate();
+    }
+
+    public void LaunchTerminal()
+    {
+        // If windows launch CYGWIN
+        if(Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            windowsOS.LaunchCygwinTerminal();
+        }
+        // Else launch default terminal
+        else
+        {
+            //TODO: Mac terminal
+        }
     }
 
     // Search only Robots
@@ -100,6 +120,12 @@ public class SimManager : MonoBehaviour {
             Debug.Log("Failed to remove a robot from the scene!");
         if (robot.myConnection != null)
             ServerManager.instance.CloseConnection(robot.myConnection);
+        // Change the active robot
+        if (robot == ServerManager.instance.activeRobot && allRobots.Count > 0)
+            ServerManager.instance.activeRobot = allRobots.Last();
+        else
+            ServerManager.instance.activeRobot = null;
+        // Remove the object from the scene
         Destroy(robot.gameObject);
         ViewRobotsWindow.instance.UpdateRobotList();
     }
@@ -107,8 +133,10 @@ public class SimManager : MonoBehaviour {
     // Add a world object
     public void AddWorldObjectToScene(WorldObject worldObj)
     {
+        Debug.Log("New Object");
         worldObj.objectID = ++totalObjects;
         allWorldObjects.Add(worldObj);
+        ViewWorldObjectsWindow.instance.UpdateWorldObjectsList();
     }
 
     // Remove a world object
@@ -117,6 +145,7 @@ public class SimManager : MonoBehaviour {
         if (!allWorldObjects.Remove(worldObj))
             Debug.Log("Failed to remove a world object from the scene!");
         Destroy(worldObj.gameObject);
+        ViewWorldObjectsWindow.instance.UpdateWorldObjectsList();
     }
 
     // Remove all robots from the scene

@@ -18,6 +18,8 @@ public class UIManager : MonoBehaviour {
     [Header("Game Windows")]
     [SerializeField]
     ViewRobotsWindow viewRobotsWindow;
+    [SerializeField]
+    ViewWorldObjectsWindow viewWorldObjectsWindow;
 
     // Builders
     private WorldBuilder worldBuilder;
@@ -83,5 +85,13 @@ public class UIManager : MonoBehaviour {
             viewRobotsWindow.transform.SetAsFirstSibling();
         else
             viewRobotsWindow.gameObject.SetActive(true);
+    }
+
+    public void OpenViewObjectsWindow()
+    {
+        if (viewWorldObjectsWindow.gameObject.activeInHierarchy)
+            viewWorldObjectsWindow.transform.SetAsFirstSibling();
+        else
+            viewWorldObjectsWindow.gameObject.SetActive(true);
     }
 }

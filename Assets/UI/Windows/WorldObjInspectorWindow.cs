@@ -48,9 +48,9 @@ public class WorldObjInspectorWindow : MonoBehaviour {
     void Update () {
         if (!SimManager.instance.isPaused)
         {
-            objXValue.text = (1000f * worldObj.transform.position.x).ToString("N2");
-            objYValue.text = (1000f * worldObj.transform.position.z).ToString("N2");
-            objPhiValue.text = worldObj.transform.rotation.eulerAngles.y.ToString("N2");
+            objXValue.text = (1000f * worldObj.transform.position.x).ToString("0.##");
+            objYValue.text = (1000f * worldObj.transform.position.z).ToString("0.##");
+            objPhiValue.text = worldObj.transform.rotation.eulerAngles.y.ToString("0.##");
         }
     }
 

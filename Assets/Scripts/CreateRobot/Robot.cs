@@ -58,6 +58,7 @@ public interface IRadio
     void AddMessageToBuffer(byte[] msg);
     byte[] RetrieveMessageFromBuffer();
     void WaitForRadioMessage(Action<RobotConnection, byte[]> radioDelegate);
+    int GetNumberOfMessages();
 }
 // Class used to pass data back to client
 public class Speed

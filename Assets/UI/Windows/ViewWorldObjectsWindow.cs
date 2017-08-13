@@ -5,7 +5,7 @@ public class ViewWorldObjectsWindow : MonoBehaviour {
 
     public static ViewWorldObjectsWindow instance { get; private set; }
 
-    public Transform contentWindow;
+    public Transform content;
     public GameObject objectButtonPrefab;
 
     private void Awake()
@@ -18,10 +18,18 @@ public class ViewWorldObjectsWindow : MonoBehaviour {
         gameObject.SetActive(false);
     }
 
-    public void AddRobotToDisplayList(WorldObject worldObj)
+    public void UpdateWorldObjectsList()
     {
-        GameObject newbutton = Instantiate(objectButtonPrefab, contentWindow, false);
-        newbutton.transform.GetChild(0).GetComponent<Text>().text = "Object " + worldObj.objectID;
-        newbutton.GetComponent<Button>().onClick.AddListener(worldObj.OpenInfoWindow);
+        foreach (Transform button in content)
+        {
+            Destroy(button.gameObject);
+        }
+
+        foreach(WorldObject wObj in SimManager.instance.allWorldObjects)
+        {
+            GameObject newbutton = Instantiate(objectButtonPrefab, content, false);
+            newbutton.transform.GetChild(0).GetComponent<Text>().text = "Object " + wObj.objectID;
+            newbutton.GetComponent<Button>().onClick.AddListener(wObj.OpenInfoWindow);
+        }
     }
 }

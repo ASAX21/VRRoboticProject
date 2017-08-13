@@ -16,6 +16,11 @@ public class WindowsOSManager
     // Launch X Windows server (XMing) on start
     public WindowsOSManager()
     {
+        LaunchXMing();
+    }
+
+    private void LaunchXMing()
+    {
         ProcessStartInfo startInfo = new ProcessStartInfo();
         startInfo.UseShellExecute = false;
         startInfo.FileName = @"Xming\Xming.exe";
@@ -25,24 +30,20 @@ public class WindowsOSManager
         xWindowsServer.Start();
     }
 
-    // Close the X Windows server
-    ~WindowsOSManager()
-    {
-        xWindowsServer.Close();
-    }
-
     // Compile a RoBIOS program using cygwin (32 bit)
     public void LaunchCygwinTerminal()
     {
         ProcessStartInfo startInfo = new ProcessStartInfo();
         startInfo.WorkingDirectory = @"cygwin";
         startInfo.FileName = "Cygwin.bat";
-        startInfo.UseShellExecute = false;
-        startInfo.RedirectStandardInput = false;
-        startInfo.EnvironmentVariables["DISPLAY"] = ":0";
 
         Process proc = new Process();
         proc.StartInfo = startInfo;
         proc.Start();
+    }
+
+    public void Terminate()
+    {
+        xWindowsServer.Close();
     }
 }
