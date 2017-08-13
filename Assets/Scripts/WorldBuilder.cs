@@ -20,7 +20,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 
     public GameObject ReceiveFile(string filepath)
     {
-		GameObject.DestroyImmediate (GameObject.Find ("World"));
+        SimManager.instance.DestroyWorld();
 		this.filepath = filepath;
         world = new GameObject();
 		world.name = "World";
@@ -37,12 +37,12 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 			processmaz ();	
 			break;
 		}
+        SimManager.instance.world = world;
 		return world;
 	}
 
     public GameObject CreateBox()
     {
-        Destroy(GameObject.Find("World"));
         world = new GameObject("World");
         addFloor(0f, 0f, 2f, 2f);
         addWall(0, 0, 0, 2f);

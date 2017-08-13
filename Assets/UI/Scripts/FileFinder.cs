@@ -46,7 +46,7 @@ public class FileFinder : MonoBehaviour
 		m_fileBrowser.SelectionPattern = m_selectPattern;
 		m_fileBrowser.DirectoryImage = m_directoryImage;
 		m_fileBrowser.FileImage = m_fileImage;
-        Debug.Log("Opened fiel browser");
+        Debug.Log("Opened file browser");
 	}
 
     protected void FileSelectedCallback(string path)

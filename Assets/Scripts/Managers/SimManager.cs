@@ -156,7 +156,6 @@ public class SimManager : MonoBehaviour {
         {
             RemoveRobotFromScene(allRobots[i]);
         }
-        ViewRobotsWindow.instance.UpdateRobotList();
     }
 
     // Remove all world objects from the scene
@@ -168,12 +167,17 @@ public class SimManager : MonoBehaviour {
         }
     }
 
-    // Remove all objects and load the original world (box)
-    public void ResetWorld()
+    public void DestroyWorld()
     {
         RemoveAllWorldObjects();
         RemoveAllRobots();
-        ViewRobotsWindow.instance.UpdateRobotList();
+        Destroy(world.gameObject);
+    }
+
+    // Remove all objects and load the original world (box)
+    public void ResetWorld()
+    {
+        DestroyWorld();
         world = WorldBuilder.instance.CreateBox();
     }
     
