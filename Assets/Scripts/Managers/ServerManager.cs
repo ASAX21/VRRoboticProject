@@ -91,9 +91,7 @@ public class ServerManager : MonoBehaviour
         if (!conns.Remove(conn))
             Debug.Log("Failed to remove connection");
         else
-        {
             connsChanged = true;
-        }
     }
 
     // Handshake connection with control program

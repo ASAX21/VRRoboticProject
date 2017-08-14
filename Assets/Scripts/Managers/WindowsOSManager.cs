@@ -42,8 +42,10 @@ public class WindowsOSManager
         proc.Start();
     }
 
+    // Close the XMing instance
     public void Terminate()
     {
+        xWindowsServer.CloseMainWindow();
         xWindowsServer.Close();
     }
 }

@@ -117,14 +117,20 @@ public class SimManager : MonoBehaviour {
     public void RemoveRobotFromScene(Robot robot)
     {
         if (!allRobots.Remove(robot))
+        {
             Debug.Log("Failed to remove a robot from the scene!");
+            return;
+        }
         if (robot.myConnection != null)
             ServerManager.instance.CloseConnection(robot.myConnection);
         // Change the active robot
-        if (robot == ServerManager.instance.activeRobot && allRobots.Count > 0)
-            ServerManager.instance.activeRobot = allRobots.Last();
-        else
-            ServerManager.instance.activeRobot = null;
+        if (robot == ServerManager.instance.activeRobot)
+        {
+            if (allRobots.Count > 0)
+                ServerManager.instance.activeRobot = allRobots.Last();
+            else
+                ServerManager.instance.activeRobot = null;
+        }
         // Remove the object from the scene
         Destroy(robot.gameObject);
         ViewRobotsWindow.instance.UpdateRobotList();

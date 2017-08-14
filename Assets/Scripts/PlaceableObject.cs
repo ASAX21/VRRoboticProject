@@ -89,6 +89,8 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
 
     public virtual void OnPointerClick(PointerEventData eventData)
     {
+        return;
+        /*
         if ( eventData.button == PointerEventData.InputButton.Left && 
              eventData.clickCount == 1 &&
              isPlaced)
@@ -103,6 +105,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
                 Select();
             }
         }
+        */
     }
 
     protected void Select()
@@ -165,10 +168,10 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (!locked && objectManager.objectOnMouse == null)
+        if (!locked && objectManager.objectOnMouse == null && eventData.button == PointerEventData.InputButton.Left)
         {
             objectManager.AddObjectToMouse(this, transform.position.y);
-            Deselect();
+            //Deselect();
         }
     }
 

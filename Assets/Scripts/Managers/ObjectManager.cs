@@ -54,10 +54,6 @@ public class ObjectManager : MonoBehaviour {
     {
         newObj.objectID = totalObjects;
         totalObjects++;
-        if (newObj is Robot)
-            SimManager.instance.AddRobotToScene(newObj as Robot);
-        else if (newObj is WorldObject)
-            SimManager.instance.AddWorldObjectToScene(newObj as WorldObject);
         AddObjectToMouse(newObj, 0f);
     }
 
@@ -94,11 +90,21 @@ public class ObjectManager : MonoBehaviour {
 
     public void TryPlaceObject()
     {
+        // Determine final validitiy of placement option
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
         bool valid = objectOnMouse.updateValidity(Physics.Raycast(ray, out hit, 1000f, groundMask));
         if (valid)
         {
+            // If it is new object, add to sim manager
+            if (!objectOnMouse.isInit)
+            {
+                if (objectOnMouse is Robot)
+                    SimManager.instance.AddRobotToScene(objectOnMouse as Robot);
+                else if (objectOnMouse is WorldObject)
+                    SimManager.instance.AddWorldObjectToScene(objectOnMouse as WorldObject);
+            }
+            // Place object physically
             objectOnMouse.PlaceObject();
             objectOnMouse = null;
         }

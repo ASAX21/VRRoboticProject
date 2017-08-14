@@ -114,6 +114,11 @@ public class RobotInspectorWindow : MonoBehaviour {
         robotPhiValue.interactable = false;
     }
 
+    public void TrailButton()
+    {
+        robot.ToggleTrail();
+    }
+
     public void LockButton()
     {
         robot.locked = !robot.locked;
