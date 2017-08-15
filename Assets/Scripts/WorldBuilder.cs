@@ -90,7 +90,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 								ymax = Mathf.Max (ymax, ypos + size);
 							}
 						} else {
-							if(line[i] == '_'){
+							if("_SUDLR".Contains(line[i].ToString())){
 								addWall (xpos, ypos, xpos + size, ypos); 
 							}
 						}
@@ -105,7 +105,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 	}
 
 	void addWall (float x1, float y1, float x2, float y2) {
-		GameObject wall = Instantiate(Resources.Load("Cube")) as GameObject;
+		GameObject wall = Instantiate(Resources.Load("Wall")) as GameObject;
 		wall.name = "wall";
         wall.layer = 0;
 		Vector2 start = new Vector2(x1, y1);
@@ -117,7 +117,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 	}
 
 	void addFloor (float xpos, float ypos, float width, float height) {
-		GameObject floor = Instantiate(Resources.Load("Cube")) as GameObject;
+		GameObject floor = Instantiate(Resources.Load("Floor")) as GameObject;
 		floor.name = "floor";
         floor.layer = Layers.GroundLayer;
 		floor.transform.localScale = new Vector3 (width,0.1f,height);
