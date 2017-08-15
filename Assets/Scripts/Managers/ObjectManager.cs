@@ -23,6 +23,7 @@ public class ObjectManager : MonoBehaviour {
 
     // Robot Prefabs
     public GameObject labBotPrefab;
+	public GameObject S4Prefab;
     // ---------------------------------------------------------------------
 
     // Specific object currently being placed (one at a time strict)
@@ -78,6 +79,13 @@ public class ObjectManager : MonoBehaviour {
         newObj.name = "Lab Bot";
         AddObjectToScene(newObj);
     }
+
+	public void AddS4ToScene()
+	{
+		PlaceableObject newObj = Instantiate(S4Prefab).GetComponent<PlaceableObject>();
+		newObj.name = "S4";
+		AddObjectToScene(newObj);
+	}
         
     // ----- Handle placement of object via mouse -----
 

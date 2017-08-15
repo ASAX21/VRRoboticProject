@@ -215,7 +215,7 @@ public class RobotBuilder: MonoBehaviour, IFileReceiver{
 			Transform CameraContainer = robotObject.transform.Find("CameraContainer");
 			if (CameraContainer == null)
 				CameraContainer = AddCameraContainer();
-            Debug.Log("addeing camera");
+            Debug.Log("adding camera");
 			Object cameraPrefab = Resources.Load("CameraPrefab");
 			GameObject camera = Object.Instantiate(cameraPrefab) as GameObject;
 			camera.transform.SetParent(CameraContainer, false);
