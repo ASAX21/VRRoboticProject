@@ -87,8 +87,7 @@ public class Interpreter {
         if(conn.robot is IServoSettable)
         {
             int servo = recv[1] - 1;
-            int angle = Convert.ToInt32((sbyte)recv[2]);
-            Debug.Log("interp receive servo: " + angle);
+            int angle = Convert.ToInt32(recv[2]);
             (conn.robot as IServoSettable).SetServo(servo, angle);
         }
         else
@@ -321,7 +320,8 @@ public class Interpreter {
             if ( (receiver != null) && (receiver is IRadio) )
             {
                 byte[] msg = new byte[4 + strlen];
-                BitConverter.GetBytes(id).CopyTo(msg, 0);
+                int fromId = IPAddress.HostToNetworkOrder(conn.robot.objectID);
+                BitConverter.GetBytes(fromId).CopyTo(msg, 0);
                 Array.Copy(recv, 5, msg, 4, strlen);
                 (receiver as IRadio).AddMessageToBuffer(msg);
             }

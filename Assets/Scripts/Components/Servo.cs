@@ -6,10 +6,13 @@ namespace RobotComponents
 {
     public class Servo : MonoBehaviour
     {
+       public enum axis {x ,y ,z };
 
         public float minAngle = -90f;
         public float maxAngle = 90f;
         public float desiredPosition = 0f;
+
+        public axis aroundAxis;
 
         private HingeJoint hinge;
         private JointMotor motor;
@@ -21,11 +24,10 @@ namespace RobotComponents
         }
 
         // Fix the desired position to the minimum and maximum angle
-        // This could be done with the hinge joint component itself
+        // Input given 0 - 255, 0 is far left, 255 is far right
         public void SetPosition(int pos)
         {
-            Debug.Log("Setting servo " + pos);
-            desiredPosition = Mathf.Clamp((float)pos, minAngle, maxAngle);
+            desiredPosition = (pos - 128f)/128 * maxAngle;
         }
 
         private void Start()
@@ -35,19 +37,19 @@ namespace RobotComponents
             motor.force = 100000;
             hinge.useMotor = true;
             motor.targetVelocity = 0;
-            motor.freeSpin = false;
+            motor.freeSpin = true;
         }
 
         // Could add another check to do nothing if no rotation required AND motor is off
         // depends on performance of modifying hinge motor
         public void FixedUpdate()
         {
-            if (NegAngles(transform.localRotation.eulerAngles.y) < desiredPosition - 0.5f)
+            if (NegAngles(transform.localRotation.eulerAngles[(int)aroundAxis]) < desiredPosition - 0.5f)
             {
                 motor.targetVelocity = 30;
                 hinge.motor = motor;
             }
-            else if (NegAngles(transform.localRotation.eulerAngles.y) > desiredPosition + 0.5f)
+            else if (NegAngles(transform.localRotation.eulerAngles[(int)aroundAxis]) > desiredPosition + 0.5f)
             {
                 motor.targetVelocity = -30;
                 hinge.motor = motor;
