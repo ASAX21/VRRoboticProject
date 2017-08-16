@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using RobotComponents;
@@ -112,11 +113,19 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
     {
         ProcessStartInfo startInfo = new ProcessStartInfo();
         startInfo.EnvironmentVariables["DISPLAY"] = ":0";
-        startInfo.WorkingDirectory = "cygmin\bin";
+        startInfo.WorkingDirectory = @"cygwin\bin";
         startInfo.UseShellExecute = false;
+        UnityEngine.Debug.Log(filepath);
         startInfo.FileName = filepath;
         ServerManager.instance.activeRobot = this;
-        Process.Start(startInfo);
+        try
+        {
+            Process.Start(startInfo);
+        }
+        catch (Win32Exception w)
+        {
+            UnityEngine.Debug.Log(w);
+        }
         return null;
     }
 

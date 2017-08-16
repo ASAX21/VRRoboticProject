@@ -75,7 +75,10 @@ public class UIManager : MonoBehaviour {
 
     public void LoadControlProgram(Robot robot)
     {
-        controlFileFinder.Initialise("*.exe", robot);
+        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+            controlFileFinder.Initialise("*.exe", robot);
+        else if (Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXEditor)
+            controlFileFinder.Initialise("*", robot);
         controlFileFinder.OpenFileSelection();
     }
 
