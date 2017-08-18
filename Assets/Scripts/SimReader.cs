@@ -96,8 +96,9 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                 else
                     wldPath = args[1];
 
-                if (Path.GetExtension(wldPath) != ".maz" || Path.GetExtension(wldPath) != ".wld")
+                if (Path.GetExtension(wldPath) != ".maz" && Path.GetExtension(wldPath) != ".wld")
                 {
+                    print(Path.GetExtension(wldPath));
                     Debug.Log("Invalid path to world");
                     return;
                 }
