@@ -17,6 +17,7 @@ public class SimReader: MonoBehaviour, IFileReceiver {
 
     public GameObject ReceiveFile(string path)
     {
+        SimManager.instance.ResetWorld();
 		IO io = new IO ();
 		if (!io.Load (path))
 			return null;
@@ -96,8 +97,9 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                 else
                     wldPath = args[1];
 
-                if (Path.GetExtension(wldPath) != ".maz" || Path.GetExtension(wldPath) != ".wld")
+                if (Path.GetExtension(wldPath) != ".maz" && Path.GetExtension(wldPath) != ".wld")
                 {
+                    print(Path.GetExtension(wldPath));
                     Debug.Log("Invalid path to world");
                     return;
                 }

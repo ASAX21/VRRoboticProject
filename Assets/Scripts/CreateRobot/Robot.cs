@@ -80,7 +80,8 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
     public int axels = 0;
 
     public RobotConnection myConnection = null;
-    public string controlBinaryPath = "Unknown";
+    private Process controlBinary = null;
+    public string controlBinaryPath = "";
     public TrailRenderer trail;
 
     // Set the robots absolute position along the ground plane
@@ -111,16 +112,23 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
     // Exectue a control program - Receives path to control
     public GameObject ReceiveFile(string filepath)
     {
+        if(controlBinary != null || myConnection != null)
+        {
+            UnityEngine.Debug.Log("Already executing control");
+            return null;
+        }
+        controlBinary = new Process();
         ProcessStartInfo startInfo = new ProcessStartInfo();
         startInfo.EnvironmentVariables["DISPLAY"] = ":0";
-        startInfo.WorkingDirectory = @"cygwin\bin";
+        if(Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+            startInfo.WorkingDirectory = @"cygwin\bin";
         startInfo.UseShellExecute = false;
-        UnityEngine.Debug.Log(filepath);
         startInfo.FileName = filepath;
+        controlBinary.StartInfo = startInfo;
         ServerManager.instance.activeRobot = this;
         try
         {
-            Process.Start(startInfo);
+            controlBinary.Start();
         }
         catch (Win32Exception w)
         {
@@ -133,6 +141,22 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
     public void DisconnectRobot()
     {
         ServerManager.instance.CloseConnection(myConnection);
+    }
+
+    // Remove control binary - invoked from ServerManager on disconnect
+    public void TerminateControlBinary()
+    {
+        if(controlBinary != null)
+        {
+            controlBinary.CloseMainWindow();
+            controlBinary.Close();
+            controlBinary = null;
+            controlBinaryPath = "";
+        }
+        else
+        {
+            UnityEngine.Debug.Log("Terminate Control Binary: Process not managed by eyesim");
+        }
     }
 
     // Handle OnClick event
