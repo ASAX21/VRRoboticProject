@@ -18,6 +18,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
     public bool isPlaced = false;
     public bool isSelected = false;
     public bool locked = false;
+    public bool unpausedLockState = false;
 
     private LayerMask currLayer = 0;
 	public int collisionCount = 0;
@@ -50,6 +51,14 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
         objectManager = ObjectManager.instance;
         validMat = ObjectManager.instance.validMat;
         invalidMat = ObjectManager.instance.invalidMat;
+        SimManager.instance.OnPause += OnSimPaused;
+        SimManager.instance.OnResume += OnSimResumed;
+    }
+
+    private void OnDestroy()
+    {
+        SimManager.instance.OnPause -= OnSimPaused;
+        SimManager.instance.OnResume -= OnSimResumed;
     }
 
     // This function is called when a robot is build from a .robi file
@@ -59,6 +68,17 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
        // rigidBody = gameObject.GetComponent<Rigidbody>();
        // objCollider = gameObject.GetComponent<Collider>();
        // matContainer = new List<MaterialContainer>();
+    }
+
+    private void OnSimPaused()
+    {
+        unpausedLockState = locked;
+        locked = false;
+    }
+
+    private void OnSimResumed()
+    {
+        locked = unpausedLockState;
     }
 
     private void OnTriggerEnter(Collider other)

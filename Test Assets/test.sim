@@ -1,0 +1,5 @@
+#comment
+#world "C:\UNIVERSITY\EyeSim\RobotVR\Test Assets\worlds\maze.maz"
+
+# botname x y phi
+LabBot 50 50 0

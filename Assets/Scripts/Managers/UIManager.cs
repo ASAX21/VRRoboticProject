@@ -24,12 +24,14 @@ public class UIManager : MonoBehaviour {
     // Builders
     private WorldBuilder worldBuilder;
     private RobotBuilder robotBuilder;
+    private SimReader simBuilder;
 
     // FileFinder
     [Header("File Finders")]
     public FileFinder worldFileFinder;
     public FileFinder robotFileFinder;
     public FileFinder controlFileFinder;
+    public FileFinder simFileFinder;
 
 	private Button loadworld;
 	private Button loadrobot;
@@ -49,8 +51,10 @@ public class UIManager : MonoBehaviour {
     {
         worldBuilder = WorldBuilder.instance;
         robotBuilder = RobotBuilder.instance;
+        simBuilder = SimReader.instance;
 		worldFileFinder.Initialise("*", worldBuilder);
         robotFileFinder.Initialise("*.robi", robotBuilder);
+        simFileFinder.Initialise("*.sim", simBuilder);
     }
 
 	public void openWindow(){
@@ -62,6 +66,11 @@ public class UIManager : MonoBehaviour {
 		windowOpen = false;
 		blockingPanel.SetActive(false);
 	}
+
+    public void LoadSimFile()
+    {
+        simFileFinder.OpenFileSelection();
+    }
 
     public void LoadWorldFile()
     {

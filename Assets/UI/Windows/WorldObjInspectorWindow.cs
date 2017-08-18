@@ -22,17 +22,18 @@ public class WorldObjInspectorWindow : MonoBehaviour {
     [Header("Icons")]
     public Image lockButtonImage;
     public Sprite lockedImage;
-    public Sprite unlockedImage;
 
     // Use this for initialization
     void Start () {
-        lockButtonImage.sprite = worldObj.locked ? lockedImage : unlockedImage;
+        lockButtonImage.sprite = lockedImage;
         objNumber.text = "ID # " + worldObj.objectID.ToString();
         objName.text = worldObj.name;
 
         objXValue.interactable = SimManager.instance.isPaused;
         objYValue.interactable = SimManager.instance.isPaused;
         objPhiValue.interactable = SimManager.instance.isPaused;
+
+        lockButtonImage.color = worldObj.locked ? Color.white : Color.grey;
 
         SimManager.instance.OnPause += OnSimPaused;
         SimManager.instance.OnResume += OnSimResumed;
@@ -90,7 +91,7 @@ public class WorldObjInspectorWindow : MonoBehaviour {
     public void LockButton()
     {
         worldObj.locked = !worldObj.locked;
-        lockButtonImage.sprite = worldObj.locked ? lockedImage : unlockedImage;
+        lockButtonImage.color = worldObj.locked ? Color.white : Color.grey;
     }
 
     public void DeleteButton()

@@ -37,8 +37,8 @@ public class RobotInspectorWindow : MonoBehaviour {
     // Icon Images
     [Header("Icons")]
     public Image lockButtonImage;
+    public Image trailButtonImage;
     public Sprite lockedImage;
-    public Sprite unlockedImage;
 
     // Use this for initialization
     void Start () {
@@ -47,9 +47,11 @@ public class RobotInspectorWindow : MonoBehaviour {
             cameraToDisplay = (robot as ICameras).GetCameraComponent(0);
             cameraTarget.texture = cameraToDisplay.rendTex;
         }
-        lockButtonImage.sprite = robot.locked ? lockedImage : unlockedImage;
+        lockButtonImage.sprite = lockedImage;
         robotNumber.text = "ID # " + robot.objectID.ToString();
         robotName.text = robot.name;
+
+        trailButtonImage.color = robot.trail.enabled ? Color.white : Color.grey;
 
         robotXValue.interactable = SimManager.instance.isPaused;
         robotZValue.interactable = SimManager.instance.isPaused;
@@ -59,6 +61,7 @@ public class RobotInspectorWindow : MonoBehaviour {
         SimManager.instance.OnResume += OnSimResumed;
     }
 
+    // Remove pause callbacks from delegate
     void OnDestroy()
     {
         SimManager.instance.OnPause -= OnSimPaused;
@@ -81,6 +84,20 @@ public class RobotInspectorWindow : MonoBehaviour {
         }
 	}
 
+    private void OnSimPaused()
+    {
+        robotXValue.interactable = true;
+        robotZValue.interactable = true;
+        robotPhiValue.interactable = true;
+    }
+
+    private void OnSimResumed()
+    {
+        robotXValue.interactable = false;
+        robotZValue.interactable = false;
+        robotPhiValue.interactable = false;
+    }
+
     public void SetXPosition(string x)
     {
         Vector3 pos = robot.transform.position;
@@ -100,29 +117,16 @@ public class RobotInspectorWindow : MonoBehaviour {
         robot.transform.rotation = Quaternion.Euler(0, float.Parse(phi), 0);
     }
 
-    public void OnSimPaused()
-    {
-        robotXValue.interactable = true;
-        robotZValue.interactable = true;
-        robotPhiValue.interactable = true;
-    }
-
-    public void OnSimResumed()
-    {
-        robotXValue.interactable = false;
-        robotZValue.interactable = false;
-        robotPhiValue.interactable = false;
-    }
-
     public void TrailButton()
     {
         robot.ToggleTrail();
+        trailButtonImage.color = robot.trail.enabled ? Color.white : Color.grey;
     }
 
     public void LockButton()
     {
         robot.locked = !robot.locked;
-        lockButtonImage.sprite = robot.locked ? lockedImage : unlockedImage;
+        lockButtonImage.color = robot.locked ? Color.white : Color.grey;
     }
 
     public void DeleteButton()

@@ -50,8 +50,24 @@ public class ObjectManager : MonoBehaviour {
         ground = new Plane(new Vector3(0, 1, 0), new Vector3(0, 0, 0));
     }
 
+    public void AddObjectToSceneAtPos(PlaceableObject newObj, float x, float y, float phi)
+    {
+        newObj.objectID = totalObjects++;
+        newObj.transform.position = new Vector3(x/1000f, 0.03f, y/1000f);
+        newObj.transform.rotation = Quaternion.Euler(new Vector3(0f, phi, 0f));
+        if (newObj is Robot)
+            SimManager.instance.AddRobotToScene(newObj as Robot);
+        else if (newObj is WorldObject)
+            SimManager.instance.AddWorldObjectToScene(newObj as WorldObject);
+        else
+        {
+            Debug.Log("Error adding objects: Unknown type");
+            Destroy(newObj.gameObject);
+        }
+    }
+
     // Add some object to scene
-    private void AddObjectToScene(PlaceableObject newObj)
+    private void AddObjectToSceneOnMouse(PlaceableObject newObj)
     {
         newObj.objectID = totalObjects;
         totalObjects++;
@@ -59,33 +75,57 @@ public class ObjectManager : MonoBehaviour {
     }
 
     // Specific object creators - called from Add Object menu
-    public void AddCokeCanToScene()
+    public void AddCokeCanToScene(string args)
     {
         PlaceableObject newObj = Instantiate(cokeCanPrefab).GetComponent<PlaceableObject>();
         newObj.name = "Coke Can";
-        AddObjectToScene(newObj);
+        if(args.Length == 0)
+            AddObjectToSceneOnMouse(newObj);
+        else
+        {
+            string[] pos = args.Split(':');
+            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
+        }
     }
 
-    public void AddSoccerBallToScene()
+    public void AddSoccerBallToScene(string args)
     {
         PlaceableObject newObj = Instantiate(soccerBallPrefab).GetComponent<PlaceableObject>();
         newObj.name = "Soccer Ball";
-        AddObjectToScene(newObj);
+        if(args.Length == 0)
+            AddObjectToSceneOnMouse(newObj);
+        else
+        {
+            string[] pos = args.Split(':');
+            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
+        }
     }
 
-    public void AddLabBotToScene()
+    public void AddLabBotToScene(string args)
     {
         PlaceableObject newObj = Instantiate(labBotPrefab).GetComponent<PlaceableObject>();
-        newObj.name = "Lab Bot";
-        AddObjectToScene(newObj);
+        newObj.name = "LabBot";
+        if(args.Length == 0)
+            AddObjectToSceneOnMouse(newObj);
+        else
+        {
+            string[] pos = args.Split(':');
+            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
+        }
     }
 
-	public void AddS4ToScene()
+	public void AddS4ToScene(string args)
 	{
 		PlaceableObject newObj = Instantiate(S4Prefab).GetComponent<PlaceableObject>();
 		newObj.name = "S4";
-		AddObjectToScene(newObj);
-	}
+        if(args.Length == 0)
+            AddObjectToSceneOnMouse(newObj);
+        else
+        {
+            string[] pos = args.Split(':');
+            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
+        }
+    }
         
     // ----- Handle placement of object via mouse -----
 
