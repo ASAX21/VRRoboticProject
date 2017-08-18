@@ -113,9 +113,9 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
     {
         ProcessStartInfo startInfo = new ProcessStartInfo();
         startInfo.EnvironmentVariables["DISPLAY"] = ":0";
-        startInfo.WorkingDirectory = @"cygwin\bin";
+        if(Application.platform == RuntimePlatform.WindowsPlayer)
+            startInfo.WorkingDirectory = @"cygwin\bin";
         startInfo.UseShellExecute = false;
-        UnityEngine.Debug.Log(filepath);
         startInfo.FileName = filepath;
         ServerManager.instance.activeRobot = this;
         try
