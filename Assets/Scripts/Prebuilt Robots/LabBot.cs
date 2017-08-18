@@ -133,6 +133,12 @@ public class LabBot : Robot,
         wheelController.DriveDoneDelegate = DriveDoneCallback;
     }
 
+    public void ClearVWWait()
+    {
+        driveDoneDelegate = null;
+        wheelController.DriveDoneDelegate = null;
+    }
+
     public void InitalizeVW(int[] args)
     {
         throw new NotImplementedException();

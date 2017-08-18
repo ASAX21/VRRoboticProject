@@ -133,7 +133,13 @@ IRadio
 		wheelController.DriveDoneDelegate = DriveDoneCallback;
 	}
 
-	public void InitalizeVW(int[] args)
+    public void ClearVWWait()
+    {
+        driveDoneDelegate = null;
+        wheelController.DriveDoneDelegate = null;
+    }
+
+    public void InitalizeVW(int[] args)
 	{
 		throw new NotImplementedException();
 	}

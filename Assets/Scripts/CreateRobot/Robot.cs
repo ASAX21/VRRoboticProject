@@ -31,6 +31,7 @@ public interface IVWDrivable
     bool VWDriveDone();
     int VWDriveStalled();
     void VWDriveWait(Action<RobotConnection> doneCallback);
+    void ClearVWWait();
 }
 
 public interface IServoSettable
@@ -142,12 +143,20 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
     // Callback to ServerManager Disconnect with this robot's connection
     public void DisconnectRobot()
     {
-        ServerManager.instance.CloseConnection(myConnection);
+        if (myConnection != null)
+        {
+            ServerManager.instance.CloseConnection(myConnection);
+        }
     }
 
     // Remove control binary - invoked from ServerManager on disconnect
     public void TerminateControlBinary()
     {
+        if(this is IVWDrivable)
+        {
+            UnityEngine.Debug.Log("VWDriveable! clearing wait");
+            (this as IVWDrivable).ClearVWWait();
+        }
         if(controlBinary != null)
         {
             try
