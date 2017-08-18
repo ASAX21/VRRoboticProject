@@ -54,16 +54,50 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 
 	public void processwld (){
 		string line;
+		float width = -1.0f;
+		float height = -1.0f;
 		while ((line = io.readLine()) != "ENDOFFILE") {
 			if (line.Length > 0) {
-				if (line [0] != '#') {
-					string[] args = line.Split (' ');
+				if (line [0] != '#' && line [0] != ';') {
+					string[] args = line.Split (new char [] {' ','\t'});
+					//convert argument string to float list
+					List<float> parameters = new List<float> ();
+					foreach (string s in args) {
+						try{
+							parameters.Add(float.Parse(s)/1000);
+						} catch {
+							//nothing, just too many spaces
+						}
+					}
 					switch (args[0]) {
 					case "floor":
-						addFloor(0,0,float.Parse(args[1])/1000, float.Parse(args[2])/1000);
+						print (parameters.Count);
+						if (parameters.Count < 2)
+							break;
+						addFloor(0,0,parameters[0], parameters[1]);
+						break;
+					case "width":
+						if (parameters.Count < 1)
+							break;
+						width = parameters [0];
+						if(width >= 0 && height >= 0){
+							addFloor(0,0,width, height);
+						}
+						break;
+					case "height":
+						if (parameters.Count < 1)
+							break;
+						height = parameters [0];
+						if(width >= 0 && height >= 0){
+							addFloor(0,0,width, height);
+						}
+						break;
+					case "position":
 						break;
 					default:
-						addWall (float.Parse(args[0])/1000, float.Parse(args[1])/1000, float.Parse(args[2])/1000, float.Parse(args[3])/1000); 
+						if (parameters.Count < 4)
+							break;
+						addWall (parameters[0], parameters[1], parameters[2], parameters[3]); 
 						break;
 					}
 				}
