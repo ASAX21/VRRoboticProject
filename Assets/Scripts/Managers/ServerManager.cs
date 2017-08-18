@@ -88,6 +88,7 @@ public class ServerManager : MonoBehaviour
     {
         conn.robot.myConnection = null;
         conn.tcpClient.Close();
+        conn.robot.TerminateControlBinary();
         if (!conns.Remove(conn))
             Debug.Log("Failed to remove connection");
         else

@@ -145,4 +145,9 @@ public class RobotInspectorWindow : MonoBehaviour {
     {
         UIManager.instance.LoadControlProgram(robot);
     }
+
+    public void DisconnectRobotControl()
+    {
+        robot.DisconnectRobot();
+    }
 }
