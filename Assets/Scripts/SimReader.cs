@@ -17,6 +17,7 @@ public class SimReader: MonoBehaviour, IFileReceiver {
 
     public GameObject ReceiveFile(string path)
     {
+        SimManager.instance.ResetWorld();
 		IO io = new IO ();
 		if (!io.Load (path))
 			return null;
