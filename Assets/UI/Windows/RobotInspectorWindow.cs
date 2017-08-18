@@ -82,6 +82,7 @@ public class RobotInspectorWindow : MonoBehaviour {
             robotZValue.text = (1000f * robot.transform.position.z).ToString("N2");
             robotPhiValue.text = robot.transform.rotation.eulerAngles.y.ToString("N2");
         }
+        robotBinaryName.text = robot.controlBinaryPath;
 	}
 
     private void OnSimPaused()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Diagnostics;
 using System.ComponentModel;
 using UnityEngine;
@@ -129,6 +130,7 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
         try
         {
             controlBinary.Start();
+            controlBinaryPath = Path.GetFileName(filepath);
         }
         catch (Win32Exception w)
         {
@@ -148,8 +150,15 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
     {
         if(controlBinary != null)
         {
-            controlBinary.CloseMainWindow();
-            controlBinary.Close();
+            try
+            {
+                controlBinary.CloseMainWindow();
+                controlBinary.Close();
+            }
+            catch
+            {
+                UnityEngine.Debug.Log("Already Closed");
+            }
             controlBinary = null;
             controlBinaryPath = "";
         }
