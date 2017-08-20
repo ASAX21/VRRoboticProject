@@ -43,6 +43,7 @@ public class CameraControl: MonoBehaviour
             {
                 float lookH = transform.localEulerAngles.y + horizontalLookSens * Input.GetAxis("Mouse X");
                 float lookV = transform.localEulerAngles.x - verticalLookSens * Input.GetAxis("Mouse Y");
+                lookV = Mathf.Clamp(lookV, 0.1f, 89.9f);
                 transform.localEulerAngles = new Vector3(lookV, lookH);
             }
 
