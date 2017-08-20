@@ -56,6 +56,8 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 		string line;
 		float width = -1.0f;
 		float height = -1.0f;
+		Stack<Vector2> relativepos = new Stack<Vector2> ();
+		relativepos.Push (new Vector2(0.0f, 0.0f));
 		while ((line = io.readLine()) != "ENDOFFILE") {
 			if (line.Length > 0) {
 				if (line [0] != '#' && line [0] != ';') {
@@ -94,10 +96,21 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 						break;
 					case "position":
 						break;
+					case "push":
+						if (parameters.Count < 2)
+							break;
+						relativepos.Push (new Vector2 (parameters [0], parameters [1]));
+						break;
+					case "pop":
+						if (relativepos.Count <= 1)
+							break;
+						relativepos.Pop ();
+						break;
 					default:
 						if (parameters.Count < 4)
 							break;
-						addWall (parameters[0], parameters[1], parameters[2], parameters[3]); 
+						addWall (parameters[0]+relativepos.Peek().x, parameters[1]+relativepos.Peek().y, 
+									parameters[2]+relativepos.Peek().x, parameters[3]+relativepos.Peek().y); 
 						break;
 					}
 				}
