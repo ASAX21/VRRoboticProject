@@ -130,7 +130,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 					size = float.Parse(line)/1000;
 				} catch {
 					for(int i = 0; i<line.Length; i++){
-						float xpos = (i / 2) * size;
+						float xpos = ((i+1) / 2) * size;
 						if (i % 2 == 0) {
 							if (line [i] == '|') {
 								addWall (xpos, ypos, xpos, ypos + size);
@@ -138,7 +138,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 							}
 						} else {
 							if("_SUDLR".Contains(line[i].ToString())){
-								addWall (xpos, ypos, xpos + size, ypos); 
+								addWall (xpos - size, ypos, xpos, ypos); 
 							}
 						}
 						xmax = Mathf.Max (xmax, xpos);
