@@ -12,7 +12,7 @@ public class CameraControl: MonoBehaviour
     public float verticalKeyboardSens = 0.005f;
     public float horizontalKeyboardSens = 0.005f;
 
-    public float mouseZoomSens = 5.0f;
+    public float mouseZoomSens = 1.0f;
     public float keyboardZoomSens = 5.0f;
 
     Vector3 mousePos;
