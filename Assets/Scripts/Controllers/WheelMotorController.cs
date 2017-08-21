@@ -126,14 +126,14 @@ public class WheelMotorController : MonoBehaviour
 
     public void SetPosition(float x, float y, float phi)
     {
-        Pos.x = x;
-        Pos.z = y;
+        Pos.x = y;
+        Pos.z = x;
         Rot = phi;
     }
 
     public float[] GetPosition()
     {
-        return new float[3] { Pos.x, Pos.z, Rot };
+        return new float[3] { Pos.z, Pos.x, Rot };
     }
 
     private void updatePosition()
