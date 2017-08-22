@@ -22,24 +22,25 @@ public class CameraControl: MonoBehaviour
     {
         if (UIManager.instance.windowOpen == false)
         {
-			// middle click : startPan 
-			if (Input.GetMouseButtonDown(2)) {
-				mousePos = Input.mousePosition;
-				backPlane = new Plane(-1 * Camera.main.transform.forward, getPlanePos(mousePos, new Plane(Vector3.up,Vector3.zero)));
-			}
+            // middle click : startPan 
+            if (Input.GetMouseButtonDown(2))
+            {
+                mousePos = Input.mousePosition;
+                backPlane = new Plane(-1 * Camera.main.transform.forward, getPlanePos(mousePos, new Plane(Vector3.up, Vector3.zero)));
+            }
 
-			// middle held : Pan 
-			if (Input.GetMouseButton(2))
-			{
-				Vector3 newMousePos = Input.mousePosition;
-				if (mousePos == newMousePos)
-					return;
-				Camera.main.transform.parent.Translate (getPlanePos (mousePos, backPlane) - getPlanePos (newMousePos, backPlane));
-				mousePos = newMousePos;
-			}
+            // middle held : Pan 
+            if (Input.GetMouseButton(2))
+            {
+                Vector3 newMousePos = Input.mousePosition;
+                if (mousePos == newMousePos)
+                    return;
+                Camera.main.transform.parent.Translate(getPlanePos(mousePos, backPlane) - getPlanePos(newMousePos, backPlane));
+                mousePos = newMousePos;
+            }
 
             // Right Click : Free look
-            else if(Input.GetMouseButton(1))
+            else if (Input.GetMouseButton(1))
             {
                 float lookH = transform.localEulerAngles.y + horizontalLookSens * Input.GetAxis("Mouse X");
                 float lookV = transform.localEulerAngles.x - verticalLookSens * Input.GetAxis("Mouse Y");
@@ -47,25 +48,36 @@ public class CameraControl: MonoBehaviour
                 transform.localEulerAngles = new Vector3(lookV, lookH);
             }
 
-            // Scrollwheel : Zoom
-            transform.position += transform.forward * mouseZoomSens * Input.GetAxis("Mouse ScrollWheel");
 
             // If camera not being controlled by mouse, keyboard inputs
-            if(!Input.GetMouseButton(1) && !Input.GetMouseButton(2) && (Input.GetAxis("Vertical") != 0 || Input.GetAxisRaw("Horizontal") != 0) )         
+            else if (Input.GetAxis("Vertical") != 0 || Input.GetAxisRaw("Horizontal") != 0)
             {
                 Vector3 forward = Input.GetAxis("Vertical") * verticalKeyboardSens * Vector3.ProjectOnPlane(transform.forward, Vector3.up).normalized;
                 Vector3 sideways = Input.GetAxis("Horizontal") * horizontalKeyboardSens * transform.right.normalized;
                 Vector3 finalMove = forward + sideways;
                 transform.Translate(finalMove, Space.World);
+            }
 
-                transform.position += transform.forward * keyboardZoomSens * Input.GetAxis("Keyboard Zoom");
+            else if (Input.GetAxis("Tilt Horizontal") != 0 || Input.GetAxis("Tilt Vertical") != 0)
+            {
+                float lookH = transform.localEulerAngles.y + Input.GetAxis("Tilt Horizontal") * 10f;
+                float lookV = transform.localEulerAngles.x + Input.GetAxis("Tilt Vertical") * 10f;
+                lookV = Mathf.Clamp(lookV, 0.1f, 89.9f);
+                transform.localEulerAngles = new Vector3(lookV, lookH);
+            }
+
+            // Zoom
+            transform.position += transform.forward * mouseZoomSens * Input.GetAxis("Mouse ScrollWheel");
+            if(Input.GetAxis("Keyboard Zoom") != 0)
+            {
+                transform.position += transform.forward * mouseZoomSens * Input.GetAxis("Keyboard Zoom");
             }
 
             // Make sure camera doens't move below ground
             if (transform.position.y < 0)
                 transform.position = new Vector3(transform.position.x, 0, transform.position.z);
         }
-	}
+    }
 
 	Vector3 getPlanePos(Vector3 mousepos, Plane plane){
 		Ray ray = Camera.main.ScreenPointToRay(mousepos);
