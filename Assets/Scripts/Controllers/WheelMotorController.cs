@@ -16,6 +16,7 @@ public class WheelMotorController : MonoBehaviour
     public float v;
 
     //vw parameters
+    [Header("VW Parameters")]
     public float targetDist;
     public float travelledDist;
     public float targetRot;
@@ -23,6 +24,11 @@ public class WheelMotorController : MonoBehaviour
     public string checkType;
     public bool checkActive;
 
+    [Header("Max Speeds")]
+    public float maxStraightSpeed = 0.005f;
+    public float maxTurnSpeed = 0.09f;
+
+    [HideInInspector]
     public Action DriveDoneDelegate;
 
     private void Awake()
@@ -115,8 +121,8 @@ public class WheelMotorController : MonoBehaviour
     //set translational and rotational target velocities
     public void SetSpeed(float setv, float setw)
     {
-        wheels[0].SetSpeed(setv - setw * wheelDist / 2 * Mathf.Deg2Rad);
-        wheels[1].SetSpeed(setv + setw * wheelDist / 2 * Mathf.Deg2Rad);
+        wheels[0].SetSpeed(Mathf.Min(setv, maxStraightSpeed) - Mathf.Min(setw, maxTurnSpeed) * wheelDist / 2 * Mathf.Deg2Rad);
+        wheels[1].SetSpeed(Mathf.Min(setv, maxStraightSpeed) + Mathf.Min(setw, maxTurnSpeed) * wheelDist / 2 * Mathf.Deg2Rad);
     }
 
     public Speed GetSpeed()
