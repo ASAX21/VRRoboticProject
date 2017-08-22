@@ -45,10 +45,10 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
     {
         world = new GameObject("World");
         addFloor(0f, 0f, 2f, 2f);
-        addWall(0, 0, 0, 2f);
-        addWall(0, 2f, 2f, 2f);
-        addWall(2f, 0, 2f, 2f);
-        addWall(0, 0, 2f, 0);
+		addWall(new Vector2(0, 0), new Vector2(0, 2f));
+		addWall(new Vector2(0, 2f), new Vector2(2f, 2f));
+		addWall(new Vector2(2f, 0), new Vector2(2f, 2f));
+		addWall(new Vector2(0, 0), new Vector2(2f, 0));
         return world;
     }
 
@@ -56,8 +56,8 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 		string line;
 		float width = -1.0f;
 		float height = -1.0f;
-		Stack<Vector2> relativepos = new Stack<Vector2> ();
-		relativepos.Push (new Vector2(0.0f, 0.0f));
+		Stack<Vector3> relativepos = new Stack<Vector3> ();
+		relativepos.Push (new Vector3(0.0f, 0.0f, 0.0f));
 		while ((line = io.readLine()) != "ENDOFFILE") {
 			if (line.Length > 0) {
 				if (line [0] != '#' && line [0] != ';') {
@@ -66,7 +66,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 					List<float> parameters = new List<float> ();
 					foreach (string s in args) {
 						try{
-							parameters.Add(float.Parse(s)/1000);
+							parameters.Add(float.Parse(s));
 						} catch {
 							//nothing, just too many spaces
 						}
@@ -76,12 +76,12 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 						print (parameters.Count);
 						if (parameters.Count < 2)
 							break;
-						addFloor(0,0,parameters[0], parameters[1]);
+						addFloor(0,0,parameters[0]/1000, parameters[1]/1000);
 						break;
 					case "width":
 						if (parameters.Count < 1)
 							break;
-						width = parameters [0];
+						width = parameters [0]/1000;
 						if(width >= 0 && height >= 0){
 							addFloor(0,0,width, height);
 						}
@@ -89,7 +89,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 					case "height":
 						if (parameters.Count < 1)
 							break;
-						height = parameters [0];
+						height = parameters [0]/1000;
 						if(width >= 0 && height >= 0){
 							addFloor(0,0,width, height);
 						}
@@ -97,9 +97,9 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 					case "position":
 						break;
 					case "push":
-						if (parameters.Count < 2)
+						if (parameters.Count < 3)
 							break;
-						relativepos.Push (new Vector2 (parameters [0], parameters [1]));
+						relativepos.Push (new Vector3 (parameters [0]/1000, parameters [1]/1000, parameters[2]));
 						break;
 					case "pop":
 						if (relativepos.Count <= 1)
@@ -109,13 +109,25 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 					default:
 						if (parameters.Count < 4)
 							break;
-						addWall (parameters[0]+relativepos.Peek().x, parameters[1]+relativepos.Peek().y, 
-									parameters[2]+relativepos.Peek().x, parameters[3]+relativepos.Peek().y); 
+						Vector2 p1 = mapDomain (new Vector2 (parameters [0]/1000, parameters [1]/1000), relativepos);
+						Vector2 p2 = mapDomain (new Vector2 (parameters [2]/1000, parameters [3]/1000), relativepos);
+						addWall (p1, p2);
 						break;
 					}
 				}
 			}
 		}
+	}
+
+	Vector2 mapDomain(Vector2 point, Stack<Vector3> relativepos){
+		foreach(Vector3 transform in relativepos){
+			//rotate point
+			point = new Vector2(point.x * Mathf.Cos(Mathf.Deg2Rad * transform.z) - point.y * Mathf.Sin(Mathf.Deg2Rad * transform.z),
+				point.x * Mathf.Sin(Mathf.Deg2Rad * transform.z) + point.y * Mathf.Cos(Mathf.Deg2Rad * transform.z));
+			//translate point
+			point += new Vector2(transform.x, transform.y);
+		}
+		return point;
 	}
 
 	public void processmaz (){
@@ -133,12 +145,12 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 						float xpos = ((i+1) / 2) * size;
 						if (i % 2 == 0) {
 							if (line [i] == '|') {
-								addWall (xpos, ypos, xpos, ypos + size);
+								addWall (new Vector2(xpos, ypos), new Vector2(xpos, ypos + size));
 								ymax = Mathf.Max (ymax, ypos + size);
 							}
 						} else {
 							if("_SUDLR".Contains(line[i].ToString())){
-								addWall (xpos - size, ypos, xpos, ypos); 
+								addWall (new Vector2(xpos - size, ypos), new Vector2(xpos, ypos)); 
 							}
 						}
 						xmax = Mathf.Max (xmax, xpos);
@@ -151,12 +163,10 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 		addFloor (0,ypos + size - ymax,xmax, ymax - ypos - size);
 	}
 
-	void addWall (float x1, float y1, float x2, float y2) {
+	void addWall (Vector2 start, Vector2 end) {
 		GameObject wall = Instantiate(Resources.Load("Wall")) as GameObject;
 		wall.name = "wall";
         wall.layer = 0;
-		Vector2 start = new Vector2(x1, y1);
-		Vector2 end = new Vector2(x2, y2);
 		wall.transform.localScale = new Vector3 (Vector2.Distance(start, end),0.3f,0.01f);
 		wall.transform.position = new Vector3 ((end.x+start.x)/2,0.05f,(end.y+start.y)/2);
 		wall.transform.rotation = Quaternion.Euler (0,Mathf.Atan2(end.y-start.y,end.x-start.x)/Mathf.PI*180,0);
