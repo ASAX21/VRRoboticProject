@@ -24,9 +24,11 @@ public class WheelMotorController : MonoBehaviour
     public string checkType;
     public bool checkActive;
 
-    [Header("Max Speeds")]
-    public float maxStraightSpeed = 0.005f;
-    public float maxTurnSpeed = 0.09f;
+    // [Header("Max Speeds")]
+    private float maxStraightSpeed = 0.5f;
+    private float maxTurnSpeed = 90f;
+    private float vSpeed = 0f;
+    private float wSpeed = 0f;
 
     [HideInInspector]
     public Action DriveDoneDelegate;
@@ -89,6 +91,7 @@ public class WheelMotorController : MonoBehaviour
     // Positive rotation - anti-clockwise
     public void DriveTurn(float rotation, float velocity)
     {
+        Debug.Log("TURN: " + rotation + " " + velocity);
         resetController();
         targetRot = rotation;
         checkType = "rotation";
@@ -121,8 +124,10 @@ public class WheelMotorController : MonoBehaviour
     //set translational and rotational target velocities
     public void SetSpeed(float setv, float setw)
     {
-        wheels[0].SetSpeed(Mathf.Min(setv, maxStraightSpeed) - Mathf.Min(setw, maxTurnSpeed) * wheelDist / 2 * Mathf.Deg2Rad);
-        wheels[1].SetSpeed(Mathf.Min(setv, maxStraightSpeed) + Mathf.Min(setw, maxTurnSpeed) * wheelDist / 2 * Mathf.Deg2Rad);
+        vSpeed = Mathf.Clamp(setv, -maxStraightSpeed, maxStraightSpeed);
+        wSpeed = Mathf.Clamp(setw, -maxTurnSpeed, maxTurnSpeed);
+        wheels[0].SetSpeed(vSpeed - wSpeed * wheelDist / 2 * Mathf.Deg2Rad);
+        wheels[1].SetSpeed(vSpeed + wSpeed * wheelDist / 2 * Mathf.Deg2Rad);
     }
 
     public Speed GetSpeed()
@@ -187,7 +192,7 @@ public class WheelMotorController : MonoBehaviour
                 break;
             case "rotation":
                 travelledRot -= w;
-                if (Mathf.Sign(targetRot) * (targetRot - travelledRot) > 0)
+                if (Mathf.Sign(targetRot) * (targetRot - travelledRot - Mathf.Abs(wSpeed)/20f) > 0)
                     return;
                 break;
             default:
@@ -195,6 +200,7 @@ public class WheelMotorController : MonoBehaviour
         }
 
         //journey complete
+        Debug.Log("Drive Done");
         SetSpeed(0, 0);
         checkActive = false;
         resetController();
