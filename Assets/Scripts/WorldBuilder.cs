@@ -169,7 +169,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
         wall.layer = 0;
 		wall.transform.localScale = new Vector3 (Vector2.Distance(start, end),0.3f,0.01f);
 		wall.transform.position = new Vector3 ((end.x+start.x)/2,0.05f,(end.y+start.y)/2);
-		wall.transform.rotation = Quaternion.Euler (0,Mathf.Atan2(end.y-start.y,end.x-start.x)/Mathf.PI*180,0);
+		wall.transform.rotation = Quaternion.Euler (0,-Mathf.Atan2(end.y-start.y,end.x-start.x)/Mathf.PI*180,0);
 		wall.transform.SetParent (world.transform);
 	}
 
