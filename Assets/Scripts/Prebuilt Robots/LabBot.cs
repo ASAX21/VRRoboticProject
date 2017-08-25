@@ -21,7 +21,6 @@ public class LabBot : Robot,
     public EyeCameraController eyeCamController;
     public AudioController audioController;
     public RadioController radioController;
-    public SimulatedDrive simDriveController;
 
     Action<RobotConnection> driveDoneDelegate;
     Action<RobotConnection, byte[]> radioMessageDelegate;
