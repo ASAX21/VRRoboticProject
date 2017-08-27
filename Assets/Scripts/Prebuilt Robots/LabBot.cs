@@ -99,7 +99,7 @@ public class LabBot : Robot,
 
     public void VWDriveStraight(int distance, int speed)
     {
-		wheelController.DriveStraight ((float) distance/1000, (float) speed/1000);
+        wheelController.DriveStraight((float)distance / 1000, (float)speed / 1000);     
     }
 
     public void VWDriveTurn(int rotation, int velocity)

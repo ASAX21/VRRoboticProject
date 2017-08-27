@@ -192,6 +192,7 @@ public class WheelMotorController : MonoBehaviour
                 break;
             case "rotation":
                 travelledRot -= w;
+                if (Mathf.Sign(targetRot) * (targetRot - travelledRot) > 0)
                 if (Mathf.Sign(targetRot) * (targetRot - travelledRot - Mathf.Abs(wSpeed)/20f) > 0)
                     return;
                 break;
