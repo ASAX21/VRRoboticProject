@@ -63,6 +63,11 @@ public interface IRadio
     void WaitForRadioMessage(Action<RobotConnection, byte[]> radioDelegate);
     int GetNumberOfMessages();
 }
+
+public interface ILaser
+{
+    int[] LaserScan();
+}
 // Class used to pass data back to client
 public class Speed
 {

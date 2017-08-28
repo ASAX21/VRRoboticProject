@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RobotComponents;
@@ -12,7 +11,8 @@ public class LabBot : Robot,
     IVWDrivable,
     ICameras,
     IAudio,
-    IRadio
+    IRadio,
+    ILaser
 {
     // Controllers
     public WheelMotorController wheelController;
@@ -21,6 +21,7 @@ public class LabBot : Robot,
     public EyeCameraController eyeCamController;
     public AudioController audioController;
     public RadioController radioController;
+    public LaserScanController laserScanController;
 
     Action<RobotConnection> driveDoneDelegate;
     Action<RobotConnection, byte[]> radioMessageDelegate;
@@ -35,6 +36,7 @@ public class LabBot : Robot,
         eyeCamController = gameObject.AddComponent<EyeCameraController>();
         audioController = gameObject.AddComponent<AudioController>();
         radioController = gameObject.AddComponent<RadioController>();
+        laserScanController = gameObject.AddComponent<LaserScanController>();
 
         wheelController.wheels = new List<Wheel>();
         psdController.sensors = new List<PSDSensor>();
@@ -193,5 +195,10 @@ public class LabBot : Robot,
     public int GetNumberOfMessages()
     {
         return radioController.numMessages;
+    }
+
+    public int[] LaserScan()
+    {
+        return laserScanController.Scan();
     }
 }

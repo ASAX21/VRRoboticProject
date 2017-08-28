@@ -396,19 +396,40 @@ public class Interpreter {
         BitConverter.GetBytes(IPAddress.HostToNetworkOrder(numBots)).CopyTo(p.data, 0);
         serverManager.WritePacket(conn, p);
     }
+    // Laser scan
+    private void Command_l(byte[] recv, RobotConnection conn)
+    {
+        if (conn.robot is ILaser)
+        {
+            Packet p = new Packet();
+            p.packetType = PacketType.SERVER_MESSAGE;
+            p.dataSize = 1440;
+            p.data = new byte[p.dataSize];
+            int[] vals = (conn.robot as ILaser).LaserScan();
+            for (int i = 0; i < vals.Length; i++)
+                BitConverter.GetBytes(IPAddress.HostToNetworkOrder(vals[i])).CopyTo(p.data, i * 4);
+            serverManager.WritePacket(conn, p);
+        }
+        else
+        {
+            Debug.Log("Robot cannot perform a laser scan");
+        }
+    }
 
     // Get Robot Pose
     private void Command_1(byte[] recv, RobotConnection conn)
     {
         int xPos = (int) Mathf.Round( 1000 * conn.robot.transform.position.x);
         int yPos = (int) Mathf.Round( 1000 * conn.robot.transform.position.z);
+        int phi = (int)Mathf.Round((360 - conn.robot.transform.rotation.eulerAngles.y) % 360);
 
         Packet p = new Packet();
         p.packetType = PacketType.SERVER_MESSAGE;
-        p.dataSize = sizeof(int) * 2;
+        p.dataSize = sizeof(int) * 3;
         p.data = new byte[p.dataSize];
         BitConverter.GetBytes(IPAddress.HostToNetworkOrder(xPos)).CopyTo(p.data, 0);
         BitConverter.GetBytes(IPAddress.HostToNetworkOrder(yPos)).CopyTo(p.data, 4);
+        BitConverter.GetBytes(IPAddress.HostToNetworkOrder(phi)).CopyTo(p.data, 8);
         serverManager.WritePacket(conn, p);
     }
 
@@ -433,11 +454,17 @@ public class Interpreter {
         int[] pose = SimManager.instance.GetObjectPoseByID(obj);
         Packet p = new Packet();
         p.packetType = PacketType.SERVER_MESSAGE;
-        p.dataSize = sizeof(int) * 3;
+        p.dataSize = sizeof(int) * 3 + 1;
         p.data = new byte[p.dataSize];
-        BitConverter.GetBytes(pose[0]).CopyTo(p.data, 0);
-        BitConverter.GetBytes(pose[1]).CopyTo(p.data, 4);
-        BitConverter.GetBytes(pose[2]).CopyTo(p.data, 8);
+        if (pose == null)
+            Array.Clear(p.data, 0, 13);
+        else
+        {
+            p.data[0] = 1;
+            BitConverter.GetBytes(IPAddress.HostToNetworkOrder(pose[0])).CopyTo(p.data, 1);
+            BitConverter.GetBytes(IPAddress.HostToNetworkOrder(pose[1])).CopyTo(p.data, 5);
+            BitConverter.GetBytes(IPAddress.HostToNetworkOrder((360 - pose[2]) % 360)).CopyTo(p.data, 9);       
+        }
         serverManager.WritePacket(conn, p);
     }
 
@@ -542,17 +569,25 @@ public class Interpreter {
             case 'I':
                 Command_I(recv, conn);
                 break;
+            // Laser scan
+            case 'l':
+                Command_l(recv, conn);
+                break;
             // Sim Get Pose
             case '1':
+                Command_1(recv, conn);
                 break;
             // Sim Set Pose
             case '2':
+                Command_2(recv, conn);
                 break;
             // Sim Get Object (position)
             case '3':
+                Command_3(recv, conn);
                 break;
             // Sim Set Object (position)
             case '4':
+                Command_4(recv, conn);
                 break;
             // Play beep
             case 'b':

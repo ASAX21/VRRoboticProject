@@ -61,7 +61,6 @@ public class ServerManager : MonoBehaviour
     public Interpreter interpreter;
 
     byte[] recvBuf = new byte[1024];
-    string data = null;
 
     void Awake()
     {

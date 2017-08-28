@@ -188,7 +188,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if (!locked && objectManager.objectOnMouse == null && eventData.button == PointerEventData.InputButton.Left)
+        if (!locked && !objectManager.isMouseOccupied && eventData.button == PointerEventData.InputButton.Left)
         {
             objectManager.AddObjectToMouse(this, transform.position.y);
             //Deselect();
