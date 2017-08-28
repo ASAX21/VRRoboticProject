@@ -89,9 +89,11 @@ public class SimManager : MonoBehaviour {
     public int[] GetObjectPoseByID(int id)
     {
         PlaceableObject obj = GetObjectByID(id);
+        if (obj == null)
+            return null;
         int[] pose = new int[3];
         pose[0] = (int)Mathf.Round(1000 * obj.transform.position.x);
-        pose[1] = (int)Mathf.Round(1000 * obj.transform.position.x);
+        pose[1] = (int)Mathf.Round(1000 * obj.transform.position.z);
         pose[2] = (int)obj.transform.eulerAngles.y;
         return pose;
     } 

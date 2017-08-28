@@ -10,17 +10,15 @@ public class RobotInspectorWindow : MonoBehaviour {
 
     // Robot identifiers
     [Header("Identifier Text Displays")]
-    [SerializeField]
-    private Text robotNumber;
-    [SerializeField]
-    private Text robotName, robotBinaryName;
+    public Text robotNumber;
+    public Text robotName;
+    public Text robotBinaryName;
 
     // Sensor variables
     [Header("PSD Text Displays")]
-    [SerializeField]
-    private Text psdFrontValue;
-    [SerializeField]
-    private Text psdLeftValue, psdRightValue;
+    public Text psdFrontValue;
+    public Text psdLeftValue;
+    public Text psdRightValue;
 
     [Header("Camera")]
     [SerializeField]
@@ -29,10 +27,9 @@ public class RobotInspectorWindow : MonoBehaviour {
 
     // Position variables
     [Header("Position Text Displays")]
-    [SerializeField]
-    private InputField robotXValue;
-    [SerializeField]
-    private InputField robotZValue, robotPhiValue;
+    public InputField robotXValue;
+    public InputField robotZValue;
+    public InputField robotPhiValue;
 
     // Icon Images
     [Header("Icons")]
