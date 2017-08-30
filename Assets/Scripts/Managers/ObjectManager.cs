@@ -28,6 +28,8 @@ public class ObjectManager : MonoBehaviour {
     // Environment Prefabs
     public GameObject wallPrefab;
     public GameObject floorPrefab;
+
+    private Material tempMat;
     // ---------------------------------------------------------------------
 
     public bool isMouseOccupied = false;
@@ -162,6 +164,7 @@ public class ObjectManager : MonoBehaviour {
         if (isMouseOccupied)
             return;
 
+        isMouseOccupied = true;
         isWallBeingPlaced = true;
         StartCoroutine(DelayPlacement());
     }
@@ -259,18 +262,25 @@ public class ObjectManager : MonoBehaviour {
                     wallBeingPlaced = Instantiate(wallPrefab, SimManager.instance.world.transform);
                     wallBeingPlaced.transform.position = wallStart;
                     wallBeingPlaced.transform.localScale = Vector3.zero;
+                    tempMat = wallBeingPlaced.GetComponent<Renderer>().material;
                     wallBeingPlaced.GetComponent<Renderer>().material = validMat;
                     wallStarted = true;
                 }
                 else if (wallStarted && canPlaceObject)
                 {
-                    
+                    wallBeingPlaced.GetComponent<Renderer>().material = tempMat;
+                    wallStarted = false;
+                    canPlaceObject = false;
+                    wallBeingPlaced = null;
+                    isMouseOccupied = false;
+                    if (Input.GetKey(KeyCode.LeftShift))
+                        AddWallToScene();
                 }
             }
             // If first click done, update wall visualisation
             else if (wallStarted)
             {
-                wallBeingPlaced.transform.position = (mousePos + wallStart) / 2;
+                wallBeingPlaced.transform.position = ((mousePos + new Vector3(0, 0.05f, 0)) + wallStart) / 2;
                 wallBeingPlaced.transform.localScale = new Vector3(Vector3.Distance(wallStart, mousePos), 0.3f, 0.01f);
                 wallBeingPlaced.transform.eulerAngles = new Vector3(0, Mathf.Atan2(mousePos.x - wallStart.x, mousePos.z - wallStart.z) * 180 / Mathf.PI + 90F, 0);
             }
