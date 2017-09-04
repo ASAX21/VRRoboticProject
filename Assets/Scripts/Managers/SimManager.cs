@@ -11,7 +11,7 @@ public class SimManager : MonoBehaviour {
     public static SimManager instance { get; private set; }
 
     public ServerManager server;
-    private WindowsOSManager windowsOS;
+    public OSManager osManager;
 
     // Current robots, objects, and world
     public List<Robot> allRobots;
@@ -32,13 +32,16 @@ public class SimManager : MonoBehaviour {
             instance = this;
         else
             Destroy(this);
+
+        // To platform specific things in Awake - Ready for other scripts in Start
+        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            osManager = new WindowsOSManager();
+        }
     }
 
     private void Start() {
-        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
-        {
-            windowsOS = new WindowsOSManager();
-        }
+
         allRobots = new List<Robot>();
         allWorldObjects = new List<WorldObject>();
         world = WorldBuilder.instance.CreateBox();
@@ -46,8 +49,8 @@ public class SimManager : MonoBehaviour {
 
     private void OnApplicationQuit()
     {
-        if (windowsOS != null)
-            windowsOS.Terminate();
+        if (osManager != null)
+            osManager.Terminate();
     }
 
     public void LaunchTerminal()
@@ -55,7 +58,7 @@ public class SimManager : MonoBehaviour {
         // If windows launch CYGWIN
         if(Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
         {
-            windowsOS.LaunchCygwinTerminal();
+            osManager.LaunchTerminal();
         }
         // Else launch default terminal
         else
@@ -192,6 +195,9 @@ public class SimManager : MonoBehaviour {
     // Pause and Resume by setting bodies to kinematic - will not move from applied forces
     public void PauseSimulation()
     {
+        if (isPaused)
+            return;
+
         isPaused = true;
         if(OnPause != null) OnPause();
         foreach (Robot rob in allRobots)
@@ -213,6 +219,9 @@ public class SimManager : MonoBehaviour {
 
     public void ResumeSimulation()
     {
+        if (!isPaused)
+            return;
+
         foreach (Robot rob in allRobots)
         {
             foreach (PhysicalContainer phys in rob.physContainer)
