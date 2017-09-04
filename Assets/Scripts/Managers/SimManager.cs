@@ -2,6 +2,8 @@
  * and the state of the current World. It also handles launching and termination
  * of the simulation program
  */
+using System;
+using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +24,8 @@ public class SimManager : MonoBehaviour {
     public delegate void PauseAction();
     public PauseAction OnPause;
     public PauseAction OnResume;
+
+    public GameObject testBeacon;
 
     // Record number of total objects, used to assign ID
     private int totalObjects = 0;
@@ -190,6 +194,37 @@ public class SimManager : MonoBehaviour {
     {
         DestroyWorld();
         world = WorldBuilder.instance.CreateBox();
+    }
+
+    // Write the World object to a wld file
+    public void SaveWorld()
+    {
+        FileStream fs = File.Open("test.wld", FileMode.Create);
+        using (StreamWriter writer = new StreamWriter(fs, System.Text.Encoding.ASCII))
+        {
+            
+            writer.WriteLine("# World file created " + DateTime.Now.ToString(@"MM\/dd\/yyyy h\:mm tt") + Environment.NewLine);
+
+            foreach(Transform item in world.transform)
+            {
+                if(item.name == "floor")
+                {
+                    int floorWidth = (int)world.transform.Find("floor").localScale.x * 1000;
+                    int floorHeight = (int)world.transform.Find("floor").localScale.z * 1000;
+                    writer.WriteLine("floor " + floorWidth + " " + floorHeight);
+                }
+                else if(item.name == "wall")
+                {
+                    float wallLength = item.localScale.x/2;
+                    float wallAngle = -item.eulerAngles.y;
+                    Vector3 wallCentre = item.position;
+                    Vector3 offset = new Vector3(Mathf.Cos(wallAngle * Mathf.PI / 180f) * wallLength, 0f, Mathf.Sin(wallAngle * Mathf.PI / 180f) * wallLength);
+                    Vector3 wall1 = (wallCentre + offset) * 1000;
+                    Vector3 wall2 = (wallCentre - offset) * 1000;
+                    writer.WriteLine((int)wall1.x + " " + (int)wall1.z + " " + (int)wall2.x + " " + (int)wall2.z);
+                }           
+            }
+        }
     }
     
     // Pause and Resume by setting bodies to kinematic - will not move from applied forces

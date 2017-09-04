@@ -168,6 +168,39 @@ public class ObjectManager : MonoBehaviour {
         isWallBeingPlaced = true;
         StartCoroutine(DelayPlacement());
     }
+
+    public void StartWallPlacement(Vector3 position)
+    {
+        wallStart = position;
+        wallBeingPlaced = Instantiate(wallPrefab, SimManager.instance.world.transform);
+        wallBeingPlaced.transform.position = wallStart;
+        wallBeingPlaced.transform.localScale = Vector3.zero;
+        tempMat = wallBeingPlaced.GetComponent<Renderer>().material;
+        wallBeingPlaced.GetComponent<Renderer>().material = validMat;
+        wallBeingPlaced.name = "wall";
+        wallStarted = true;
+    }
+
+    public void FinishWallPlacement()
+    {
+        wallBeingPlaced.GetComponent<Renderer>().material = tempMat;
+        wallStarted = false;
+        canPlaceObject = false;
+        wallBeingPlaced = null;
+        isMouseOccupied = false;
+    }
+
+    public void CancelWallPlacement()
+    {
+        if (!isWallBeingPlaced)
+            return;
+        Destroy(wallBeingPlaced);
+        wallStarted = false;
+        canPlaceObject = false;
+        wallBeingPlaced = null;
+        isMouseOccupied = false;
+
+    }
         
     // ----- Handle placement of object via mouse -----
 
@@ -253,28 +286,30 @@ public class ObjectManager : MonoBehaviour {
             if (ground.Raycast(ray, out distance))
                 mousePos = ray.GetPoint(distance);
             // Check for click
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                CancelWallPlacement();
+            }
             if (Input.GetMouseButtonDown(0))
             {
                 // If this is the first click, set initial location
                 if (!wallStarted && canPlaceObject)
                 {
-                    wallStart = mousePos;
-                    wallBeingPlaced = Instantiate(wallPrefab, SimManager.instance.world.transform);
-                    wallBeingPlaced.transform.position = wallStart;
-                    wallBeingPlaced.transform.localScale = Vector3.zero;
-                    tempMat = wallBeingPlaced.GetComponent<Renderer>().material;
-                    wallBeingPlaced.GetComponent<Renderer>().material = validMat;
-                    wallStarted = true;
+                    StartWallPlacement(mousePos);
                 }
                 else if (wallStarted && canPlaceObject)
                 {
-                    wallBeingPlaced.GetComponent<Renderer>().material = tempMat;
-                    wallStarted = false;
-                    canPlaceObject = false;
-                    wallBeingPlaced = null;
-                    isMouseOccupied = false;
+                    FinishWallPlacement();
                     if (Input.GetKey(KeyCode.LeftShift))
-                        AddWallToScene();
+                    {
+                        if (Input.GetKey(KeyCode.LeftControl))
+                        {
+                            AddWallToScene();
+                            StartWallPlacement(mousePos);
+                        }
+                        else
+                            AddWallToScene();
+                    }
                 }
             }
             // If first click done, update wall visualisation
