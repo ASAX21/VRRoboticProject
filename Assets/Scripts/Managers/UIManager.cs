@@ -32,6 +32,13 @@ public class UIManager : MonoBehaviour {
     public FileFinder robotFileFinder;
     public FileFinder controlFileFinder;
     public FileFinder simFileFinder;
+    public FileFinder scriptFileFinder;
+
+    // Images of control buttons
+    [Header("Sim Control Buttons")]
+    public Image pauseButton;
+    public Image playButton;
+    public Image ffButton;
 
 	private Button loadworld;
 	private Button loadrobot;
@@ -55,6 +62,7 @@ public class UIManager : MonoBehaviour {
 		worldFileFinder.Initialise("*", worldBuilder);
         robotFileFinder.Initialise("*.robi", robotBuilder);
         simFileFinder.Initialise("*.sim", simBuilder);
+        scriptFileFinder.Initialise("*.c", SimManager.instance.osManager);
     }
 
 	public void openWindow(){
@@ -91,6 +99,10 @@ public class UIManager : MonoBehaviour {
         controlFileFinder.OpenFileSelection();
     }
 
+    public void LoadScriptFile()
+    {
+        scriptFileFinder.OpenFileSelection();
+    }
     public void OpenViewRobotWindow()
     {
         if (viewRobotsWindow.gameObject.activeInHierarchy)
@@ -105,5 +117,31 @@ public class UIManager : MonoBehaviour {
             viewWorldObjectsWindow.transform.SetAsFirstSibling();
         else
             viewWorldObjectsWindow.gameObject.SetActive(true);
+    }
+
+    public void PauseButton()
+    {
+        SimManager.instance.PauseSimulation();
+        pauseButton.color = new Color(0, 0, 0, 1f);
+        playButton.color = new Color(0, 0, 0, 0.2f);
+        ffButton.color = new Color(0, 0, 0, 0.2f);
+    }
+
+    public void PlayButton()
+    {
+        SimManager.instance.ResumeSimulation();
+        Time.timeScale = 1f;
+        pauseButton.color = new Color(0, 0, 0, 0.2f);
+        playButton.color = new Color(0, 0, 0, 1f);
+        ffButton.color = new Color(0, 0, 0, 0.2f);
+    } 
+
+    public void FastForwardButton()
+    {
+        SimManager.instance.ResumeSimulation();
+        Time.timeScale = 2f;
+        pauseButton.color = new Color(0, 0, 0, 0.2f);
+        playButton.color = new Color(0, 0, 0, 0.2f);
+        ffButton.color = new Color(0, 0, 0, 1f);
     }
 }
