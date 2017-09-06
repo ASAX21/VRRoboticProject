@@ -226,6 +226,11 @@ public class SimManager : MonoBehaviour {
             }
         }
     }
+
+    public void SaveObjects()
+    {
+
+    }
     
     // Pause and Resume by setting bodies to kinematic - will not move from applied forces
     public void PauseSimulation()
