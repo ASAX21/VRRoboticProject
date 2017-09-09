@@ -39,7 +39,7 @@ public class WindowsOSManager: OSManager
         xWindowsServer.Start();
     }
 
-    // Compile a RoBIOS program using cygwin (32 bit)
+    // Launch cygwin terminal
     public override void LaunchTerminal()
     {
         ProcessStartInfo startInfo = new ProcessStartInfo();

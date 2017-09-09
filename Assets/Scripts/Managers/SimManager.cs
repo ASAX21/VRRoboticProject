@@ -42,6 +42,10 @@ public class SimManager : MonoBehaviour {
         {
             osManager = new WindowsOSManager();
         }
+        else if(Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXEditor)
+        {
+            osManager = new MacOSManager();
+        }
     }
 
     private void Start() {
@@ -67,7 +71,7 @@ public class SimManager : MonoBehaviour {
         // Else launch default terminal
         else
         {
-            //TODO: Mac terminal
+            osManager.LaunchTerminal();
         }
     }
 

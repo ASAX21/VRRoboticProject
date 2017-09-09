@@ -21,7 +21,7 @@ namespace RobotComponents
                 	value = hit.distance * 1000;
 					return;
             }
-			value = -1;
+			value = 9999;
         }
     }
 }
