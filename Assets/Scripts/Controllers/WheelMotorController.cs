@@ -6,6 +6,7 @@ using RobotComponents;
 
 public class WheelMotorController : MonoBehaviour
 {
+    public Robot mainBot;
     public List<Wheel> wheels; // the information about each individual wheel  
     public float maxMotorTorque; // maximum torque the motor can apply to wheel
     public float maxSteeringAngle; // maximum steer angle the wheel can have
@@ -14,6 +15,10 @@ public class WheelMotorController : MonoBehaviour
     public float w;
     public Vector3 Pos;
     public float v;
+
+    // Latest SetPosition data
+    public Transform VWOrigin;
+    public bool realCoords = false;
 
     //vw parameters
     [Header("VW Parameters")]
@@ -36,6 +41,8 @@ public class WheelMotorController : MonoBehaviour
     private void Awake()
     {
         Pos = new Vector3(0,0,0);
+        VWOrigin = new GameObject("VWOrigin").transform;
+        VWOrigin.position = mainBot.transform.position;
     }
 
     private void Update()
@@ -91,7 +98,6 @@ public class WheelMotorController : MonoBehaviour
     // Positive rotation - anti-clockwise
     public void DriveTurn(float rotation, float velocity)
     {
-        Debug.Log("TURN: " + rotation + " " + velocity);
         resetController();
         targetRot = rotation;
         checkType = "rotation";
@@ -105,9 +111,14 @@ public class WheelMotorController : MonoBehaviour
     public void DriveCurve(float distance, float rotation, float velocity)
     {
         resetController();
+        if (Mathf.Abs(distance) <= Mathf.Epsilon)
+            return;
         targetDist = distance;
         checkType = "distance";
-        SetSpeed(velocity, (float)velocity / distance * rotation); //finds w via ratio
+        if(distance >= 0)
+            SetSpeed(Mathf.Abs(velocity), Mathf.Abs(velocity) / distance * rotation); //finds w via ratio
+        else
+            SetSpeed(-Mathf.Abs(velocity), Mathf.Abs(velocity) / distance * rotation);
         checkActive = true;
     }
 
@@ -135,16 +146,39 @@ public class WheelMotorController : MonoBehaviour
         return new Speed(v * 1000000, w * 1000);
     }
 
+    public void SetSpeedManual(float v, float w)
+    {
+        resetController();
+        SetSpeed(v, w);
+    }
+
     public void SetPosition(float x, float y, float phi)
     {
-        Pos.x = y;
-        Pos.z = x;
+        Debug.Log("Trying to set : " + x + " " + y + " " + phi);
+
+        Pos.x = y / 1000;
+        Pos.z = x / 1000;
         Rot = phi;
+
+        Quaternion axisDir = Quaternion.AngleAxis(phi + mainBot.transform.eulerAngles.y, mainBot.transform.up);
+        VWOrigin.position = mainBot.transform.position;
+        VWOrigin.rotation = axisDir;
+        VWOrigin.Translate(-VWOrigin.forward * (x / 1000), Space.World);
+        VWOrigin.Translate(VWOrigin.right * (y / 1000), Space.World);
     }
 
     public float[] GetPosition()
     {
-        return new float[3] { Pos.z, Pos.x, Rot };
+        // Get real position
+        Vector3 relPos = VWOrigin.InverseTransformPoint(mainBot.transform.position);
+        float angle = VWOrigin.eulerAngles.y - mainBot.transform.eulerAngles.y;
+        angle = (angle + 360) % 360;
+        angle = angle > 180 ? angle - 360 : angle;
+
+        if(realCoords)
+            return new float[3] { relPos.z, -relPos.x, angle};
+        else
+            return new float[3] { Pos.z, Pos.x, Rot };
     }
 
     private void updatePosition()
@@ -155,7 +189,7 @@ public class WheelMotorController : MonoBehaviour
         float neww = (lspeed - rspeed) / wheelDist * Mathf.Rad2Deg;
         Pos.z += ((newv + v) / 2) * Mathf.Cos(Mathf.Deg2Rad * Rot);
         Pos.x += ((newv + v) / 2) * Mathf.Sin(Mathf.Deg2Rad * Rot);
-        Rot += (neww + w) / 2;
+        Rot -= (neww + w) / 2;
 
         while (Rot > 180)
         {
@@ -176,6 +210,7 @@ public class WheelMotorController : MonoBehaviour
         targetRot = 0;
         travelledDist = 0;
         travelledRot = 0;
+        checkActive = false;
     }
 
     private void checkDrive()
@@ -193,7 +228,7 @@ public class WheelMotorController : MonoBehaviour
             case "rotation":
                 travelledRot -= w;
                 if (Mathf.Sign(targetRot) * (targetRot - travelledRot) > 0)
-                if (Mathf.Sign(targetRot) * (targetRot - travelledRot - Mathf.Abs(wSpeed)/20f) > 0)
+                //if (Mathf.Sign(targetRot) * (targetRot - travelledRot - Mathf.Abs(wSpeed) / 20f) > 0)
                     return;
                 break;
             default:
@@ -202,8 +237,8 @@ public class WheelMotorController : MonoBehaviour
 
         //journey complete
         Debug.Log("Drive Done");
+        Debug.Log("Travelled: " + travelledDist + " Rot: " + travelledRot);
         SetSpeed(0, 0);
-        checkActive = false;
         resetController();
     }
 }

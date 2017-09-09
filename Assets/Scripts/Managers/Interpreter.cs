@@ -187,7 +187,6 @@ public class Interpreter {
     // VW Drive Straight
     private void Command_y(byte[] recv, RobotConnection conn)
     {
-        Debug.Log("VWStraight : " + recv.Length);
         if(conn.robot is IVWDrivable)
         {
             // Velocity is first byte, distance is second byte

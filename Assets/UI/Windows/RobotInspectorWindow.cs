@@ -139,6 +139,14 @@ public class RobotInspectorWindow : MonoBehaviour {
         Destroy(gameObject);
     }
 
+    public void ToggleAccurate(bool toggle)
+    {
+        if(robot is LabBot)
+            (robot as LabBot).wheelController.realCoords = toggle;
+        if (robot is S4)
+            (robot as S4).wheelController.realCoords = toggle;
+    }
+
     public void AddRobotControl()
     {
         UIManager.instance.LoadControlProgram(robot);

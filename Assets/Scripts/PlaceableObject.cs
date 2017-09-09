@@ -182,6 +182,13 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
             if(!SimManager.instance.isPaused)
                 phys.rigidBody.isKinematic = false;
         }
+        if(isInit == false)
+        {
+            if(this is LabBot)
+                (this as LabBot).SetPose(0, 0, 0);
+            if(this is S4)
+                (this as S4).SetPose(0, 0, 0);
+        }
         isPlaced = true;
         isInit = true;
     }

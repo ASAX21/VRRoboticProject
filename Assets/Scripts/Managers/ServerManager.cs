@@ -111,9 +111,10 @@ public class ServerManager : MonoBehaviour
     // Reject a connection (due to no robot present)
     private void RejectConnection(TcpClient client)
     {
-        byte[] reply = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00 };
+        Debug.Log("REJECTING");
+        byte[] reply = new byte[] { 0x00, 0x00, 0x00, 0x00, 0x01, 0x00 };
         reply[0] = PacketType.SERVER_DISCONNECT;
-        client.GetStream().Write(reply, 0, 5);
+        client.GetStream().Write(reply, 0, 6);
         client.Close();
     }
 

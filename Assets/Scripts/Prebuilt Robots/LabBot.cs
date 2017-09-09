@@ -71,13 +71,15 @@ public class LabBot : Robot,
 
     public void SetPose(int x, int y, int phi)
     {
-        wheelController.SetPosition(x, y, phi);
+        Debug.Log("SET POSE: " + x + " " + y + " " + phi);
+        wheelController.SetPosition((int)x, (int)y, (int)phi);
     }
 
     public Int16[] GetPose()
     {
         Int16[] pos = new Int16[3];
         float[] robPos = wheelController.GetPosition();
+        Debug.Log("POSE: " + robPos[0] + " " +  robPos[1] + " " + robPos[2]);
         pos[0] = Convert.ToInt16(Math.Round(robPos[0] * 1000));
         pos[1] = Convert.ToInt16(Math.Round(robPos[1] * 1000));
         pos[2] = Convert.ToInt16(Math.Round(robPos[2]));
@@ -91,7 +93,7 @@ public class LabBot : Robot,
 
     public void VWSetVehicleSpeed(int linear, int angular)
     {
-        wheelController.SetSpeed(linear/1000.0f, angular);
+        wheelController.SetSpeedManual(linear/1000.0f, angular);
     }
 
     public Speed VWGetVehicleSpeed()
