@@ -99,7 +99,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 					case "push":
 						if (parameters.Count < 3)
 							break;
-						relativepos.Push (new Vector3 (parameters [0]/1000, parameters [1]/1000, parameters[2]));
+						relativepos.Push (new Vector3 (parameters [0]/1000, parameters [1]/1000, -parameters[2]));
 						break;
 					case "pop":
 						if (relativepos.Count <= 1)
