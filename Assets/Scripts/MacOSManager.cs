@@ -11,13 +11,10 @@ public class MacOSManager : OSManager
     {
     }
 
-    // Compile a RoBIOS program using cygwin (32 bit)
+    // Launch MAC Terminal
     public override void LaunchTerminal()
     {
-        ProcessStartInfo startInfo = new ProcessStartInfo(@"/Applications/Terminal");
-        Process proc = new Process();
-        proc.StartInfo = startInfo;
-        proc.Start();
+        Process.Start(@"/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal");
     }
 
 
