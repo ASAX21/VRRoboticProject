@@ -53,16 +53,16 @@ public class CameraControl: MonoBehaviour
             if (isOrtho)
             {
                 // middle click : startPan 
-                if (Input.GetMouseButtonDown(1))
+                if (Input.GetMouseButtonDown(2))
                     mousePos = Input.mousePosition;
 
                 // middle held : Pan 
-                if (Input.GetMouseButton(1))
+                if (Input.GetMouseButton(2))
                 {
                     Vector3 newMousePos = Input.mousePosition;
                     if (mousePos == newMousePos)
                         return;
-                    Camera.main.transform.parent.Translate(new Vector3(mousePos.x - newMousePos.x, 0, mousePos.y - newMousePos.y) / orthoPanSens);
+                    Camera.main.transform.parent.Translate(new Vector3(mousePos.x - newMousePos.x, 0, mousePos.y - newMousePos.y) * orthoPanSens/200);
                     mousePos = newMousePos;
                 }
                 // Pan with Keyboard
@@ -71,10 +71,10 @@ public class CameraControl: MonoBehaviour
                     Camera.main.transform.parent.Translate(new Vector3(Input.GetAxis("Horizontal") * sidewaysPanSens / 10f, 0, Input.GetAxis("Vertical") * forwardsPanSens / 10f));
                 }
                 // Zoom
-                Camera.main.orthographicSize += Input.GetAxis("Mouse ScrollWheel") * orthoZoomSens;
+                Camera.main.orthographicSize -= Input.GetAxis("Mouse ScrollWheel") * orthoZoomSens;
                 if (Input.GetAxis("Keyboard Zoom") != 0)
                 {
-                    Camera.main.orthographicSize += Input.GetAxis("Keyboard Zoom") * orthoZoomSens;
+                    Camera.main.orthographicSize -= Input.GetAxis("Keyboard Zoom") * orthoZoomSens;
                 }
             }
             else
