@@ -154,8 +154,6 @@ public class WheelMotorController : MonoBehaviour
 
     public void SetPosition(float x, float y, float phi)
     {
-        Debug.Log("Trying to set : " + x + " " + y + " " + phi);
-
         Pos.x = y / 1000;
         Pos.z = x / 1000;
         Rot = phi;

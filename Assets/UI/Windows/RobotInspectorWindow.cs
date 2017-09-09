@@ -37,6 +37,8 @@ public class RobotInspectorWindow : MonoBehaviour {
     public Image trailButtonImage;
     public Sprite lockedImage;
 
+    public Toggle toggleVWAccurate;
+
     // Use this for initialization
     void Start () {
         if(robot is ICameras)
@@ -53,6 +55,11 @@ public class RobotInspectorWindow : MonoBehaviour {
         robotXValue.interactable = SimManager.instance.isPaused;
         robotZValue.interactable = SimManager.instance.isPaused;
         robotPhiValue.interactable = SimManager.instance.isPaused;
+
+        if (robot is LabBot)
+            toggleVWAccurate.isOn = (robot as LabBot).wheelController.realCoords;
+        else if (robot is S4)
+            toggleVWAccurate.isOn = (robot as S4).wheelController.realCoords;
 
         SimManager.instance.OnPause += OnSimPaused;
         SimManager.instance.OnResume += OnSimResumed;

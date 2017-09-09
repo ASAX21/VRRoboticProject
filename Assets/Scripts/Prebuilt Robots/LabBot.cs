@@ -71,7 +71,6 @@ public class LabBot : Robot,
 
     public void SetPose(int x, int y, int phi)
     {
-        Debug.Log("SET POSE: " + x + " " + y + " " + phi);
         wheelController.SetPosition((int)x, (int)y, (int)phi);
     }
 
