@@ -3,7 +3,7 @@
 public class CameraControl: MonoBehaviour
 {
     public bool isOrtho = false;
-    public float orthoPanSens = 800f;
+    public float orthoPanSens = 400f;
     public float orthoZoomSens = 0.4f;
 
     public float horizontalLookSens = 5.0f;
@@ -62,7 +62,7 @@ public class CameraControl: MonoBehaviour
                     Vector3 newMousePos = Input.mousePosition;
                     if (mousePos == newMousePos)
                         return;
-                    Camera.main.transform.parent.Translate(new Vector3(mousePos.x - newMousePos.x, 0, mousePos.y - newMousePos.y) * orthoPanSens/200);
+                    Camera.main.transform.parent.Translate(new Vector3(mousePos.x - newMousePos.x, 0, mousePos.y - newMousePos.y) / orthoPanSens);
                     mousePos = newMousePos;
                 }
                 // Pan with Keyboard
