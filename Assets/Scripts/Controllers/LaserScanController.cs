@@ -23,7 +23,7 @@ public class LaserScanController : MonoBehaviour {
             if (Physics.Raycast(transform.position, forward, out hit, 2000))
                 dists[i] = Mathf.FloorToInt(hit.distance * 1000);
             else
-                dists[i] = -1;
+                dists[i] = 9999;
         }
         return dists;
     }

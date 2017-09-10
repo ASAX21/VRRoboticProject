@@ -27,6 +27,7 @@ public class CameraControl: MonoBehaviour
             ToggleCameraOrtho();
         Camera.main.transform.rotation = Quaternion.Euler(new Vector3(40f, 0f, 0f));
         Camera.main.transform.parent.position = new Vector3(0f, 1.35f, -0.7f);
+        Camera.main.transform.localPosition = Vector3.zero;
     }
 
     public void ToggleCameraOrtho()

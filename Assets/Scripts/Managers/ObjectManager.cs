@@ -264,11 +264,25 @@ public class ObjectManager : MonoBehaviour {
                 TryPlaceObject();
             }
             // Escape - If object isn't initalized (has never been placed), destroy it.
-            else if (Input.GetKeyDown(KeyCode.Escape))
+            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Delete))
             {
                 if (!objectOnMouse.isInit)
                 {
                     Destroy(objectOnMouse.gameObject);
+                    objectOnMouse = null;
+                    isMouseOccupied = false;
+                }
+                else
+                {
+                    if (objectOnMouse is Robot)
+                        SimManager.instance.RemoveRobotFromScene(objectOnMouse as Robot);
+                    else if (objectOnMouse is WorldObject)
+                        SimManager.instance.RemoveWorldObjectFromScene(objectOnMouse as WorldObject);
+                    else
+                    {
+                        Debug.Log("Delete on mouse failed");
+                        return;
+                    }
                     objectOnMouse = null;
                     isMouseOccupied = false;
                 }

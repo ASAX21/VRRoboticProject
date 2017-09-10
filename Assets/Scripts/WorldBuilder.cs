@@ -73,7 +73,6 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 					}
 					switch (args[0]) {
 					case "floor":
-						print (parameters.Count);
 						if (parameters.Count < 2)
 							break;
 						addFloor(0,0,parameters[0]/1000, parameters[1]/1000);
