@@ -3,8 +3,8 @@
 public class CameraControl: MonoBehaviour
 {
     public bool isOrtho = false;
-    public float orthoPanSens = 400f;
-    public float orthoZoomSens = 0.4f;
+    public float orthoPanSens = 100f;
+    public float orthoZoomSens = 2f;
 
     public float horizontalLookSens = 5.0f;
     public float verticalLookSens = 5.0f;
