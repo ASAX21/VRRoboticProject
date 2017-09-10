@@ -21,7 +21,10 @@ public class LaserScanController : MonoBehaviour {
             RaycastHit hit;
             Debug.DrawRay(laserScanner.position, forward, Color.green);
             if (Physics.Raycast(transform.position, forward, out hit, 2000))
+            {
                 dists[i] = Mathf.FloorToInt(hit.distance * 1000);
+                dists[i] = dists[i] > 9999 ? 9999 : dists[i];
+            }
             else
                 dists[i] = 9999;
         }

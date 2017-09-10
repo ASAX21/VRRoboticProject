@@ -17,11 +17,11 @@ namespace RobotComponents
 			Debug.DrawRay (transform.position, forward,Color.green);
             if (Physics.Raycast(transform.position, forward, out hit, 2000))
             {
-				//if(hit.transform.tag == "wall")
-                	value = hit.distance * 1000;
-					return;
+                value = hit.distance * 1000;
+                value = value > 10000f ? 9999f : value;
+    			return;
             }
-			value = 9999;
+			value = 9999f;
         }
     }
 }
