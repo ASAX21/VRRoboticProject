@@ -78,7 +78,6 @@ public class LabBot : Robot,
     {
         Int16[] pos = new Int16[3];
         float[] robPos = wheelController.GetPosition();
-        Debug.Log("POSE: " + robPos[0] + " " +  robPos[1] + " " + robPos[2]);
         pos[0] = Convert.ToInt16(Math.Round(robPos[0] * 1000));
         pos[1] = Convert.ToInt16(Math.Round(robPos[1] * 1000));
         pos[2] = Convert.ToInt16(Math.Round(robPos[2]));

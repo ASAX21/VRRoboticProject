@@ -217,7 +217,6 @@ public class Interpreter {
             int angle = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 3));
             int speed = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 5));     
             (conn.robot as IVWDrivable).VWDriveCurve(distance, angle, speed);
-            Debug.Log("Drive Curve: " + distance + " " + angle + " " + speed);
         }
     }
 
