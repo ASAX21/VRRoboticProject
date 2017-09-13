@@ -30,6 +30,10 @@ public class ObjectManager : MonoBehaviour {
     public GameObject floorPrefab;
 
     private Material tempMat;
+
+    // ----- Custom Objects: Loaded at run-time
+
+
     // ---------------------------------------------------------------------
 
     public bool isMouseOccupied = false;
@@ -67,8 +71,14 @@ public class ObjectManager : MonoBehaviour {
         ground = new Plane(new Vector3(0, 1, 0), new Vector3(0, 0, 0));
     }
 
-    // ---- Add Objects -----
+    // ---- Load an OBJ File ----
+    public void LoadObjFile()
+    {
+        GameObject test = ObjectBuilder.instance.ReceiveFile(@"C:\UNIVERSITY\EyeSim\Models\Teacup\3D Models\TeaCup.esObj");
+        Debug.Log(test.name);
+    }
 
+    // ---- Add Objects -----
     public void AddObjectToSceneAtPos(PlaceableObject newObj, float x, float y, float phi)
     {
         newObj.objectID = totalObjects++;
@@ -93,7 +103,7 @@ public class ObjectManager : MonoBehaviour {
         AddObjectToMouse(newObj, 0f);
     }
 
-    // Specific object creators - called from Add Object menu
+    // ----- Specific object creators - called from Add Object menu
     public void AddCokeCanToScene(string args)
     {
         if (isMouseOccupied)

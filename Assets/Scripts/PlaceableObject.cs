@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,10 +16,11 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
 
     // Placement variables
     public bool isInit = false;
-    public bool isPlaced = false;
+    public bool isPlaced = true;
     public bool isSelected = false;
     public bool locked = false;
     public bool unpausedLockState = false;
+    public bool isValidPlacement = true;
 
     private LayerMask currLayer = 0;
 	public int collisionCount = 0;
@@ -53,6 +55,9 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
         invalidMat = ObjectManager.instance.invalidMat;
         SimManager.instance.OnPause += OnSimPaused;
         SimManager.instance.OnResume += OnSimResumed;
+        // For some reason, initializing this to true in the decleration doesn't work
+        isPlaced = true;
+        PostBuild();
     }
 
     private void OnDestroy()
@@ -65,9 +70,33 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
     // Initializes required variables (Prefab vars set in editor)
     public void PostBuild()
     {
-       // rigidBody = gameObject.GetComponent<Rigidbody>();
-       // objCollider = gameObject.GetComponent<Collider>();
-       // matContainer = new List<MaterialContainer>();
+        physContainer = new List<PhysicalContainer>();
+        matContainer = new List<MaterialContainer>();
+
+        // Get all renderers
+        Renderer[] rends = GetComponentsInChildren<Renderer>();
+        foreach (Renderer r in rends)
+        {
+            MaterialContainer m = new MaterialContainer();
+            m.modelRend = r;
+            m.defaultMats = r.materials;
+            foreach(Material d in m.defaultMats)
+            {
+                Debug.Log(d.name);
+            }
+            matContainer.Add(m);
+        }
+
+        // Get all bodies
+        Rigidbody[] bodies = GetComponentsInChildren<Rigidbody>();
+        foreach (Rigidbody rb in bodies)
+        {
+            Debug.Log(rb.gameObject.name);
+            PhysicalContainer p = new PhysicalContainer();
+            p.rigidBody = rb;
+            p.collider = rb.gameObject.GetComponents<Collider>();
+            physContainer.Add(p);
+        }
     }
 
     private void OnSimPaused()
@@ -97,12 +126,20 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
         }
     }
 
-	public bool updateValidity(bool onGround){
-		bool valid = onGround && collisionCount == 0;
-		Material newMat = valid ? validMat : invalidMat;
-        foreach (MaterialContainer mat in matContainer)
+    // Update whether object is placeable
+    public bool updateValidity(bool onGround)
+    {
+        bool valid = onGround && collisionCount == 0;
+        if (valid != isValidPlacement || isPlaced)
         {
-            mat.modelRend.material = newMat;
+            Material newMat = valid ? validMat : invalidMat;
+            foreach (MaterialContainer mat in matContainer)
+            {
+                Material[] newMats = Enumerable.Repeat(newMat, mat.modelRend.materials.Length).ToArray();
+                mat.modelRend.materials = newMats;
+            }
+            isValidPlacement = valid;
+            isPlaced = false;
         }
         return valid;
 	}
@@ -161,12 +198,13 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
 
         foreach(PhysicalContainer phys in physContainer)
         {
-            phys.collider.isTrigger = true;
             phys.rigidBody.isKinematic = true;
+            foreach(Collider c in phys.collider)
+                c.isTrigger = true;
         }
 
         collisionCount = 0;
-        isPlaced = false;
+        //isPlaced = false;
         isSelected = false;
     }
 
@@ -174,13 +212,14 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
     {
         foreach (MaterialContainer mat in matContainer)
         {
-            mat.modelRend.material = mat.defaultMat;
+            mat.modelRend.materials = mat.defaultMats;
         }
         foreach (PhysicalContainer phys in physContainer)
         {
-            phys.collider.isTrigger = false;
             if(!SimManager.instance.isPaused)
                 phys.rigidBody.isKinematic = false;
+            foreach (Collider c in phys.collider)
+                c.isTrigger = false;
         }
         if(isInit == false)
         {
@@ -216,7 +255,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
 public class MaterialContainer
 {
     [SerializeField]
-    internal Material defaultMat;
+    internal Material[] defaultMats;
     [SerializeField]
     internal Renderer modelRend;
 }
@@ -226,7 +265,7 @@ public class MaterialContainer
 public class PhysicalContainer
 {
     [SerializeField]
-    internal Collider collider;
+    internal Collider[] collider;
     [SerializeField]
     internal Rigidbody rigidBody;
 }
