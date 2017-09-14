@@ -24,6 +24,8 @@ namespace RobotComponents
 
         public float speed;
 
+        public float maxSpeed;
+
 		public float ticks = 0;
 
 		public float tickrate;

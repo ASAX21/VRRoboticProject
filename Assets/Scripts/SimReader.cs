@@ -1,11 +1,15 @@
 ﻿using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SimReader: MonoBehaviour, IFileReceiver {
 
 	public static SimReader instance;
+
+    private List<string> executables;
 
     private void Awake()
     {
@@ -18,7 +22,9 @@ public class SimReader: MonoBehaviour, IFileReceiver {
     public GameObject ReceiveFile(string path)
     {
         SimManager.instance.ResetWorld();
-		IO io = new IO ();
+        SimManager.instance.PauseSimulation();
+        executables = new List<string>();
+        IO io = new IO ();
 		if (!io.Load (path))
 			return null;
 		while (true)
@@ -34,6 +40,8 @@ public class SimReader: MonoBehaviour, IFileReceiver {
 				}
 			}
 		}
+        // Finished processing - Launch exectuables
+        StartCoroutine(LaunchExecutables());
         return null;
 	}
 
@@ -50,12 +58,26 @@ public class SimReader: MonoBehaviour, IFileReceiver {
 			/*run client*/
 			    break;
             case "labbot":
-                if (args.Length != 4)
+                if (args.Length < 4)
                 {
                     Debug.Log("Incorrect number of arguments");
                     return;
                 }
                 ObjectManager.instance.AddLabBotToScene(args[1] + ":" + args[2] + ":" + args[3]);
+                if (args.Length == 5)
+                {
+                    string execPath = args[4];
+                    if (!(String.IsNullOrEmpty(execPath) || execPath.Trim().Length == 0))
+                    {
+                        if (execPath[0] == '"')
+                        {
+                            execPath = Regex.Matches(line, "\"[^\"]*\"")[0].ToString();
+                            execPath = execPath.Trim('"');
+                        }
+                        executables.Add(execPath);
+                    }
+
+                }
                 break;
 
             case "s4":
@@ -65,6 +87,19 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                     return;
                 }
                 ObjectManager.instance.AddS4ToScene(args[1] + ":" + args[2] + ":" + args[3]);
+                if (args.Length == 5)
+                {
+                    string execPath = args[4];
+                    if (!(String.IsNullOrEmpty(execPath) || execPath.Trim().Length == 0))
+                    {
+                        if (execPath[0] == '"')
+                        {
+                            execPath = Regex.Matches(line, "\"[^\"]*\"")[0].ToString();
+                            execPath = execPath.Trim('"');
+                        }
+                        executables.Add(execPath);
+                    }  
+                }
                 break;
 
             case "can":
@@ -111,4 +146,19 @@ public class SimReader: MonoBehaviour, IFileReceiver {
 			    break;
 		}
 	}
+
+    // Launch executables
+    // Launch process one by one, wait until connection received until continuing
+    IEnumerator LaunchExecutables()
+    {
+        for(int i = 0; i < executables.Count; i++)
+        {
+            ServerManager.instance.connectionReceived = false;
+            Debug.Log(i + " " + @executables[i]);
+            SimManager.instance.allRobots[i].ReceiveFile(@executables[i]);
+            yield return new WaitUntil(() => ServerManager.instance.connectionReceived);
+        }
+
+        SimManager.instance.ResumeSimulation();
+    }
 }

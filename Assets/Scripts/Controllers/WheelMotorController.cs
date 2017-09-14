@@ -234,8 +234,6 @@ public class WheelMotorController : MonoBehaviour
         }
 
         //journey complete
-        Debug.Log("Drive Done");
-        Debug.Log("Travelled: " + travelledDist + " Rot: " + travelledRot);
         SetSpeed(0, 0);
         resetController();
     }

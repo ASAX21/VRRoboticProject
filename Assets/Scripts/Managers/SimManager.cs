@@ -193,6 +193,9 @@ public class SimManager : MonoBehaviour {
     public void ResetWorld()
     {
         DestroyWorld();
+        allRobots = new List<Robot>();
+        allWorldObjects = new List<WorldObject>();
+        totalObjects = 0;
         world = WorldBuilder.instance.CreateBox();
     }
 

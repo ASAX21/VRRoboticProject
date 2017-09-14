@@ -57,6 +57,8 @@ public class ServerManager : MonoBehaviour
     private int port = 34721;
     private IPAddress localAddr = IPAddress.Parse("127.0.0.1");
     private bool connsChanged;
+
+    public bool connectionReceived = false;
     
     public Interpreter interpreter;
 
@@ -80,6 +82,13 @@ public class ServerManager : MonoBehaviour
         // Periodically check if connections are active
         StartCoroutine(CheckConnections());
         Debug.Log("Server Started");
+    }
+
+    // This is used as a delegate for SimReader, to pause
+    // and wait for subsequent programs to connect
+    public bool CheckIfProgramConnected()
+    {
+        return true;
     }
 
     // Terminate a connection, and remove form the connection list
@@ -147,6 +156,7 @@ public class ServerManager : MonoBehaviour
             // Reply to the robot to begin control
             Debug.Log("Accepted a connection");
             ReplyHandshake(newClient);
+            connectionReceived = true;
         }
     }
 
