@@ -87,7 +87,6 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
         Rigidbody[] bodies = GetComponentsInChildren<Rigidbody>();
         foreach (Rigidbody rb in bodies)
         {
-            Debug.Log(rb.gameObject.name);
             PhysicalContainer p = new PhysicalContainer();
             p.rigidBody = rb;
             p.collider = rb.gameObject.GetComponents<Collider>();
