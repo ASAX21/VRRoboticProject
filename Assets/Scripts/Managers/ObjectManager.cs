@@ -5,37 +5,44 @@ using UnityEngine;
 
 // Object manager handles objects in the scene
 // Allows placement of objects at run-time
-public class ObjectManager : MonoBehaviour {
+public class ObjectManager : MonoBehaviour, IFileReceiver {
 
     public static ObjectManager instance { get; private set; }
 
     public int totalObjects = 0;
 
     // Stores reference to the Ground LayerMask, and shaders to use during placement
+    [Header("Placement")]
     public LayerMask groundMask;
     public Material validMat;
     public Material invalidMat;
 
     //  ----- Placeable object prefabs - spawned from Add Object menu -----
     // World Object Prefabs
+    [Header("Prefab World Ojbects")]
     public GameObject cokeCanPrefab;
     public GameObject soccerBallPrefab;
 
     // Robot Prefabs
+    [Header("Prefab Robots")]
     public GameObject labBotPrefab;
 	public GameObject S4Prefab;
 
     // Environment Prefabs
+    [Header("Prefab Environment Objects")]
     public GameObject wallPrefab;
     public GameObject floorPrefab;
 
     private Material tempMat;
 
-    // ----- Custom Objects: Loaded at run-time
-
+    // ----- Custom Objects: Loaded at run-time -----
+    [Header("Builder References")]
+    public ObjectBuilder objectBuilder;
+    public List<GameObject> customObjects;
 
     // ---------------------------------------------------------------------
 
+    [Header("Placement Variables")]
     public bool isMouseOccupied = false;
 
     // Specific object currently being placed (one at a time strict)
@@ -72,10 +79,14 @@ public class ObjectManager : MonoBehaviour {
     }
 
     // ---- Load an OBJ File ----
-    public void LoadObjFile()
+    public GameObject ReceiveFile(string filepath)
     {
-        GameObject test = ObjectBuilder.instance.ReceiveFile(@"C:\UNIVERSITY\EyeSim\Models\Teacup\3D Models\TeaCup.esObj");
-        Debug.Log(test.name);
+        GameObject newCustomObj = objectBuilder.BuildObjectFromFile(filepath);
+        WorldObject newWorldObj = newCustomObj.GetComponent<WorldObject>();
+
+        MenuBarManager.instance.AddCustomObjectToMenu(newCustomObj.name, customObjects.Count);
+        customObjects.Add(newCustomObj);
+        return null;
     }
 
     // ---- Add Objects -----
@@ -100,10 +111,31 @@ public class ObjectManager : MonoBehaviour {
     {
         newObj.objectID = totalObjects;
         totalObjects++;
-        AddObjectToMouse(newObj, 0f);
+        if (newObj is WorldObject)
+        {
+            Debug.Log("vert: " + (newObj as WorldObject).defaultVerticalOffset);
+            AddObjectToMouse(newObj, (newObj as WorldObject).defaultVerticalOffset);
+        }
+        else
+            AddObjectToMouse(newObj, 0f);
     }
 
     // ----- Specific object creators - called from Add Object menu
+    public void AddCustomObjectToScene(int index, string args)
+    {
+        if (isMouseOccupied)
+            return;
+        PlaceableObject newObj = Instantiate(customObjects[index]).GetComponent<PlaceableObject>();
+        newObj.gameObject.SetActive(true);
+        newObj.name = customObjects[index].name;
+        if (args.Length == 0)
+            AddObjectToSceneOnMouse(newObj);
+        else
+        {
+            string[] pos = args.Split(':');
+            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
+        }
+    }
     public void AddCokeCanToScene(string args)
     {
         if (isMouseOccupied)

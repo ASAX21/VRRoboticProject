@@ -29,6 +29,7 @@ public class MenuBarItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     private MenuBarButton parentMenu;
 
     // Callback function
+    public int callbackIndex;
     public UnityEvent callback;
 
     private void Awake()
@@ -119,5 +120,10 @@ public class MenuBarItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     private void OnDisable()
     {
         image.color = defaultColor;
+    }
+
+    public void CustomObjectCallback()
+    {
+        ObjectManager.instance.AddCustomObjectToScene(callbackIndex, "");
     }
 }

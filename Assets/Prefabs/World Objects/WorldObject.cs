@@ -3,6 +3,8 @@ using UnityEngine.EventSystems;
 
 public class WorldObject : PlaceableObject, IPointerClickHandler {
 
+    public float defaultVerticalOffset = 0f;
+
     public void OpenInfoWindow()
     {
         if (!isWindowOpen)

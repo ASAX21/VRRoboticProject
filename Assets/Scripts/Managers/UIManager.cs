@@ -33,6 +33,7 @@ public class UIManager : MonoBehaviour {
     public FileFinder controlFileFinder;
     public FileFinder simFileFinder;
     public FileFinder scriptFileFinder;
+    public FileFinder customObjFileFinder;
 
     // Images of control buttons
     [Header("Sim Control Buttons")]
@@ -63,6 +64,7 @@ public class UIManager : MonoBehaviour {
         robotFileFinder.Initialise("*.robi", robotBuilder);
         simFileFinder.Initialise("*.sim", simBuilder);
         scriptFileFinder.Initialise("*.c", SimManager.instance.osManager);
+        customObjFileFinder.Initialise("*.esObj", ObjectManager.instance);
     }
 
 	public void openWindow(){
@@ -103,6 +105,12 @@ public class UIManager : MonoBehaviour {
     {
         scriptFileFinder.OpenFileSelection();
     }
+
+    public void LoadCustomObject()
+    {
+        customObjFileFinder.OpenFileSelection();
+    }
+
     public void OpenViewRobotWindow()
     {
         if (viewRobotsWindow.gameObject.activeInHierarchy)

@@ -45,6 +45,8 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
         {
             GetComponent<Rigidbody>().centerOfMass = centreOfMass;
         }
+
+        PostBuild();
     }
 
     private void Start()
@@ -55,9 +57,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
         invalidMat = ObjectManager.instance.invalidMat;
         SimManager.instance.OnPause += OnSimPaused;
         SimManager.instance.OnResume += OnSimResumed;
-        // For some reason, initializing this to true in the decleration doesn't work
         isPlaced = true;
-        PostBuild();
     }
 
     private void OnDestroy()
@@ -80,10 +80,6 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
             MaterialContainer m = new MaterialContainer();
             m.modelRend = r;
             m.defaultMats = r.materials;
-            foreach(Material d in m.defaultMats)
-            {
-                Debug.Log(d.name);
-            }
             matContainer.Add(m);
         }
 
@@ -127,6 +123,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
     }
 
     // Update whether object is placeable
+    // Should never be called on an object not on the mouse
     public bool updateValidity(bool onGround)
     {
         bool valid = onGround && collisionCount == 0;
@@ -204,7 +201,6 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
         }
 
         collisionCount = 0;
-        //isPlaced = false;
         isSelected = false;
     }
 
@@ -223,10 +219,8 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
         }
         if(isInit == false)
         {
-            if(this is LabBot)
-                (this as LabBot).SetPose(0, 0, 0);
-            if(this is S4)
-                (this as S4).SetPose(0, 0, 0);
+            if(this is IVWDrivable)
+                (this as IVWDrivable).SetPose(0, 0, 0);
         }
         isPlaced = true;
         isInit = true;

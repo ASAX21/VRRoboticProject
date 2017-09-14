@@ -8,23 +8,9 @@ using UnityEngine;
 
 // ObjectBuilder constructs a gameObject from the .esObj file
 
-public class ObjectBuilder : MonoBehaviour, IFileReceiver
+public class ObjectBuilder : MonoBehaviour
 {
-    public static ObjectBuilder instance;
-
-    private void Awake()
-    {
-        if(instance == null || instance == this)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(this);
-        }
-    }
-
-    public GameObject ReceiveFile(string filepath)
+    public GameObject BuildObjectFromFile(string filepath)
     {
         IO io = new IO();
         GameObject customObj = null;
@@ -62,8 +48,25 @@ public class ObjectBuilder : MonoBehaviour, IFileReceiver
                         else
                             objPath = args[1];
                         customObj = OBJLoader.LoadOBJFile(objPath);
-                        customObj.SetActive(false);
-                        customObj.AddComponent<Rigidbody>();
+                        customObj.transform.position = new Vector3(0f, -20f, 0f);
+                        customObj.AddComponent<Rigidbody>().isKinematic = true;
+                        break;
+
+                    case "scale":
+                        if (customObj == null)
+                        {
+                            Debug.Log("obj must be first input in .esObj file");
+                            return null;
+                        }
+                        try
+                        {
+                            customObj.transform.localScale = new Vector3(float.Parse(args[1]), float.Parse(args[1]), float.Parse(args[1]));
+                        }
+                        catch
+                        {
+                            Debug.Log("Error in scale: Invalid argument");
+                            return null;
+                        }
                         break;
 
                     // Configure mass properties
@@ -127,24 +130,15 @@ public class ObjectBuilder : MonoBehaviour, IFileReceiver
                                 Debug.Log("obj must be first input in .esObj file");
                                 return null;
                             }
-                            CapsuleCollider col = customObj.AddComponent<CapsuleCollider>();
+                            SphereCollider col = customObj.AddComponent<SphereCollider>();
                             try
                             {
                                 col.center = new Vector3(float.Parse(args[1]), float.Parse(args[2]), float.Parse(args[3]));
                                 col.radius = float.Parse(args[4]);
-                                col.height = float.Parse(args[5]);
-                                if (args[6] == "x")
-                                    col.direction = 0;
-                                else if (args[6] == "y")
-                                    col.direction = 1;
-                                else if (args[6] == "z")
-                                    col.direction = 2;
-                                else
-                                    throw new FormatException();
                             }
                             catch
                             {
-                                Debug.Log("Error in capsule: Invalid arguments");
+                                Debug.Log("Error in sphere: Invalid arguments");
                                 Destroy(customObj);
                                 return null;
                             }
@@ -158,20 +152,11 @@ public class ObjectBuilder : MonoBehaviour, IFileReceiver
                                 Debug.Log("obj must be first input in .esObj file");
                                 return null;
                             }
-                            CapsuleCollider col = customObj.AddComponent<CapsuleCollider>();
+                            BoxCollider col = customObj.AddComponent<BoxCollider>();
                             try
                             {
                                 col.center = new Vector3(float.Parse(args[1]), float.Parse(args[2]), float.Parse(args[3]));
-                                col.radius = float.Parse(args[4]);
-                                col.height = float.Parse(args[5]);
-                                if (args[6] == "x")
-                                    col.direction = 0;
-                                else if (args[6] == "y")
-                                    col.direction = 1;
-                                else if (args[6] == "z")
-                                    col.direction = 2;
-                                else
-                                    throw new FormatException();
+                                col.size = new Vector3(float.Parse(args[4]), float.Parse(args[5]), float.Parse(args[6]));
                             }
                             catch
                             {
@@ -190,7 +175,9 @@ public class ObjectBuilder : MonoBehaviour, IFileReceiver
                 }
             }
         }
-        customObj.AddComponent<WorldObject>();
+        // Add the WorldObject component, and calculate vertical offset
+        customObj.AddComponent<WorldObject>().defaultVerticalOffset = -customObj.GetComponent<Collider>().bounds.min.y - 20f;
+        customObj.SetActive(false);
         return customObj;
     }
 }
