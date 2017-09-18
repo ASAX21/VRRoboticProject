@@ -12,6 +12,9 @@
 # every parameter describing a length is specified in milli meter
 # every parameter describing a angle is specified in degree
 
+# motors and encoders for low level drive routines
+# Diff.-drive: left motor, left encoder, right motor, right encoder
+drive DIFFERENTIAL_DRIVE
 
 # the name of the robi, the used string is the rest of the line
 # behind the keyword without the surrounding white space
@@ -19,6 +22,9 @@ name LabBot
 
 # robot diameter mm
 diameter 260
+
+# robot mass
+mass 50 0 30 -50
 
 # max linear velocity in mm/s
 speed    600
@@ -32,7 +38,7 @@ model LabBot.obj
 # axis is the distance between the center of the robi and the center of
 # the robis axis, e.g. a value of 0 means the axis is in the center of
 # the robi, if no value is given, it is set to 0.
-axis 00 23
+axis 22.7 10.8
 
 # psd sensor definition:
 # id-num has to match file "hdt.h"
@@ -49,11 +55,7 @@ psd PSD_RIGHT 3 45 -27 40 -90
 # color camera sensor definition:
 # "camera", relative position to the robi center (x,y,z), default
 # pan-tilt-angle (pan, tilt), maximum image width and height in pixel
-camera 40 0 70 0 0 80 60
+camera 40 50 70 0 0 90 90
 
 # wheel diameter [mm], max. rotational velocity [deg/s], encoder ticks/rev., wheel-base distance [mm]
 wheel 45 3600 540 70
-
-# motors and encoders for low level drive routines
-# Diff.-drive: left motor, left encoder, right motor, right encoder
-drive DIFFERENTIAL_DRIVE  MOTOR_LEFT QUAD_LEFT  MOTOR_RIGHT QUAD_RIGHT

@@ -111,13 +111,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     {
         newObj.objectID = totalObjects;
         totalObjects++;
-        if (newObj is WorldObject)
-        {
-            Debug.Log("vert: " + (newObj as WorldObject).defaultVerticalOffset);
-            AddObjectToMouse(newObj, (newObj as WorldObject).defaultVerticalOffset);
-        }
-        else
-            AddObjectToMouse(newObj, 0f);
+        AddObjectToMouse(newObj, newObj.defaultVerticalOffset);
     }
 
     // ----- Specific object creators - called from Add Object menu

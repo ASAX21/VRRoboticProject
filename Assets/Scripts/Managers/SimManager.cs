@@ -202,7 +202,7 @@ public class SimManager : MonoBehaviour {
     // Write the World object to a wld file
     public void SaveWorld()
     {
-        FileStream fs = File.Open("test.wld", FileMode.Create);
+        FileStream fs = File.Open("SavedWorld.wld", FileMode.Create);
         using (StreamWriter writer = new StreamWriter(fs, System.Text.Encoding.ASCII))
         {
             
@@ -230,9 +230,31 @@ public class SimManager : MonoBehaviour {
         }
     }
 
-    public void SaveObjects()
+    // Write scene to a Sim file
+    public void SaveSim()
     {
+        PauseSimulation();
+        SaveWorld();
+        FileStream fs = File.Open("SavedSim.sim", FileMode.Create);
+        using (StreamWriter writer = new StreamWriter(fs, System.Text.Encoding.ASCII))
+        {
+            // Save world, and link to default save location
+            writer.WriteLine("# Sim file created " + DateTime.Now.ToString(@"MM\/dd\/yyyy h\:mm tt") + Environment.NewLine);
+            writer.WriteLine("# World File " + Environment.NewLine + "world SavedWorld.wld");
+            writer.Write(Environment.NewLine + Environment.NewLine);
 
+            // Save robot locations
+            writer.WriteLine("# Robots");
+            foreach(Robot rob in allRobots)
+                writer.WriteLine(rob.type + " " + (int)Math.Floor(rob.transform.position.x * 1000f) + " " + (int)Math.Floor(rob.transform.position.z * 1000f) + " " + (int)Math.Floor(rob.transform.eulerAngles.y));
+            writer.WriteLine();
+
+            // Save object locations
+            writer.WriteLine("# Objects");
+            foreach(WorldObject wObj in allWorldObjects)
+                writer.WriteLine(wObj.type + " " + (int)Math.Floor(wObj.transform.position.x * 1000f) + " " + (int)Math.Floor(wObj.transform.position.z * 1000f) + " " + (int)Math.Floor(wObj.transform.eulerAngles.y));
+            ResumeSimulation();
+        }
     }
     
     // Pause and Resume by setting bodies to kinematic - will not move from applied forces

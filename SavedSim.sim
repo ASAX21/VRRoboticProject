@@ -1,0 +1,13 @@
+# Sim file created 09/16/2017 8:02 PM
+
+# World File 
+world SavedWorld.wld
+
+
+# Robots
+LabBot 621 1370 359
+S4 1011 437 0
+
+# Objects
+Can 1344 1401 0
+Soccer 1552 715 0

@@ -469,7 +469,23 @@ public class Interpreter {
     // Set Object Pose
     private void Command_4(byte[] recv, RobotConnection conn)
     {
+        int id = BitConverter.ToInt32(recv, 1);
+        id = IPAddress.NetworkToHostOrder(id);
 
+        int x = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(recv, 5));
+        int y = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(recv, 9));
+        int phi = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(recv, 13));
+        Debug.Log("SET: " + x + " " + y + " " + phi);
+
+        PlaceableObject obj = SimManager.instance.GetObjectByID(id);
+        if (obj == null)
+            Debug.Log("Set Position: Invalid ID argument");
+        else
+        {
+            obj.transform.position = new Vector3(x / 1000f, obj.defaultVerticalOffset, y / 1000f);
+            obj.transform.rotation = Quaternion.Euler(new Vector3(0, phi, 0));
+        }
+        
     }
 
     public void ReceiveCommand(byte[] recv, RobotConnection conn)

@@ -13,6 +13,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
     protected ObjectManager objectManager;
 
     public int objectID;
+    public string type;
 
     // Placement variables
     public bool isInit = false;
@@ -24,6 +25,8 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
 
     private LayerMask currLayer = 0;
 	public int collisionCount = 0;
+
+    public float defaultVerticalOffset = 0f;
 
     // Physics
     public Vector3 centreOfMass;
@@ -70,6 +73,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
     // Initializes required variables (Prefab vars set in editor)
     public void PostBuild()
     {
+        Debug.Log("Post Build");
         physContainer = new List<PhysicalContainer>();
         matContainer = new List<MaterialContainer>();
 

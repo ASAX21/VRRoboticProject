@@ -10,10 +10,10 @@ public class PSDController : MonoBehaviour {
     public List<PSDSensor> sensors;
 
     public UInt16 GetPSDValue(int psd)
-    {   
-        if (sensors[psd].value <= 0)
+    {
+        if (psd >= sensors.Count)
             return 0;
-        else
-            return Convert.ToUInt16(sensors[psd].value);
+
+        return Convert.ToUInt16(sensors[psd].GetSensorValue());
     }
 }

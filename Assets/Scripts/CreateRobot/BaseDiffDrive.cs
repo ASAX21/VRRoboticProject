@@ -11,12 +11,14 @@ public class BaseDiffDrive : Robot, IMotors,
     ICameras,
     IAudio,
     IRadio,
-    ILaser
+    ILaser,
+    ConfigureableRobot
 {
     // Components of the robot
     public BoxCollider robotBody;
     public CapsuleCollider robotBunt;
     public GameObject robotModel;
+    public Rigidbody robotRigidbody;
 
     public Transform axel;
 
@@ -46,6 +48,10 @@ public class BaseDiffDrive : Robot, IMotors,
     Action<RobotConnection> driveDoneDelegate;
     Action<RobotConnection, byte[]> radioMessageDelegate;
 
+    private void Awake()
+    {
+        psdController.sensors = new List<PSDSensor>();
+    }
     public void TEST()
     {
         //   PSD_FRONT 1 30 0 80 0
@@ -59,10 +65,16 @@ public class BaseDiffDrive : Robot, IMotors,
     }
 
     // Configure size of robot - single box collider, and position of the slider located at the back
-    public void ConfigureBotSize(float length, float width, float height)
+    public void ConfigureSize(float length, float width, float height)
     {
         robotBody.size = new Vector3(width / 1000f, height / 1000f, length / 1000f);
         robotBunt.center = new Vector3(0f, 0.025f, 0.5f * length / 1000f * 0.6f);
+    }
+
+    public void ConfigureMass(float mass, Vector3 com)
+    {
+        robotRigidbody.mass = mass;
+        robotRigidbody.centerOfMass = com;
     }
 
     // Configure axel height (vertical into robot) and position along z-axis (forward)
@@ -74,15 +86,15 @@ public class BaseDiffDrive : Robot, IMotors,
     public void ConfigureWheels(float diameter, float maxVel, int ticksPerRev, float track)
     {
         Wheel leftWheel = wheelController.wheels[0];
-        leftWheel.GetComponent<HingeJoint>().connectedAnchor = new Vector3(-track, axel.localPosition.y, axel.localPosition.z);
-        leftWheel.transform.localPosition = new Vector3(-track, 0f, 0f);
+        leftWheel.GetComponent<HingeJoint>().connectedAnchor = new Vector3(-track / 1000f, axel.localPosition.y, axel.localPosition.z);
+        leftWheel.transform.localPosition = new Vector3(-track / 1000f, 0f, 0f);
         leftWheel.transform.localScale = new Vector3(diameter / 1000f, diameter / 1000f, diameter / 1000f);
         leftWheel.encoderRate = ticksPerRev;
         leftWheel.maxSpeed = maxVel;
 
         Wheel rightWheel = wheelController.wheels[1];
-        rightWheel.GetComponent<HingeJoint>().connectedAnchor = new Vector3(track, axel.localPosition.y, axel.localPosition.z);
-        rightWheel.transform.localPosition = new Vector3(track, 0f, 0f);
+        rightWheel.GetComponent<HingeJoint>().connectedAnchor = new Vector3(track / 1000f, axel.localPosition.y, axel.localPosition.z);
+        rightWheel.transform.localPosition = new Vector3(track / 1000f, 0f, 0f);
         rightWheel.transform.localScale = new Vector3(diameter / 1000f, diameter / 1000f, diameter / 1000f);
         rightWheel.encoderRate = ticksPerRev;
         rightWheel.maxSpeed = maxVel;
@@ -92,13 +104,14 @@ public class BaseDiffDrive : Robot, IMotors,
     {
         if(id != psdController.sensors.Count + 1)
         {
-            Debug.Log("Expected incrementing IDs");
+            Debug.Log("Expected incrementing IDs " + psdController.sensors.Count + "  " + id);
             return false;
         }
         GameObject newPSD = Instantiate(PSDPrefab, PSDContainer);
         newPSD.name = name;
         newPSD.transform.localPosition = pos;
         newPSD.transform.localEulerAngles = new Vector3(0f, -rot, 0f);
+        psdController.sensors.Add(newPSD.GetComponent<PSDSensor>());
         psdEnabled = true;
         return true;
     }
@@ -286,4 +299,14 @@ public class BaseDiffDrive : Robot, IMotors,
         else
             return null;
     }
+}
+
+public interface ConfigureableRobot
+{
+    void ConfigureSize(float length, float width, float height);
+    void ConfigureMass(float mass, Vector3 com);
+    void ConfigureAxel(float axelHeight, float axelPos);
+    void ConfigureWheels(float diameter, float maxVel, int ticksPerRev, float track);
+    bool AddPSDSensor(int id, string name, Vector3 pos, float rot);
+    void ConfigureCamera(Vector3 pos, float pan, float tilt, float maxPan, float maxTilt);
 }
