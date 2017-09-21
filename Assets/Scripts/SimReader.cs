@@ -9,6 +9,7 @@ public class SimReader: MonoBehaviour, IFileReceiver {
 
 	public static SimReader instance;
 
+    // Store each executable in sim file, begin executing after the world is completely loaded
     private List<string> executables;
 
     private void Awake()
@@ -46,8 +47,7 @@ public class SimReader: MonoBehaviour, IFileReceiver {
 	}
 
 	public void process(string line){
-		string[] args = line.Split (' ');
-		print (args [0]);
+		string[] args = line.Split (new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
 
 		switch (args[0].ToLower()) {
 		    case "robi":
@@ -154,7 +154,6 @@ public class SimReader: MonoBehaviour, IFileReceiver {
         for(int i = 0; i < executables.Count; i++)
         {
             ServerManager.instance.connectionReceived = false;
-            Debug.Log(i + " " + @executables[i]);
             SimManager.instance.allRobots[i].ReceiveFile(@executables[i]);
             yield return new WaitUntil(() => ServerManager.instance.connectionReceived);
         }

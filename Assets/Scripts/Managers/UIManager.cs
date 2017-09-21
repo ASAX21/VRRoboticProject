@@ -20,6 +20,8 @@ public class UIManager : MonoBehaviour {
     ViewRobotsWindow viewRobotsWindow;
     [SerializeField]
     ViewWorldObjectsWindow viewWorldObjectsWindow;
+    [SerializeField]
+    GameObject aboutWindow;
 
     // Builders
     private WorldBuilder worldBuilder;
@@ -127,6 +129,23 @@ public class UIManager : MonoBehaviour {
             viewWorldObjectsWindow.gameObject.SetActive(true);
     }
 
+    // Help Menu Buttons
+    public void OpenUserManual()
+    {
+
+    }
+
+    public void OpenAPI()
+    {
+        Application.OpenURL(@"http://robotics.ee.uwa.edu.au/eyebot7/Robios7.html");
+    }
+
+    public void OpenAbout()
+    {
+
+    }
+
+    // Pause/Resume/FastForward UI Buttons
     public void PauseButton()
     {
         SimManager.instance.PauseSimulation();
