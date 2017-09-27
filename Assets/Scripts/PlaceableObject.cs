@@ -48,7 +48,6 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
         {
             GetComponent<Rigidbody>().centerOfMass = centreOfMass;
         }
-
         PostBuild();
     }
 
@@ -73,7 +72,6 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
     // Initializes required variables (Prefab vars set in editor)
     public void PostBuild()
     {
-        Debug.Log("Post Build");
         physContainer = new List<PhysicalContainer>();
         matContainer = new List<MaterialContainer>();
 

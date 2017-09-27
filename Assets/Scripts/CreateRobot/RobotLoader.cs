@@ -82,115 +82,133 @@ public class RobotLoader: MonoBehaviour, IFileReceiver {
         return true;
     }
 
+    // Run each line - return true if worked, false on failure
     public bool process(string line)
     {
 
-        string[] args = line.Split(' ');
-        switch (args[0])
+        string[] args = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+        // Line processing in try block: Catch only FormatException from bad float parsing
+        try
         {
-            // Type of robot
-            case "drive":
-                robotDrive = true;
-                if (!CheckArguments(args, 2, "drive"))
-                    return false;
-                switch (args[1])
-                {
-                    case "DIFFERENTIAL_DRIVE":
-                        robotObject = Instantiate(diffDriveBase);
-                        break;
-                    case "ACKERMANN_DRIVE":
-                        robotObject = Instantiate(ackDriveBase);
-                        break;
-                    case "OMNI_DRIVE":
-                        Debug.Log("Omni drive not implemented");
-                        return false;
-                    default:
-                        Debug.Log("Unknown Drive received: " + args[1]);
-                        return false;     
-                }
-                robotConfig = robotObject.GetComponent<ConfigureableRobot>();
-                return true;
-            case "name":
-                if (!CheckArguments(args, 2, "name"))
-                    return false;
-                robotObject.name = args[1];
-                return true;
-            case "model":
-                if (!CheckArguments(args, 2, "model"))
-                    return false;
-                return true;
-            case "mass":
-                if (!CheckArguments(args, 5, "mass"))
-                    return false;
-                try
-                {
-                    Vector3 com = new Vector3(float.Parse(args[2]) / 1000f, float.Parse(args[3]) / 1000f, float.Parse(args[4]) / 1000f);
-                    robotConfig.ConfigureMass(float.Parse(args[1]), com);
-                }
-                catch (FormatException e)
-                {
-                    Debug.Log("Error parsing mass arguments: " + e.Message);
-                    return false;
-                }
-                return true;
-            case "axis":
-                if (!CheckArguments(args, 3, "axis"))
-                    return false;
-                try
-                {
-                    robotConfig.ConfigureAxel(float.Parse(args[1]), float.Parse(args[2]));
-                }
-                catch (FormatException e)
-                {
-                    Debug.Log("Error parsing axis arguments: " + e.Message);
-                    return false;
-                }
-                return true;
-            case "psd":
-                if (!CheckArguments(args, 7, "psd"))
-                    return false;
-                try
-                {
-                    Vector3 pos = new Vector3(float.Parse(args[3]) / 1000f, float.Parse(args[4]) / 1000f, float.Parse(args[5]) / 1000f);
-                    robotConfig.AddPSDSensor(int.Parse(args[2]), args[1], pos, float.Parse(args[6]));
-                }
-                catch (FormatException e)
-                {
-                    Debug.Log("Error parsing psd arguments: " + e.Message);
-                    return false;
-                }
-                return true;
-            case "wheel":
-                if (!CheckArguments(args, 5, "wheel"))
-                    return false;
-                try
-                {
-                    robotConfig.ConfigureWheels(float.Parse(args[1]), float.Parse(args[2]), int.Parse(args[3]), float.Parse(args[4]));
-                }
-                catch (FormatException e)
-                {
-                    Debug.Log("Error parsing wheel arguments: " + e.Message);
-                    return false;
-                }
-                return true;
-            case "camera":
-                if (!CheckArguments(args, 8, "camera"))
-                    return false;
-                try
-                {
-                    Vector3 pos = new Vector3(float.Parse(args[1])/1000f, float.Parse(args[2]) / 1000f, float.Parse(args[3]) / 1000f);
-                    robotConfig.ConfigureCamera(pos, float.Parse(args[4]), float.Parse(args[5]), float.Parse(args[6]), float.Parse(args[7]));
-                }
-                catch (FormatException e)
-                {
-                    Debug.Log("Error parsing camera arguments: " + e.Message);
-                    return false;
-                }
-                return true;
-            default:
-                Debug.Log("Unknown argument: " + args[0]);
-                return true;
+            switch (args[0])
+            {
+                // Type of robot
+                case "drive":
+                    {
+                        robotDrive = true;
+                        if (!CheckArguments(args, 2, "drive"))
+                            return false;
+                        switch (args[1])
+                        {
+                            case "DIFFERENTIAL_DRIVE":
+                                robotObject = Instantiate(diffDriveBase);
+                                break;
+                            case "ACKERMANN_DRIVE":
+                                robotObject = Instantiate(ackDriveBase);
+                                break;
+                            case "OMNI_DRIVE":
+                                Debug.Log("Omni drive not implemented");
+                                return false;
+                            default:
+                                Debug.Log("Unknown Drive received: " + args[1]);
+                                return false;
+                        }
+                        robotConfig = robotObject.GetComponent<ConfigureableRobot>();
+                        return true;
+                    }
+                case "name":
+                    {
+                        if (!CheckArguments(args, 2, "name"))
+                            return false;
+                        robotObject.name = args[1];
+                        return true;
+                    }
+                // Path to robot model (.obj file)
+                case "model":
+                    {
+                        if (!CheckArguments(args, 2, "model"))
+                            return false;
+                        return true;
+                    }
+                // Centre of mass, and mass in kg
+                case "mass":
+                    {
+                        if (!CheckArguments(args, 5, "mass"))
+                            return false;
+                        Vector3 com = new Vector3(float.Parse(args[2]) / 1000f, float.Parse(args[3]) / 1000f, float.Parse(args[4]) / 1000f);
+                        robotConfig.ConfigureMass(float.Parse(args[1]), com);
+                        return true;
+                    }
+                // Location of robot's axis
+                case "axis":
+                    {
+                        if (!CheckArguments(args, 3, "axis"))
+                            return false;
+                        else if(!(robotObject.GetComponent<Robot>() is BaseDiffDrive))
+                        {
+                            Debug.Log("axis on non diff-drive robot");
+                            return false;
+                        }
+                        robotConfig.ConfigureAxel(float.Parse(args[1]), float.Parse(args[2]), AxelType.None);
+                        return true;
+                    }
+                // Location of an axel, and type (drive / turn)
+                case "axel":
+                    {
+                        if (!CheckArguments(args, 4, "axel"))
+                            return false;
+                        else if (!(robotObject.GetComponent<Robot>() is BaseAckDrive))
+                        {
+                            Debug.Log("axel on non ackermann-drive robot");
+                            return false;
+                        }
+                        if (args[1] == "turn")
+                            robotConfig.ConfigureAxel(float.Parse(args[2]), float.Parse(args[3]), AxelType.Turn);
+                        else if (args[1] == "drive")
+                            robotConfig.ConfigureAxel(float.Parse(args[2]), float.Parse(args[3]), AxelType.Drive);
+                        else
+                        {
+                            Debug.Log("Bad axel designation (" + args[1] + "). Must be turn or drive.");
+                            return false;
+                        }
+                        return true;
+                    }
+                // Add a PSD sensor
+                case "psd":
+                    {
+                        if (!CheckArguments(args, 7, "psd"))
+                            return false;
+                        Vector3 pos = new Vector3(float.Parse(args[3]) / 1000f, float.Parse(args[4]) / 1000f, float.Parse(args[5]) / 1000f);
+                        robotConfig.AddPSDSensor(int.Parse(args[2]), args[1], pos, float.Parse(args[6]));
+                    }
+                    return true;
+                // Configure wheels
+                case "wheel":
+                    {
+                        if (!CheckArguments(args, 5, "wheel"))
+                            return false;
+                        robotConfig.ConfigureWheels(float.Parse(args[1]), float.Parse(args[2]), int.Parse(args[3]), float.Parse(args[4]));
+                    }
+                    return true;
+                // Add camera
+                case "camera":
+                    {
+                        if (!CheckArguments(args, 8, "camera"))
+                            return false;
+                        Vector3 pos = new Vector3(float.Parse(args[1]) / 1000f, float.Parse(args[2]) / 1000f, float.Parse(args[3]) / 1000f);
+                        robotConfig.ConfigureCamera(pos, float.Parse(args[4]), float.Parse(args[5]), float.Parse(args[6]), float.Parse(args[7]));
+                    }
+                    return true;
+                default:
+                    Debug.Log("Unknown argument: " + args[0]);
+                    return true;
+            }
         }
-        return false;
+        // Catch parsing errors
+        catch (FormatException e)
+        {
+            Debug.Log("Error parsing arguments for " + args[0] + ": " + e.Message);
+            return false;
+        }
     }
 }

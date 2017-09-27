@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using RobotComponents;
 
-public class BaseDiffDrive : Robot, IMotors,
+public class BaseAckDrive : Robot, IMotors,
     IPIDUsable,
     IPSDSensors,
     IServoSettable,
@@ -20,7 +20,8 @@ public class BaseDiffDrive : Robot, IMotors,
     public GameObject robotModel;
     public Rigidbody robotRigidbody;
 
-    public Transform axel;
+    public Transform axelTurn;
+    public Transform axelDrive;
 
     public Transform PSDContainer;
     public GameObject PSDPrefab;
@@ -29,7 +30,7 @@ public class BaseDiffDrive : Robot, IMotors,
     public HingeJoint eyeCamPosition;
 
     // Controllers
-    public WheelMotorController wheelController;
+    public AckermannController wheelController;
     public PSDController psdController;
     public ServoController servoController;
     public EyeCameraController eyeCamController;
@@ -55,13 +56,12 @@ public class BaseDiffDrive : Robot, IMotors,
     public void TEST()
     {
         //   PSD_FRONT 1 30 0 80 0
-        Vector3 p = new Vector3(30 / 1000f, 50/1000f, 80 / 1000f);
-        AddPSDSensor(1, "PSD_FRONT", p, 0f);
+        VWDriveStraight(1000, 100);
     }
 
     public void TEST2()
     {
-        ConfigureCamera(new Vector3(0, 50/1000f, 70/ 1000f), 0f, 0f, 90f, 90f);
+        this.PostBuild();
     }
 
     // Configure size of robot - single box collider, and position of the slider located at the back
@@ -80,24 +80,12 @@ public class BaseDiffDrive : Robot, IMotors,
     // Configure axel height (vertical into robot) and position along z-axis (forward)
     public void ConfigureAxel(float axelHeight, float axelPos, AxelType type)
     {
-        axel.localPosition = new Vector3(0f, axelHeight / 1000f, axelPos / 1000f);
+
     }
 
     public void ConfigureWheels(float diameter, float maxVel, int ticksPerRev, float track)
     {
-        Wheel leftWheel = wheelController.wheels[0];
-        leftWheel.GetComponent<HingeJoint>().connectedAnchor = new Vector3(-track / 1000f, axel.localPosition.y, axel.localPosition.z);
-        leftWheel.transform.localPosition = new Vector3(-track / 1000f, 0f, 0f);
-        leftWheel.transform.localScale = new Vector3(diameter / 1000f, diameter / 1000f, diameter / 1000f);
-        leftWheel.encoderRate = ticksPerRev;
-        leftWheel.maxSpeed = maxVel;
 
-        Wheel rightWheel = wheelController.wheels[1];
-        rightWheel.GetComponent<HingeJoint>().connectedAnchor = new Vector3(track / 1000f, axel.localPosition.y, axel.localPosition.z);
-        rightWheel.transform.localPosition = new Vector3(track / 1000f, 0f, 0f);
-        rightWheel.transform.localScale = new Vector3(diameter / 1000f, diameter / 1000f, diameter / 1000f);
-        rightWheel.encoderRate = ticksPerRev;
-        rightWheel.maxSpeed = maxVel;
     }
 
     public bool AddPSDSensor(int id, string name, Vector3 pos, float rot)

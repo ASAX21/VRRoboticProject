@@ -80,6 +80,19 @@ public class Speed
         angular = Convert.ToInt16(ang);
     }
 }
+// Interface for building robot from robi file
+public enum AxelType { None, Drive, Turn };
+
+public interface ConfigureableRobot
+{
+    void ConfigureSize(float length, float width, float height);
+    void ConfigureMass(float mass, Vector3 com);
+    void ConfigureAxel(float axelHeight, float axelPos, AxelType type);
+    void ConfigureWheels(float diameter, float maxVel, int ticksPerRev, float track);
+    bool AddPSDSensor(int id, string name, Vector3 pos, float rot);
+    void ConfigureCamera(Vector3 pos, float pan, float tilt, float maxPan, float maxTilt);
+}
+
 // Abstract robot
 // Universal functions
 public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiver
