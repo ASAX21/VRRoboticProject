@@ -62,10 +62,10 @@ public class SettingsManager : MonoBehaviour {
     public void LoadSettings()
     {
         foreach (KeyValuePair<string, Func<float, bool, float>> entry in floatSettings)
-            entry.Value(PlayerPrefs.GetFloat(entry.Key), true);
+            entry.Value(PlayerPrefs.GetFloat(entry.Key, entry.Value(0, false)), true);
 
         foreach (KeyValuePair<string, Func<string, bool, string>> entry in stringSettings)
-            entry.Value(PlayerPrefs.GetString(entry.Key), true);
+            entry.Value(PlayerPrefs.GetString(entry.Key, entry.Value("", false)), true);
     }
 
     // ----- Camera Settings -----
