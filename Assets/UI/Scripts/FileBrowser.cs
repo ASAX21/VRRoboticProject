@@ -138,15 +138,14 @@ public class FileBrowser
 
     protected GUISkin gui_skin;
 
-    // Browsers need at least a rect, name and callback
-    public FileBrowser(Rect screenRect, string name, FinishedCallback callback)
+    public FileBrowser(Rect screenRect, string name, FileBrowserType type, FinishedCallback callback)
     {
         m_name = name;
         m_screenRect = screenRect;
-        m_browserType = FileBrowserType.File;
+        m_browserType = type;
         m_callback = callback;
         UIManager.instance.windowOpen = true;
-        SetNewDirectory(Directory.GetCurrentDirectory());
+        SetNewDirectory(SettingsManager.instance.homeDirectory);
         SwitchDirectoryNow();
     }
 

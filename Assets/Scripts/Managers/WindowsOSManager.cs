@@ -82,3 +82,27 @@ public class WindowsOSManager: OSManager
         return null;
     }
 }
+
+public class MacOSManager: OSManager
+{	
+
+	public override void LaunchTerminal()
+    {
+        System.Diagnostics.Process.Start(@"/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal");
+    }
+
+    public override void CompileProgram(string path)
+    {
+        return;
+    }
+
+    public override void Terminate()
+    {
+        return;
+    }
+
+    public override GameObject ReceiveFile(string filepath)
+    {
+        return null;
+    }
+}

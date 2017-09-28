@@ -9,6 +9,13 @@ public class EyeCameraController : MonoBehaviour {
 
     public List<EyeCamera> cameras;
 
+    public bool useSNPNoise;
+    public bool useGaussNoise;
+    public float saltPepperPercent;
+    public float saltPepperRatio;
+    public float gaussMean;
+    public float gaussStdDev;
+
 	public byte[] GetBytes(int camera)
     {   
 		return cameras [camera].GetBytes ();
@@ -18,5 +25,11 @@ public class EyeCameraController : MonoBehaviour {
     {
         Debug.Log("Set Resolution: " + width + " " + height);
         cameras[camera].SetResolution(width, height);
+    }
+
+    // Returns a string of Width x Height
+    public string GetResolution(int camera)
+    {
+        return cameras[camera].GetResolution();
     }
 }

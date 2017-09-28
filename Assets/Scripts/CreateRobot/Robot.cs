@@ -9,6 +9,7 @@ using RobotComponents;
 public interface IMotors
 {
     void DriveMotor(int motor, int speed);
+    int GetEncoder(int quad);
 }
 
 public interface IPIDUsable
@@ -42,13 +43,28 @@ public interface IServoSettable
 public interface IPSDSensors
 {
     UInt16 GetPSD(int psd);
+    float MeanError { get; set; }
+    float StdDevError { get; set; }
+    bool UseGlobalError { get; set; }
+    void SetVisualize(bool val);
 }
 
 public interface ICameras
 {
     byte[] GetCameraOutput(int camera);
     void SetCameraResolution(int camera, int width, int height);
+    string GetCameraResolution(int camera);
     EyeCamera GetCameraComponent(int camera);
+    bool SaltPepperNoise { get; set; }
+    // Salt and Pepper noise % of pixels to modify (average)
+    float SPPixelPercent { get; set; }
+    // Salt and Pepper ratio of black to white pixels (average)
+    float SPBWRatio { get; set; }
+
+    bool GaussianNoise { get; set; }
+    float GaussMean { get; set; }
+    float GaussStdDev { get; set; }
+
 }
 
 public interface IAudio
@@ -104,6 +120,9 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
     public string controlBinaryPath = "";
     public TrailRenderer trail;
 
+    // Robot Info Window
+    public RobotInspectorWindow myWindow;
+
     // Set the robots absolute position along the ground plane
     // Dangerous: Could result in extreme behaviour with physics engine
     public void SetRobotPosition(int x, int z, int phi)
@@ -125,7 +144,17 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
         if (!isWindowOpen)
         {
             isWindowOpen = true;
-            objectSelector.DisplayRobotInfoWindow(this);
+            // If no window exists, make a new one
+            if (myWindow == null)
+            {
+                myWindow = Instantiate(UIManager.instance.robotInspectorWindowPrefab,UIManager.instance.gameWindowContainer);
+                myWindow.robot = this;
+                myWindow.Initialize();
+
+            }
+            // Else activate the old one
+            else
+                myWindow.gameObject.SetActive(true);
         }
     }
 

@@ -42,6 +42,9 @@ public class SimManager : MonoBehaviour {
         {
             osManager = new WindowsOSManager();
         }
+        else if (Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXEditor){
+            osManager = new MacOSManager();
+        }
     }
 
     private void Start() {
@@ -59,16 +62,8 @@ public class SimManager : MonoBehaviour {
 
     public void LaunchTerminal()
     {
-        // If windows launch CYGWIN
-        if(Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
-        {
-            osManager.LaunchTerminal();
-        }
-        // Else launch default terminal
-        else
-        {
-            //TODO: Mac terminal
-        }
+        if(osManager != null)
+           osManager.LaunchTerminal();
     }
 
     // Search only Robots
@@ -140,6 +135,9 @@ public class SimManager : MonoBehaviour {
             else
                 ServerManager.instance.activeRobot = null;
         }
+        // Remove info window
+        if (robot.myWindow != null)
+            Destroy(robot.myWindow.gameObject);
         // Remove the object from the scene
         Destroy(robot.gameObject);
         ViewRobotsWindow.instance.UpdateRobotList();

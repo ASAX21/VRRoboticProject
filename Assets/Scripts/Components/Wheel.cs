@@ -25,7 +25,7 @@ namespace RobotComponents
         public int I;
         public int D;
 
-		public void SetPIDParams(int p, int i, int d)
+        public void SetPIDParams(int p, int i, int d)
         {
 			pidEnabled = true;
 			P = p;
@@ -48,7 +48,7 @@ namespace RobotComponents
 		public void SetMotorSpeed(float speed)
 		{
 			this.speed = speed;
-			JointMotor newmotor = GetComponent<HingeJoint>().motor;
+			JointMotor newmotor = wheelHingeJoint.motor;
 			newmotor.targetVelocity = speed;
 			wheelHingeJoint.motor = newmotor;
 		}
@@ -64,12 +64,12 @@ namespace RobotComponents
         // Apply wheel rotation to visual representation
 		public void updateRotation()
         {
-			float deltaAngle = GetComponent<HingeJoint>().angle - currentrotation;
+			float deltaAngle = wheelHingeJoint.angle - currentrotation;
 			if (Mathf.Abs (deltaAngle) < 20)
 				tickrate = deltaAngle * encoderRate / 360;
 
 			ticks += tickrate;
-			currentrotation = GetComponent<HingeJoint>().angle;
+			currentrotation = wheelHingeJoint.angle;
 		}
 
         private void FixedUpdate()

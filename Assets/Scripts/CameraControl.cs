@@ -3,20 +3,15 @@
 public class CameraControl: MonoBehaviour
 {
     public bool isOrtho = false;
-    public float orthoPanSens = 100f;
+    public float orthoPanSens = 1f;
     public float orthoZoomSens = 2f;
 
-    public float horizontalLookSens = 5.0f;
-    public float verticalLookSens = 5.0f;
+    public float mouseLookSens = 5.0f;
+    public float keyboardLookSens = 10.0f;
 
-    public float sidewaysPanSens = 1.0f;
-    public float forwardsPanSens = 1.0f;
+    public float keyboardPanSens = 0.005f;
 
-    public float verticalKeyboardSens = 0.005f;
-    public float horizontalKeyboardSens = 0.005f;
-
-    public float mouseZoomSens = 1.0f;
-    public float keyboardZoomSens = 5.0f;
+    public float zoomSens = 1.0f;
 
     Vector3 mousePos;
 	Plane backPlane;
@@ -63,13 +58,13 @@ public class CameraControl: MonoBehaviour
                     Vector3 newMousePos = Input.mousePosition;
                     if (mousePos == newMousePos)
                         return;
-                    Camera.main.transform.parent.Translate(new Vector3(mousePos.x - newMousePos.x, 0, mousePos.y - newMousePos.y) / orthoPanSens);
+                    Camera.main.transform.parent.Translate(new Vector3(mousePos.x - newMousePos.x, 0, mousePos.y - newMousePos.y) * (orthoPanSens * 0.002f));
                     mousePos = newMousePos;
                 }
                 // Pan with Keyboard
                 else if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
                 {
-                    Camera.main.transform.parent.Translate(new Vector3(Input.GetAxis("Horizontal") * sidewaysPanSens / 10f, 0, Input.GetAxis("Vertical") * forwardsPanSens / 10f));
+                    Camera.main.transform.parent.Translate(new Vector3(Input.GetAxis("Horizontal") * orthoPanSens / 10f, 0, Input.GetAxis("Vertical") * orthoPanSens / 10f));
                 }
                 // Zoom
                 Camera.main.orthographicSize -= Input.GetAxis("Mouse ScrollWheel") * orthoZoomSens;
@@ -100,8 +95,8 @@ public class CameraControl: MonoBehaviour
                 // Right Click : Free look
                 else if (Input.GetMouseButton(1))
                 {
-                    float lookH = transform.localEulerAngles.y + horizontalLookSens * Input.GetAxis("Mouse X");
-                    float lookV = transform.localEulerAngles.x - verticalLookSens * Input.GetAxis("Mouse Y");
+                    float lookH = transform.localEulerAngles.y + mouseLookSens * Input.GetAxis("Mouse X");
+                    float lookV = transform.localEulerAngles.x - mouseLookSens * Input.GetAxis("Mouse Y");
                     lookV = Mathf.Clamp(lookV, 0.1f, 89.9f);
                     transform.localEulerAngles = new Vector3(lookV, lookH);
                 }
@@ -110,25 +105,25 @@ public class CameraControl: MonoBehaviour
                 // If camera not being controlled by mouse, keyboard inputs
                 else if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
                 {
-                    Vector3 forward = Input.GetAxis("Vertical") * verticalKeyboardSens * Vector3.ProjectOnPlane(transform.forward, Vector3.up).normalized;
-                    Vector3 sideways = Input.GetAxis("Horizontal") * horizontalKeyboardSens * transform.right.normalized;
+                    Vector3 forward = Input.GetAxis("Vertical") * keyboardPanSens * Vector3.ProjectOnPlane(transform.forward, Vector3.up).normalized;
+                    Vector3 sideways = Input.GetAxis("Horizontal") * keyboardPanSens * transform.right.normalized;
                     Vector3 finalMove = forward + sideways;
                     transform.Translate(finalMove, Space.World);
                 }
 
                 else if (Input.GetAxis("Tilt Horizontal") != 0 || Input.GetAxis("Tilt Vertical") != 0)
                 {
-                    float lookH = transform.localEulerAngles.y + Input.GetAxis("Tilt Horizontal") * 10f;
-                    float lookV = transform.localEulerAngles.x + Input.GetAxis("Tilt Vertical") * 10f;
+                    float lookH = transform.localEulerAngles.y + Input.GetAxis("Tilt Horizontal") * keyboardLookSens;
+                    float lookV = transform.localEulerAngles.x + Input.GetAxis("Tilt Vertical") * keyboardLookSens;
                     lookV = Mathf.Clamp(lookV, 0.1f, 89.9f);
                     transform.localEulerAngles = new Vector3(lookV, lookH);
                 }
 
                 // Zoom
-                transform.position += transform.forward * mouseZoomSens * Input.GetAxis("Mouse ScrollWheel");
+                transform.position += transform.forward * zoomSens * Input.GetAxis("Mouse ScrollWheel");
                 if (Input.GetAxis("Keyboard Zoom") != 0)
                 {
-                    transform.position += transform.forward * mouseZoomSens * Input.GetAxis("Keyboard Zoom");
+                    transform.position += transform.forward * zoomSens * Input.GetAxis("Keyboard Zoom");
                 }
 
                 // Make sure camera doens't move below ground
