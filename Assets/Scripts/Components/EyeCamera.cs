@@ -56,6 +56,12 @@ namespace RobotComponents
             cameraComponent.targetTexture = rendTex;
         }
 
+        // Returns a string of Width x Height
+        public string GetResolution()
+        {
+            return rect.width + " x " + rect.height;
+        }
+
         // Determine camera output at each frame
 		void OnPostRender()
         {

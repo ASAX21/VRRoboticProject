@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum BlockingType { UI, Scene }
+
 public class UIManager : MonoBehaviour {
 
     public static UIManager instance { get; private set; }
@@ -12,7 +14,12 @@ public class UIManager : MonoBehaviour {
     // Front windows must be closed before anything else can be interacted with
     // Front blocking panel prevents opening menus
     public bool windowOpen = false;
-    public GameObject blockingPanel;
+    public GameObject blockScenePanel;
+    public GameObject blockUIPanel;
+
+    [Header("Window Containers")]
+    public Transform gameWindowContainer;
+    public Transform frontWindowContainer;
 
     // Game Windows
     [Header("Game Windows")]
@@ -22,6 +29,17 @@ public class UIManager : MonoBehaviour {
     ViewWorldObjectsWindow viewWorldObjectsWindow;
     [SerializeField]
     GameObject aboutWindow;
+    [SerializeField]
+    SettingsWindow settingsWindow;
+
+    [Header("Window Prefabs")]
+    public RobotInspectorWindow robotInspectorWindowPrefab;
+    public WorldObjInspectorWindow worldObjInspectorWindowPrefab;
+
+    // Color Scheme
+    [Header("Colors")]
+    public Color windowHeaderColor;
+    public Color windowHeaderTextColor;
 
     // Builders
     private WorldBuilder worldBuilder;
@@ -62,22 +80,28 @@ public class UIManager : MonoBehaviour {
         worldBuilder = WorldBuilder.instance;
         robotBuilder = RobotBuilder.instance;
         simBuilder = SimReader.instance;
-		worldFileFinder.Initialise("*", worldBuilder);
-        robotFileFinder.Initialise("*.robi", robotBuilder);
-        simFileFinder.Initialise("*.sim", simBuilder);
-        scriptFileFinder.Initialise("*.c", SimManager.instance.osManager);
-        customObjFileFinder.Initialise("*.esObj", ObjectManager.instance);
+		worldFileFinder.Initialise("*.wld", FileBrowserType.File, worldBuilder);
+        robotFileFinder.Initialise("*.robi", FileBrowserType.File, robotBuilder);
+        simFileFinder.Initialise("*.sim", FileBrowserType.File, simBuilder);
+        scriptFileFinder.Initialise("*.c", FileBrowserType.File, SimManager.instance.osManager);
+        customObjFileFinder.Initialise("*.esObj", FileBrowserType.File, ObjectManager.instance);
     }
 
-	public void openWindow(){
+	public void openWindow(BlockingType type){
 		windowOpen = true;
-		blockingPanel.SetActive(true);
+        if (type == BlockingType.UI)
+            blockUIPanel.SetActive(true);
+        else if (type == BlockingType.Scene)
+            blockScenePanel.SetActive(true);
 	}
 
 	public void closeWindow(){
 		windowOpen = false;
-		blockingPanel.SetActive(false);
+        blockUIPanel.SetActive(false);
+		blockScenePanel.SetActive(false);
 	}
+
+    // File Menu
 
     public void LoadSimFile()
     {
@@ -97,9 +121,9 @@ public class UIManager : MonoBehaviour {
     public void LoadControlProgram(Robot robot)
     {
         if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
-            controlFileFinder.Initialise("*.exe", robot);
+            controlFileFinder.Initialise("*.exe", FileBrowserType.File, robot);
         else if (Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXEditor)
-            controlFileFinder.Initialise("*", robot);
+            controlFileFinder.Initialise("*", FileBrowserType.File, robot);
         controlFileFinder.OpenFileSelection();
     }
 
@@ -113,10 +137,22 @@ public class UIManager : MonoBehaviour {
         customObjFileFinder.OpenFileSelection();
     }
 
+    public void OpenSettings()
+    {
+        if (settingsWindow.gameObject.activeInHierarchy)
+            settingsWindow.transform.SetAsLastSibling();
+        else
+        {
+            settingsWindow.gameObject.SetActive(true);
+            openWindow(BlockingType.Scene);
+        }
+    }
+
+    // Simulation Menu
     public void OpenViewRobotWindow()
     {
         if (viewRobotsWindow.gameObject.activeInHierarchy)
-            viewRobotsWindow.transform.SetAsFirstSibling();
+            viewRobotsWindow.transform.SetAsLastSibling();
         else
             viewRobotsWindow.gameObject.SetActive(true);
     }
@@ -124,7 +160,7 @@ public class UIManager : MonoBehaviour {
     public void OpenViewObjectsWindow()
     {
         if (viewWorldObjectsWindow.gameObject.activeInHierarchy)
-            viewWorldObjectsWindow.transform.SetAsFirstSibling();
+            viewWorldObjectsWindow.transform.SetAsLastSibling();
         else
             viewWorldObjectsWindow.gameObject.SetActive(true);
     }

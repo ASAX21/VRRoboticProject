@@ -1,10 +1,14 @@
 fileFormatVersion: 2
 guid: bc5f70fdcbc054191ba240df0afc436f
-timeCreated: 1491912912
+timeCreated: 1506514875
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - trail: {instanceID: 0}
+  - robotWindowPrefab: {fileID: 114419083274056536, guid: 426221abedcbb2f4792bb5d51583d4cb,
+      type: 2}
+  - myWindow: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

@@ -177,6 +177,42 @@ public class BaseDiffDrive : Robot, IMotors,
             return 0;
     }
 
+    public float MeanError
+    {
+        get
+        {
+            return psdController.normalMean;
+        }
+        set
+        {
+            psdController.normalMean = value;
+        }
+    }
+
+    public float StdDevError
+    {
+        get
+        {
+            return psdController.normalStdDev;
+        }
+        set
+        {
+            psdController.normalStdDev = value;
+        }
+    }
+
+    public bool UseGlobalError
+    {
+        get
+        {
+            return psdController.useGlobalError;
+        }
+        set
+        {
+            psdController.useGlobalError = value;
+        }
+    }
+
     public void VWSetVehicleSpeed(int linear, int angular)
     {
         wheelController.SetSpeedManual(linear / 1000.0f, angular);
@@ -242,10 +278,87 @@ public class BaseDiffDrive : Robot, IMotors,
             return null;
     }
 
+    public bool SaltPepperNoise
+    {
+        get
+        {
+            return eyeCamController.useSNPNoise;
+        }
+        set
+        {
+            eyeCamController.useSNPNoise = value;
+        }
+    }
+
+    public float SPPixelPercent
+    {
+        get
+        {
+            return eyeCamController.saltPepperPercent;
+        }
+        set
+        {
+            eyeCamController.saltPepperPercent = value;
+        }
+    }
+
+    public float SPBWRatio
+    {
+        get
+        {
+            return eyeCamController.saltPepperRatio;
+        }
+        set
+        {
+            eyeCamController.saltPepperRatio = value;
+        }
+    }
+
+    public bool GaussianNoise
+    {
+        get
+        {
+            return eyeCamController.useGaussNoise;
+        }
+        set
+        {
+            eyeCamController.useGaussNoise = value;
+        }
+    }
+
+    public float GaussMean
+    {
+        get
+        {
+            return eyeCamController.gaussMean;
+        }
+        set
+        {
+            eyeCamController.gaussMean = value;
+        }
+    }
+
+    public float GaussStdDev
+    {
+        get
+        {
+            return eyeCamController.gaussStdDev;
+        }
+        set
+        {
+            eyeCamController.gaussStdDev = value;
+        }
+    }
+
     public void SetCameraResolution(int camera, int width, int height)
     {
         if(camEnabled)
             eyeCamController.SetResolution(camera, width, height);
+    }
+
+    public string GetCameraResolution(int camera)
+    {
+        return eyeCamController.GetResolution(camera);
     }
 
     public EyeCamera GetCameraComponent(int camera)

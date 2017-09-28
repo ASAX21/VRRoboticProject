@@ -11,19 +11,24 @@ public class FileFinder : MonoBehaviour
     public UIManager uiManager;
     public string m_textPath;
 
+    public string windowTitle;
+
     public string m_selectPattern;
     public IFileReceiver m_fileReceiver;
 
     protected FileBrowser m_fileBrowser;
 
+    private FileBrowserType m_type;
+
     [SerializeField]
     protected Texture2D m_directoryImage,
                         m_fileImage;
 
-    public FileFinder Initialise(string selectPattern, IFileReceiver fileReceiver)
+    public FileFinder Initialise(string selectPattern, FileBrowserType type, IFileReceiver fileReceiver)
     {
         m_selectPattern = selectPattern;
         m_fileReceiver = fileReceiver;
+        m_type = type;
         uiManager = UIManager.instance;
         return this;
     }
@@ -37,16 +42,16 @@ public class FileFinder : MonoBehaviour
     }
 
 	public void OpenFileSelection(){
-		uiManager.openWindow();
+		uiManager.openWindow(BlockingType.UI);
 		m_fileBrowser = new FileBrowser(
 			new Rect(100, 100, 600, 500),
-			"Select a File",
-			FileSelectedCallback
+            windowTitle,
+            m_type,
+            FileSelectedCallback
 		);
 		m_fileBrowser.SelectionPattern = m_selectPattern;
 		m_fileBrowser.DirectoryImage = m_directoryImage;
 		m_fileBrowser.FileImage = m_fileImage;
-        Debug.Log("Opened file browser");
 	}
 
     protected void FileSelectedCallback(string path)

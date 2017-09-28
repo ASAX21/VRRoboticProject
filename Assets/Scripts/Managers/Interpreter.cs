@@ -379,7 +379,7 @@ public class Interpreter {
     private void Command_I(byte[] recv, RobotConnection conn)
     {
         int numBots = SimManager.instance.allRobots.Count;
-
+        Debug.Log("numBots: " + numBots);
         Packet p = new Packet();
         p.packetType = PacketType.SERVER_MESSAGE;
         p.dataSize = 4 + (numBots * 4);
