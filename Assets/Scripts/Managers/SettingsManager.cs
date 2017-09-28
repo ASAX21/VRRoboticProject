@@ -10,7 +10,11 @@ public class SettingsManager : MonoBehaviour {
 
     public CameraControl cameraController;
 
+    public Dictionary<string, Func<float, bool, float>> floatSettings;
+    public Dictionary<string, Func<string, bool, string>> stringSettings;
+
     public string homeDirectory;
+    public float test = 3;
 
     private void Awake()
     {
@@ -24,75 +28,64 @@ public class SettingsManager : MonoBehaviour {
 
     private void Start()
     {
+        floatSettings = new Dictionary<string, Func<float, bool, float>>();
+        stringSettings = new Dictionary<string, Func<string, bool, string>>();
+        ConfigureSettings();
         LoadSettings();
+    }
+
+    public void TEST()
+    {
+
+        Debug.Log("currentDir: " + stringSettings["homedir"]("", false));
+    }
+
+    // Build the settings dictionary
+    private void ConfigureSettings()
+    {
+        floatSettings.Add("mouseLook", (x, y) => y ? cameraController.mouseLookSens = x : cameraController.mouseLookSens);
+        floatSettings.Add("keyLook", (x, y) => y ? cameraController.keyboardLookSens = x : cameraController.keyboardLookSens);
+        floatSettings.Add("keyPan", (x, y) => y ? cameraController.keyboardPanSens = x : cameraController.keyboardPanSens);
+        floatSettings.Add("zoom", (x, y) => y ? cameraController.zoomSens = x : cameraController.zoomSens);
+        floatSettings.Add("orthoPan", (x, y) => y ? cameraController.orthoPanSens = x : cameraController.orthoPanSens);
+        floatSettings.Add("orthoSens", (x, y) => y ? cameraController.orthoZoomSens = x : cameraController.orthoZoomSens);
+
+        stringSettings.Add("homedir", (x, y) => y ? homeDirectory = x : homeDirectory);
     }
 
     public void SaveSettings()
     {
-        INIParser ini = new INIParser();
-        // Windows: Write INI file to /Users/username/AppData/Roaming/eyesim/config.ini
-        if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
-        {
-            // Get Directory
-            string appDir = Environment.GetEnvironmentVariable("APPDATA");
-            appDir = Path.Combine(appDir, "eyesim");
-            if (!Directory.Exists(appDir))
-                Directory.CreateDirectory(appDir);
-            appDir = Path.Combine(appDir, "config.ini");
-            // Open INI file
-            ini.Open(appDir);
-        }
+        foreach(KeyValuePair<string, Func<float, bool, float>> entry in floatSettings)
+            PlayerPrefs.SetFloat(entry.Key, entry.Value(0, false));
 
-        // TODO: Mac
-        else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer)
-        {
-            Debug.Log("Not implemented for Mac!");
-            return;
-        }
+        foreach (KeyValuePair<string, Func<string, bool, string>> entry in stringSettings)
+            PlayerPrefs.SetString(entry.Key, entry.Value("", false));
 
-        // Camera
-        ini.WriteValue("Camera", "mouseLook", Math.Round(cameraController.mouseLookSens,5));
-        ini.WriteValue("Camera", "keyLook", Math.Round(cameraController.keyboardLookSens, 5));
-        ini.WriteValue("Camera", "keyPan", Math.Round(cameraController.keyboardPanSens, 5));
-        ini.WriteValue("Camera", "zoom", Math.Round(cameraController.zoomSens, 5));
-        ini.WriteValue("Camera", "orthoPan", Math.Round(cameraController.orthoPanSens, 5));
-        ini.WriteValue("Camera", "orthoSens", Math.Round(cameraController.orthoZoomSens, 5));
-
-        // Directory
-        ini.WriteValue("Directory", "home", homeDirectory);
-
-        // Close config file (Completes Write)
-        ini.Close();
+        //PlayerPrefs.SetFloat("mouseLook", (float) Math.Round(cameraController.mouseLookSens,5));
+        //PlayerPrefs.SetFloat("keyLook", (float) Math.Round(cameraController.keyboardLookSens, 5));
+        //PlayerPrefs.SetFloat("keyPan", (float) Math.Round(cameraController.keyboardPanSens, 5));
+        //PlayerPrefs.SetFloat("zoom", (float) Math.Round(cameraController.zoomSens, 5));
+        //PlayerPrefs.SetFloat("orthoPan", (float) Math.Round(cameraController.orthoPanSens, 5));
+        //PlayerPrefs.SetFloat("orthoSens", (float) Math.Round(cameraController.orthoZoomSens, 5));
+        //PlayerPrefs.SetString("homedir", homeDirectory);
+        PlayerPrefs.Save();
     }
 
     public void LoadSettings()
     {
-        INIParser ini = new INIParser();
-        if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer)
-        {
-            string appDir = Environment.GetEnvironmentVariable("APPDATA");
-            appDir = Path.Combine(appDir, "eyesim" + Path.DirectorySeparatorChar + "config.ini");
-            if (!File.Exists(appDir))
-            {
-                Debug.Log(appDir);
-                Debug.Log("Could not find config file!");
-                return;
-            }
-            ini.Open(appDir);
-        }
+        foreach (KeyValuePair<string, Func<float, bool, float>> entry in floatSettings)
+            entry.Value(PlayerPrefs.GetFloat(entry.Key), true);
 
-        // Camera settings
-        cameraController.mouseLookSens = (float) ini.ReadValue("Camera", "mouseLook", 5f);
-        cameraController.keyboardLookSens = (float)ini.ReadValue("Camera", "keyLook", 5f);
-        cameraController.keyboardPanSens = (float)ini.ReadValue("Camera", "keyPan", 5f);
-        cameraController.zoomSens = (float)ini.ReadValue("Camera", "zoom", 5f);
-        cameraController.orthoPanSens = (float)ini.ReadValue("Camera", "orthoPan", 5f);
-        cameraController.orthoZoomSens = (float)ini.ReadValue("Camera", "orthoSens", 5f);
+        foreach (KeyValuePair<string, Func<string, bool, string>> entry in stringSettings)
+            entry.Value(PlayerPrefs.GetString(entry.Key), true);
 
-        // Directory settings
-        homeDirectory = ini.ReadValue("Directory", "home", Directory.GetCurrentDirectory());
-
-        ini.Close();
+        //cameraController.mouseLookSens = PlayerPrefs.GetFloat("mouseLook", cameraController.mouseLookSens);
+        //cameraController.keyboardLookSens = PlayerPrefs.GetFloat("keyLook", cameraController.keyboardLookSens);
+        //cameraController.keyboardPanSens = PlayerPrefs.GetFloat("keyPan", cameraController.keyboardPanSens);
+        //cameraController.zoomSens = PlayerPrefs.GetFloat("zoom", cameraController.zoomSens);
+        //cameraController.orthoPanSens = PlayerPrefs.GetFloat("orthoPan", cameraController.orthoPanSens);
+        //cameraController.orthoZoomSens = PlayerPrefs.GetFloat("orthoSens", cameraController.orthoZoomSens);
+        //homeDirectory = PlayerPrefs.GetString("homedir", Directory.GetCurrentDirectory());
     }
 
     // ----- Camera Settings -----
