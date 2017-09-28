@@ -149,6 +149,16 @@ public class RobotInspectorWindow : TabWindow {
     }
 
     // ----- PSD CONTENT -----
+    // Toggle Visualize
+
+    public void ToggleVisualise(bool val)
+    {
+        if (!(robot is IPSDSensors))
+            return;
+
+        (robot as IPSDSensors).SetVisualize(val);
+    }
+
     // Enable Error
     public void PSDErrorEnabled(bool val)
     {

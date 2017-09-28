@@ -30,6 +30,12 @@ public class PSDController : MonoBehaviour {
         normalStdDev = dev;
     }
 
+    public void VisualiseAllSensors(bool val)
+    {
+        foreach (PSDSensor psd in sensors)
+            psd.EnableVisualise(val);
+    }
+
     // Box-Muller Implementation for Random Normal number
     private float GetRandomError()
     {

@@ -9,6 +9,7 @@ using RobotComponents;
 public interface IMotors
 {
     void DriveMotor(int motor, int speed);
+    int GetEncoder(int quad);
 }
 
 public interface IPIDUsable
@@ -45,6 +46,7 @@ public interface IPSDSensors
     float MeanError { get; set; }
     float StdDevError { get; set; }
     bool UseGlobalError { get; set; }
+    void SetVisualize(bool val);
 }
 
 public interface ICameras

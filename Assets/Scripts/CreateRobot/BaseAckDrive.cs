@@ -122,6 +122,11 @@ public class BaseAckDrive : Robot, IMotors,
         driveDoneDelegate(myConnection);
     }
 
+    public int GetEncoder(int quad)
+    {
+        return 0;
+    }
+
     public void DriveMotor(int motor, int speed)
     {
         wheelController.SetMotorSpeed(motor, speed);
@@ -199,6 +204,11 @@ public class BaseAckDrive : Robot, IMotors,
         {
             psdController.useGlobalError = value;
         }
+    }
+
+    public void SetVisualize(bool val)
+    {
+        psdController.VisualiseAllSensors(val);
     }
 
     public void VWSetVehicleSpeed(int linear, int angular)

@@ -34,6 +34,20 @@ public class Interpreter {
         serverManager.WritePacket(conn, p);
     }
 
+    private void Command_e(byte[] recv, RobotConnection conn)
+    {
+        if(conn.robot is IMotors)
+        {
+            int quad = recv[1] - 1;
+            int tick = (conn.robot as IMotors).GetEncoder(quad);
+            Packet p = new Packet();
+            p.packetType = PacketType.SERVER_MESSAGE;
+            p.dataSize = 4;
+            p.data = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(tick));
+            serverManager.WritePacket(conn, p);
+        }
+    }
+
     // Drive Motor Uncontrolled
     private void Command_m(byte[] recv, RobotConnection conn)
     {
@@ -492,6 +506,10 @@ public class Interpreter {
     {
         switch ((char)recv[0])
         {
+            // Read Encoder
+            case 'e':
+                Command_e(recv, conn);
+                break;
             // Motor Drive Uncontrolled
             case 'm':
                 Command_m(recv, conn);

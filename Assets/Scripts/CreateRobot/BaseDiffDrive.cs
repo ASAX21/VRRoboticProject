@@ -134,6 +134,11 @@ public class BaseDiffDrive : Robot, IMotors,
         driveDoneDelegate(myConnection);
     }
 
+    public int GetEncoder(int quad)
+    {
+        return wheelController.GetEncoderTicks(quad);
+    }
+
     public void DriveMotor(int motor, int speed)
     {
         wheelController.SetMotorSpeed(motor, speed);
@@ -211,6 +216,11 @@ public class BaseDiffDrive : Robot, IMotors,
         {
             psdController.useGlobalError = value;
         }
+    }
+
+    public void SetVisualize(bool val)
+    {
+        psdController.VisualiseAllSensors(val);
     }
 
     public void VWSetVehicleSpeed(int linear, int angular)

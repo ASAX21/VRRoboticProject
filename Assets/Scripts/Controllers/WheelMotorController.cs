@@ -54,15 +54,30 @@ public class WheelMotorController : MonoBehaviour
         }
     }
 
+    // Get the encoder ticks from a quad
+    public int GetEncoderTicks(int quad)
+    {
+        if (quad > wheels.Count - 1)
+        {
+            Debug.Log("Robot " + mainBot.objectID + ":  Get Encoder " + (quad + 1) + " - robot has only " + wheels.Count + " encoders");
+            return 0;
+        }
+        else
+            return Mathf.RoundToInt(wheels[quad].ticks);
+            
+    }
+
     // Set the local PID Parameters
     public void SetPIDParams(int motor, int p, int i, int d)
     {
         wheels[motor].SetPIDParams(p, i, d);
     }
-    // Set the speed of a single motor
+
+    // Set the speed of a single motor (ratio -100 to 100)
     public void SetMotorSpeed(int motor, float speed)
     {
-        wheels[motor].SetMotorSpeed(speed);
+        
+        wheels[motor].SetSpeed( (speed/100f) * maxStraightSpeed);
     }
 
     // Set the speed of a single motor (controlled)

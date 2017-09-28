@@ -47,7 +47,12 @@ IRadio
 		driveDoneDelegate(myConnection);
 	}
 
-	public void DriveMotor(int motor, int speed)
+    public int GetEncoder(int quad)
+    {
+        return wheelController.GetEncoderTicks(quad);
+    }
+
+    public void DriveMotor(int motor, int speed)
 	{
 		wheelController.SetMotorSpeed(motor, speed);
 	}
@@ -121,6 +126,11 @@ IRadio
         {
             psdController.useGlobalError = value;
         }
+    }
+
+    public void SetVisualize(bool val)
+    {
+        psdController.VisualiseAllSensors(val);
     }
 
     public void VWSetVehicleSpeed(int linear, int angular)
