@@ -34,12 +34,6 @@ public class SettingsManager : MonoBehaviour {
         LoadSettings();
     }
 
-    public void TEST()
-    {
-
-        Debug.Log("currentDir: " + stringSettings["homedir"]("", false));
-    }
-
     // Build the settings dictionary
     private void ConfigureSettings()
     {
@@ -61,13 +55,6 @@ public class SettingsManager : MonoBehaviour {
         foreach (KeyValuePair<string, Func<string, bool, string>> entry in stringSettings)
             PlayerPrefs.SetString(entry.Key, entry.Value("", false));
 
-        //PlayerPrefs.SetFloat("mouseLook", (float) Math.Round(cameraController.mouseLookSens,5));
-        //PlayerPrefs.SetFloat("keyLook", (float) Math.Round(cameraController.keyboardLookSens, 5));
-        //PlayerPrefs.SetFloat("keyPan", (float) Math.Round(cameraController.keyboardPanSens, 5));
-        //PlayerPrefs.SetFloat("zoom", (float) Math.Round(cameraController.zoomSens, 5));
-        //PlayerPrefs.SetFloat("orthoPan", (float) Math.Round(cameraController.orthoPanSens, 5));
-        //PlayerPrefs.SetFloat("orthoSens", (float) Math.Round(cameraController.orthoZoomSens, 5));
-        //PlayerPrefs.SetString("homedir", homeDirectory);
         PlayerPrefs.Save();
     }
 
@@ -78,14 +65,6 @@ public class SettingsManager : MonoBehaviour {
 
         foreach (KeyValuePair<string, Func<string, bool, string>> entry in stringSettings)
             entry.Value(PlayerPrefs.GetString(entry.Key), true);
-
-        //cameraController.mouseLookSens = PlayerPrefs.GetFloat("mouseLook", cameraController.mouseLookSens);
-        //cameraController.keyboardLookSens = PlayerPrefs.GetFloat("keyLook", cameraController.keyboardLookSens);
-        //cameraController.keyboardPanSens = PlayerPrefs.GetFloat("keyPan", cameraController.keyboardPanSens);
-        //cameraController.zoomSens = PlayerPrefs.GetFloat("zoom", cameraController.zoomSens);
-        //cameraController.orthoPanSens = PlayerPrefs.GetFloat("orthoPan", cameraController.orthoPanSens);
-        //cameraController.orthoZoomSens = PlayerPrefs.GetFloat("orthoSens", cameraController.orthoZoomSens);
-        //homeDirectory = PlayerPrefs.GetString("homedir", Directory.GetCurrentDirectory());
     }
 
     // ----- Camera Settings -----
