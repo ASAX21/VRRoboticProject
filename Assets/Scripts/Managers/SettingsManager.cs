@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEditor.iOS.Xcode;
 
 public class SettingsManager : MonoBehaviour {
 
@@ -41,28 +42,45 @@ public class SettingsManager : MonoBehaviour {
             appDir = Path.Combine(appDir, "config.ini");
             // Open INI file
             ini.Open(appDir);
+			// Camera
+			ini.WriteValue("Camera", "mouseLook", Math.Round(cameraController.mouseLookSens,5));
+			ini.WriteValue("Camera", "keyLook", Math.Round(cameraController.keyboardLookSens, 5));
+			ini.WriteValue("Camera", "keyPan", Math.Round(cameraController.keyboardPanSens, 5));
+			ini.WriteValue("Camera", "zoom", Math.Round(cameraController.zoomSens, 5));
+			ini.WriteValue("Camera", "orthoPan", Math.Round(cameraController.orthoPanSens, 5));
+			ini.WriteValue("Camera", "orthoSens", Math.Round(cameraController.orthoZoomSens, 5));
+
+			// Directory
+			ini.WriteValue("Directory", "home", homeDirectory);
+
+			// Close config file (Completes Write)
+			ini.Close();
         }
 
         // TODO: Mac
         else if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer)
         {
-            Debug.Log("Not implemented for Mac!");
+			string plistPath = @"test.plist";
+			PlistDocument plist = new PlistDocument ();
+			if(!File.Exists(plistPath))
+				//plist.Create(plistPath);
+				Debug.Log("nofile");
+
+			PlistElementDict dict = plist.root;
+
+			// Camera
+			dict.SetString("mouseLook", Math.Round(cameraController.mouseLookSens,5).ToString());
+			dict.SetString("keyLook", Math.Round(cameraController.keyboardLookSens, 5).ToString());
+			dict.SetString("keyPan", Math.Round(cameraController.keyboardPanSens, 5).ToString());
+			dict.SetString("zoom", Math.Round(cameraController.zoomSens, 5).ToString());
+			dict.SetString("orthoPan", Math.Round(cameraController.orthoPanSens, 5).ToString());
+			dict.SetString("orthoSens", Math.Round(cameraController.orthoZoomSens, 5).ToString());
+
+			// Directory
+			dict.SetString("home", homeDirectory);
+			plist.WriteToFile (plistPath);
             return;
         }
-
-        // Camera
-        ini.WriteValue("Camera", "mouseLook", Math.Round(cameraController.mouseLookSens,5));
-        ini.WriteValue("Camera", "keyLook", Math.Round(cameraController.keyboardLookSens, 5));
-        ini.WriteValue("Camera", "keyPan", Math.Round(cameraController.keyboardPanSens, 5));
-        ini.WriteValue("Camera", "zoom", Math.Round(cameraController.zoomSens, 5));
-        ini.WriteValue("Camera", "orthoPan", Math.Round(cameraController.orthoPanSens, 5));
-        ini.WriteValue("Camera", "orthoSens", Math.Round(cameraController.orthoZoomSens, 5));
-
-        // Directory
-        ini.WriteValue("Directory", "home", homeDirectory);
-
-        // Close config file (Completes Write)
-        ini.Close();
     }
 
     public void LoadSettings()
