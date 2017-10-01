@@ -27,6 +27,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
 	public int collisionCount = 0;
 
     public float defaultVerticalOffset = 0f;
+    public float vertPlaceOffset = 0.03f;
 
     // Physics
     public Vector3 centreOfMass;
@@ -109,7 +110,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!isPlaced)
+        if (!isPlaced && other.tag != "Marker")
         {
 			collisionCount++;
         }
@@ -117,7 +118,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
 
     private void OnTriggerExit(Collider other)
     {
-        if (!isPlaced)
+        if (!isPlaced && other.tag != "Marker")
         {
 			collisionCount--;
         }
@@ -142,7 +143,9 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
         return valid;
 	}
 
-    public virtual void OnPointerClick(PointerEventData eventData)
+    abstract public void OpenInfoWindow();
+
+    virtual public void OnPointerClick(PointerEventData eventData)
     {
         return;
         /*
@@ -205,7 +208,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
         isSelected = false;
     }
 
-    public void PlaceObject()
+    public virtual void PlaceObject()
     {
         foreach (MaterialContainer mat in matContainer)
         {
@@ -217,11 +220,6 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
                 phys.rigidBody.isKinematic = false;
             foreach (Collider c in phys.collider)
                 c.isTrigger = false;
-        }
-        if(isInit == false)
-        {
-            if(this is IVWDrivable)
-                (this as IVWDrivable).SetPose(0, 0, 0);
         }
         isPlaced = true;
         isInit = true;

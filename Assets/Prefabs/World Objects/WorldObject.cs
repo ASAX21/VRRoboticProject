@@ -3,7 +3,7 @@ using UnityEngine.EventSystems;
 
 public class WorldObject : PlaceableObject, IPointerClickHandler {
 
-    public void OpenInfoWindow()
+    override public void OpenInfoWindow()
     {
         if (!isWindowOpen)
         {
@@ -12,7 +12,7 @@ public class WorldObject : PlaceableObject, IPointerClickHandler {
         }
     }
 
-    public override void OnPointerClick(PointerEventData eventData)
+    override public void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.clickCount > 1 && !isWindowOpen)
         {

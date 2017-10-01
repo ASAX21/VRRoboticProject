@@ -1,8 +1,10 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UI.Extensions;
 
 public class SettingsWindow : TabWindow, IFileReceiver
 {
@@ -29,7 +31,11 @@ public class SettingsWindow : TabWindow, IFileReceiver
     public FileFinder homeDirFinder;
     public InputField dirInput;
 
-    void OnEnable () {
+    [Header("Error")]
+    public GaussianDrawer gaussDrawer;
+
+    void OnEnable ()
+    {
         windowTitle.color = UIManager.instance.windowHeaderTextColor;
         windowHeader.color = UIManager.instance.windowHeaderColor;
         homeDirFinder.Initialise("*", FileBrowserType.Directory, this);
@@ -73,7 +79,7 @@ public class SettingsWindow : TabWindow, IFileReceiver
     public void SetMouseLookSensSlider(float val)
     {
         float sens = Mathf.Clamp(val, 1f, 20f);
-        SettingsManager.instance.SetCamMouseLookSens(sens);
+        SettingsManager.instance.ChangeSettingsValue("mouseLook", sens);
         mouseLookSensInput.text = sens.ToString();
     }
 
@@ -82,14 +88,14 @@ public class SettingsWindow : TabWindow, IFileReceiver
         float sens;
         float.TryParse(val, out sens);
         sens = Mathf.Clamp(sens, 1f, 20f);
-        SettingsManager.instance.SetCamMouseLookSens(sens);
+        SettingsManager.instance.ChangeSettingsValue("mouseLook", sens);
         mouseLookSensSlider.value = sens;
     }
     // Key Look
     public void SetKeyLookSensSlider(float val)
     {
         float sens = Mathf.Clamp(val, 1f, 100f);
-        SettingsManager.instance.SetCamKeyLookSens(sens);
+        SettingsManager.instance.ChangeSettingsValue("keyLook", sens);
         keyLookSensInput.text = sens.ToString();
     }
 
@@ -98,14 +104,14 @@ public class SettingsWindow : TabWindow, IFileReceiver
         float sens;
         float.TryParse(val, out sens);
         sens = Mathf.Clamp(sens, 1f, 100f);
-        SettingsManager.instance.SetCamKeyLookSens(sens);
+        SettingsManager.instance.ChangeSettingsValue("keyLook", sens);
         keyLookSensSlider.value = sens;
     }
     // Key Pan
     public void SetKeyPanSensSlider(float val)
     {
         float sens = Mathf.Clamp(val, 0f, 10f);
-        SettingsManager.instance.SetCamPanSens(sens);
+        SettingsManager.instance.ChangeSettingsValue("keyPan", sens);
         keyPanSensInput.text = sens.ToString();
     }
 
@@ -114,14 +120,14 @@ public class SettingsWindow : TabWindow, IFileReceiver
         float sens;
         float.TryParse(val, out sens);
         sens = Mathf.Clamp(sens, 0f, 10f);
-        SettingsManager.instance.SetCamPanSens(sens);
+        SettingsManager.instance.ChangeSettingsValue("keyPan", sens);
         keyPanSensSlider.value = sens;
     }
     // Zoom
     public void SetZoomSensSlider(float val)
     {
         float sens = Mathf.Clamp(val, 1f, 10f);
-        SettingsManager.instance.SetCamZoomSens(sens);
+        SettingsManager.instance.ChangeSettingsValue("zoom", sens);
         zoomSensInput.text = sens.ToString();
     }
 
@@ -130,7 +136,7 @@ public class SettingsWindow : TabWindow, IFileReceiver
         float sens;
         float.TryParse(val, out sens);
         sens = Mathf.Clamp(sens, 1f, 10f);
-        SettingsManager.instance.SetCamZoomSens(sens);
+        SettingsManager.instance.ChangeSettingsValue("zoom", sens);
         zoomSensSlider.value = sens;
     }
 
@@ -139,7 +145,7 @@ public class SettingsWindow : TabWindow, IFileReceiver
     public void SetOrthoPanSlider(float val)
     {
         float sens = Mathf.Clamp(val, 1f, 10f);
-        SettingsManager.instance.SetOrthoPanSens(sens);
+        SettingsManager.instance.ChangeSettingsValue("orthoPan", sens);
         orthoPanInput.text = sens.ToString();
     }
 
@@ -148,14 +154,14 @@ public class SettingsWindow : TabWindow, IFileReceiver
         float sens;
         float.TryParse(val, out sens);
         sens = Mathf.Clamp(sens, 1f, 10f);
-        SettingsManager.instance.SetOrthoPanSens(sens);
+        SettingsManager.instance.ChangeSettingsValue("orthoPan", sens);
         orthoPanSlider.value = sens;
     }
     // Zoom
     public void SetOrthoZoomSlider(float val)
     {
         float sens = Mathf.Clamp(val, 1f, 10f);
-        SettingsManager.instance.SetOrthoZoomSens(sens);
+        SettingsManager.instance.ChangeSettingsValue("orthoZoom", sens);
         orthoZoomInput.text = sens.ToString();
     }
 
@@ -164,9 +170,11 @@ public class SettingsWindow : TabWindow, IFileReceiver
         float sens;
         float.TryParse(val, out sens);
         sens = Mathf.Clamp(sens, 1f, 10f);
-        SettingsManager.instance.SetOrthoZoomSens(sens);
+        SettingsManager.instance.ChangeSettingsValue("orthoZoom", sens);
         orthoZoomSlider.value = sens;
     }
+
+    // ----- Directory Settings -----
 
     // Home Directory
     public void OpenHomeDirSelect()
@@ -178,7 +186,7 @@ public class SettingsWindow : TabWindow, IFileReceiver
     {
         if (Directory.Exists(dirpath))
         {
-            SettingsManager.instance.SetHomeDirectory(dirpath);
+            SettingsManager.instance.ChangeSettingsValue("homedir", dirpath);
         }
         else
         {
@@ -191,10 +199,34 @@ public class SettingsWindow : TabWindow, IFileReceiver
     {
         if (Directory.Exists(dirpath))
         {
-            SettingsManager.instance.SetHomeDirectory(dirpath);
+            SettingsManager.instance.ChangeSettingsValue("homedir", dirpath);
             dirInput.text = dirpath;
         }
         return null;
+    }
+
+    // ----- Error Settings -----
+
+    // PSD Error
+    
+    public void PSDMeanErrorInput(string val)
+    {
+        float mean;
+        if (float.TryParse(val, out mean))
+        {
+            PSDController.globalMean = mean;
+            gaussDrawer.DrawPSDGaussian(mean, PSDController.globalStdDev);
+        }
+    }
+
+    public void PSDStdDevErrorInput(string val)
+    {
+        float sdev;
+        if (float.TryParse(val, out sdev))
+        {
+            PSDController.globalStdDev = sdev;
+            gaussDrawer.DrawPSDGaussian(PSDController.globalMean, sdev);
+        }
     }
 
     // Close Window

@@ -35,6 +35,7 @@ public class UIManager : MonoBehaviour {
     [Header("Window Prefabs")]
     public RobotInspectorWindow robotInspectorWindowPrefab;
     public WorldObjInspectorWindow worldObjInspectorWindowPrefab;
+    public MarkerWindow markerWindowPrefab;
 
     // Color Scheme
     [Header("Colors")]

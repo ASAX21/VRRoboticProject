@@ -182,14 +182,15 @@ public class WheelMotorController : MonoBehaviour
 
     public float[] GetPosition()
     {
-        // Get real position
-        Vector3 relPos = VWOrigin.InverseTransformPoint(mainBot.transform.position);
-        float angle = VWOrigin.eulerAngles.y - mainBot.transform.eulerAngles.y;
-        angle = (angle + 360) % 360;
-        angle = angle > 180 ? angle - 360 : angle;
-
-        if(realCoords)
-            return new float[3] { relPos.z, -relPos.x, angle};
+        if (realCoords)
+        {
+            // Get real position relative to VWSetPosition
+            Vector3 relPos = VWOrigin.InverseTransformPoint(mainBot.transform.position);
+            float angle = VWOrigin.eulerAngles.y - mainBot.transform.eulerAngles.y;
+            angle = (angle + 360) % 360;
+            angle = angle > 180 ? angle - 360 : angle;
+            return new float[3] { relPos.z, -relPos.x, angle };
+        }
         else
             return new float[3] { Pos.z, Pos.x, Rot };
     }

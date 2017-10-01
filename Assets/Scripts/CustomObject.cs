@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CustomObject : PlaceableObject
+public class CustomObject : WorldObject
 {
 
 }

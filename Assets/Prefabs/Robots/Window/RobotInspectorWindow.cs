@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using RobotComponents;
@@ -21,6 +22,7 @@ public class RobotInspectorWindow : TabWindow {
     public Text psdLeftValue;
     public Text psdRightValue;
 
+    private bool useGlobalError;
     public Toggle globalError;
     [SerializeField]
     private Text globalErrorLabel, psdMeanLabel, psdStdDevLabel;
@@ -46,10 +48,13 @@ public class RobotInspectorWindow : TabWindow {
 
 
     // Position variables
-    [Header("Position Text Displays")]
+    [Header("Driving")]
     public InputField robotXValue;
     public InputField robotZValue;
     public InputField robotPhiValue;
+    public Text vwXtext;
+    public Text vwYtext;
+    public Text vwPhiText;
 
     // Icon Images
     [Header("Icons")]
@@ -94,7 +99,17 @@ public class RobotInspectorWindow : TabWindow {
                 psdMeanError.text = (robot as IPSDSensors).MeanError.ToString("N2");
                 psdStdDevError.text = (robot as IPSDSensors).StdDevError.ToString("N2");
             }
+            useGlobalError = (robot as IPSDSensors).UseGlobalError;
         }
+
+        if(robot is IVWDrivable)
+        {
+            Int16[] pos = (robot as IVWDrivable).GetPose();
+            vwXtext.text = pos[0].ToString("N2");
+            vwYtext.text = pos[1].ToString("N2");
+            vwPhiText.text = pos[2].ToString("N2");
+        }
+        
         SaltPepperNoiseToggle(false);
         GaussianNoiseToggle(false);
         PSDErrorEnabled(false);
@@ -127,7 +142,13 @@ public class RobotInspectorWindow : TabWindow {
         {
             cameraResolution.text = (robot as ICameras).GetCameraResolution(0);
         }
-        robotBinaryName.text = robot.controlBinaryPath;
+        if (robot is IVWDrivable)
+        {
+            Int16[] pos = (robot as IVWDrivable).GetPose();
+            vwXtext.text = pos[0].ToString("N2");
+            vwYtext.text = pos[1].ToString("N2");
+            vwPhiText.text = pos[2].ToString("N2");
+        }
 	}
     
     // ----- CAMERA CONTENT -----
@@ -180,9 +201,10 @@ public class RobotInspectorWindow : TabWindow {
             psdStdDevLabel.color = Color.grey;
             globalErrorLabel.color = Color.grey;
         }
-        psdMeanError.interactable = val;
-        psdStdDevError.interactable = val;
+        (robot as IPSDSensors).UseError = val;
         globalError.interactable = val;
+        psdMeanError.interactable = val && !useGlobalError;
+        psdStdDevError.interactable = val && !useGlobalError;
     }
 
     public void PSDGlobalError(bool val)
@@ -191,7 +213,6 @@ public class RobotInspectorWindow : TabWindow {
             return;
         psdMeanError.interactable = !val;
         psdStdDevError.interactable = !val;
-        (robot as IPSDSensors).UseGlobalError = val;
         if (val)
         {
             psdMeanError.text = PSDController.globalMean.ToString("N2");
@@ -202,6 +223,8 @@ public class RobotInspectorWindow : TabWindow {
             psdMeanError.text = (robot as IPSDSensors).MeanError.ToString("N2");
             psdStdDevError.text = (robot as IPSDSensors).StdDevError.ToString("N2");
         }
+        (robot as IPSDSensors).UseGlobalError = val;
+        useGlobalError = val;
     }
     // PSD Sensor Error Inputs
     public void SetErrorMean(string mean)
@@ -221,6 +244,9 @@ public class RobotInspectorWindow : TabWindow {
             (robot as IPSDSensors).StdDevError = d;
         }
     }
+    
+    // ----- Driving Content -----
+    // 
 
     private void OnSimPaused()
     {

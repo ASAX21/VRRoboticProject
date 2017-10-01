@@ -117,7 +117,21 @@ public class LabBot : Robot,
             psdController.normalStdDev = value;
         }
     }
+    
+    // Add error to sensor values
+    public bool UseError
+    {
+        get
+        {
+            return psdController.errorEnabled;
+        }
+        set
+        {
+            psdController.errorEnabled = value;
+        }
+    }
 
+    // Use global or local values for calculating error
     public bool UseGlobalError
     {
         get

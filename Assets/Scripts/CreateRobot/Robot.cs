@@ -45,6 +45,7 @@ public interface IPSDSensors
     UInt16 GetPSD(int psd);
     float MeanError { get; set; }
     float StdDevError { get; set; }
+    bool UseError { get; set; }
     bool UseGlobalError { get; set; }
     void SetVisualize(bool val);
 }
@@ -139,7 +140,7 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
     }
 
     // Open the info window for this robot
-    public void OpenInfoWindow()
+    override public void OpenInfoWindow()
     {
         if (!isWindowOpen)
         {
@@ -230,5 +231,15 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
         if (eventData.clickCount > 1 && !isWindowOpen)
             OpenInfoWindow();
         base.OnPointerClick(eventData);
+    }
+    
+    override public void PlaceObject()
+    {
+        if (isInit == false)
+        {
+            if (this is IVWDrivable)
+                (this as IVWDrivable).SetPose(0, 0, 0);
+        }
+        base.PlaceObject();
     }
 }

@@ -11,7 +11,11 @@ public class PSDController : MonoBehaviour {
 
     // Values for error
     public bool errorEnabled = false;
+    // Use global or loca values for calculating
     public bool useGlobalError = true;
+
+    // If error enabled is false, no error will be added
+    // regardless of useGlobalError value
 
     public static float globalMean = 0f;
     public static float globalStdDev = 10f;

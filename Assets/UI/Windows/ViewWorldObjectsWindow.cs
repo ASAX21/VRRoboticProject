@@ -28,7 +28,7 @@ public class ViewWorldObjectsWindow : MonoBehaviour {
         foreach(WorldObject wObj in SimManager.instance.allWorldObjects)
         {
             GameObject newbutton = Instantiate(objectButtonPrefab, content, false);
-            newbutton.transform.GetChild(0).GetComponent<Text>().text = "Object " + wObj.objectID;
+            newbutton.transform.GetChild(0).GetComponent<Text>().text = wObj.name + wObj.objectID;
             newbutton.GetComponent<Button>().onClick.AddListener(wObj.OpenInfoWindow);
         }
     }

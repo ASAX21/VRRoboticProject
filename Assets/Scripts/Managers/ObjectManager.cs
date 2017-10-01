@@ -22,6 +22,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     [Header("Prefab World Ojbects")]
     public GameObject cokeCanPrefab;
     public GameObject soccerBallPrefab;
+    public GameObject markerPrefab;
 
     // Robot Prefabs
     [Header("Prefab Robots")]
@@ -162,6 +163,22 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         }
     }
 
+    public void AddMarkerToScene(string args)
+    {
+        if (isMouseOccupied)
+            return;
+
+        PlaceableObject newObj = Instantiate(markerPrefab).GetComponent<PlaceableObject>();
+        newObj.name = "Marker";
+        if (args.Length == 0)
+            AddObjectToSceneOnMouse(newObj);
+        else
+        {
+            string[] pos = args.Split(':');
+            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
+        }
+    }
+
     public void AddLabBotToScene(string args)
     {
         if (isMouseOccupied)
@@ -288,7 +305,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
 			float distance;
 			if(ground.Raycast(ray, out distance)){
 				Vector3 hitpoint = ray.GetPoint (distance);
-				objectOnMouse.transform.position = new Vector3(hitpoint.x, 0.03f + verticalOffset, hitpoint.z);
+				objectOnMouse.transform.position = new Vector3(hitpoint.x, objectOnMouse.vertPlaceOffset + verticalOffset, hitpoint.z);
                 if(Physics.Raycast(ray, 1000f, groundMask))
                     objectOnMouse.updateValidity(true);
                 else

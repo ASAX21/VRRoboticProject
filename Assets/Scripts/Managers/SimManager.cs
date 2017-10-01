@@ -146,7 +146,6 @@ public class SimManager : MonoBehaviour {
     // Add a world object
     public void AddWorldObjectToScene(WorldObject worldObj)
     {
-        Debug.Log("New Object");
         worldObj.objectID = ++totalObjects;
         allWorldObjects.Add(worldObj);
         ViewWorldObjectsWindow.instance.UpdateWorldObjectsList();

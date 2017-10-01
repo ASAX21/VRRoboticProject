@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+// Responsible for saving/loading preferences between sessions
+// A central point where settings can be modified
+
 public class SettingsManager : MonoBehaviour {
 
     static public SettingsManager instance;
@@ -14,7 +17,6 @@ public class SettingsManager : MonoBehaviour {
     public Dictionary<string, Func<string, bool, string>> stringSettings;
 
     public string homeDirectory;
-    public float test = 3;
 
     private void Awake()
     {
@@ -42,7 +44,9 @@ public class SettingsManager : MonoBehaviour {
         floatSettings.Add("keyPan", (x, y) => y ? cameraController.keyboardPanSens = x : cameraController.keyboardPanSens);
         floatSettings.Add("zoom", (x, y) => y ? cameraController.zoomSens = x : cameraController.zoomSens);
         floatSettings.Add("orthoPan", (x, y) => y ? cameraController.orthoPanSens = x : cameraController.orthoPanSens);
-        floatSettings.Add("orthoSens", (x, y) => y ? cameraController.orthoZoomSens = x : cameraController.orthoZoomSens);
+        floatSettings.Add("orthoZoom", (x, y) => y ? cameraController.orthoZoomSens = x : cameraController.orthoZoomSens);
+        floatSettings.Add("psdMeanError", (x, y) => y ? PSDController.globalMean = x : PSDController.globalMean);
+        floatSettings.Add("psdStdDevError", (x, y) => y ? PSDController.globalStdDev = x : PSDController.globalStdDev);
 
         stringSettings.Add("homedir", (x, y) => y ? homeDirectory = x : homeDirectory);
     }
@@ -67,43 +71,25 @@ public class SettingsManager : MonoBehaviour {
             entry.Value(PlayerPrefs.GetString(entry.Key, entry.Value("", false)), true);
     }
 
-    // ----- Camera Settings -----
-    public void SetCamMouseLookSens(float sens)
+    // ----- Settings -----
+    public void ChangeSettingsValue(string setting, float val)
     {
-        cameraController.mouseLookSens = sens;
+        if (!floatSettings.ContainsKey(setting))
+        {
+            Debug.Log("Settings: " + setting + " - No such entry");
+            return;
+        }
+
+        floatSettings[setting](val, true);
     }
 
-    public void SetCamZoomSens(float sens)
+    public void ChangeSettingsValue(string setting, string val)
     {
-        cameraController.zoomSens = sens;
-    }
-
-    public void SetCamKeyLookSens(float sens)
-    {
-        cameraController.keyboardLookSens = sens;
-    }
-
-    public void SetCamPanSens(float sens)
-    {
-        cameraController.keyboardPanSens = sens;
-    }
-
-    public void SetOrthoPanSens(float sens)
-    {
-        cameraController.orthoPanSens = sens;
-    }
-
-    public void SetOrthoZoomSens(float sens)
-    {
-        cameraController.orthoZoomSens = sens;
-    }
-
-    // ----- Directory Settings -----
-    public void SetHomeDirectory(string dirPath)
-    {
-        if (Directory.Exists(dirPath))
-            homeDirectory = dirPath;
-        else
-            Debug.Log("Bad directory given to Set Home Directory");
+        if (!stringSettings.ContainsKey(setting))
+        {
+            Debug.Log("Settings: " + setting + " - No such entry");
+            return;
+        }
+        stringSettings[setting](val, true);
     }
 }
