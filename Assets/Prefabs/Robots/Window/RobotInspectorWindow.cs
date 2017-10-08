@@ -153,6 +153,12 @@ public class RobotInspectorWindow : TabWindow {
     
     // ----- CAMERA CONTENT -----
 
+    // Refresh render target
+    public void UpdateCameraTarget()
+    {
+        cameraTarget.texture = cameraToDisplay.rendTex;
+    }
+
     public void SaltPepperNoiseToggle(bool val)
     {
         if (!(robot is ICameras))

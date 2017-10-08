@@ -50,8 +50,7 @@ namespace RobotComponents
         public void SetResolution(int width, int height)
         {
             rendTex = new RenderTexture(width, height, 16);
-            Destroy(tex);
-            tex = new Texture2D(rendTex.width, rendTex.height, TextureFormat.RGB24, false);
+            tex.Resize(rendTex.width, rendTex.height, TextureFormat.RGB24, false);
             rect.Set(0, 0, rendTex.width, rendTex.height);
             cameraComponent.targetTexture = rendTex;
         }
