@@ -11,7 +11,7 @@ using System;
 /// INTERPRETER --calls--> INVOKER --invokes--> COMMAND --commands--> RECEIVER --acts--> COMPONENT
 /// 
 /// 
-/// ROBOT COMMANDS IS DEPRECATED THIS SUX no thank you
+/// ROBOT COMMANDS IS DEPRECATED
 /// 
 /// </summary>
 /// <typeparam name="T"></typeparam>

@@ -214,7 +214,8 @@ public class LabBot : Robot,
     public void SetCameraResolution(int camera, int width, int height)
     {
         eyeCamController.SetResolution(camera, width, height);
-        myWindow.UpdateCameraTarget();
+        if(myWindow != null)
+            myWindow.UpdateCameraTarget();
     }
 
     public string GetCameraResolution(int camera)

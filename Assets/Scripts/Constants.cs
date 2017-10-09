@@ -23,3 +23,12 @@ public static class Layers
 {
     public const int GroundLayer = 10;
 }
+
+// Static helper functions
+public static class Eyesim
+{
+    public static int ClampInt(int value, int min, int max)
+    {
+        return value < min ? min : (value > max ? max : value);
+    }
+}

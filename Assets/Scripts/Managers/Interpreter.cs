@@ -33,7 +33,7 @@ public class Interpreter {
         p.data = msg;
         serverManager.WritePacket(conn, p);
     }
-
+    // Get Encoder
     private void Command_e(byte[] recv, RobotConnection conn)
     {
         if(conn.robot is IMotors)

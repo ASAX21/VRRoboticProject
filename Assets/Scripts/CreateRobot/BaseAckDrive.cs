@@ -7,7 +7,6 @@ public class BaseAckDrive : Robot, IMotors,
     IPIDUsable,
     IPSDSensors,
     IServoSettable,
-    IVWDrivable,
     ICameras,
     IAudio,
     IRadio,
@@ -49,14 +48,10 @@ public class BaseAckDrive : Robot, IMotors,
     Action<RobotConnection> driveDoneDelegate;
     Action<RobotConnection, byte[]> radioMessageDelegate;
 
-    private void Awake()
+    internal override void Awake()
     {
         psdController.sensors = new List<PSDSensor>();
-    }
-    public void TEST()
-    {
-        //   PSD_FRONT 1 30 0 80 0
-        VWDriveStraight(1000, 100);
+        base.Awake();
     }
 
     public void TEST2()
@@ -134,7 +129,8 @@ public class BaseAckDrive : Robot, IMotors,
 
     public void DriveMotorControlled(int motor, int ticks)
     {
-        wheelController.SetMotorControlled(motor, ticks);
+        Debug.Log("Motor Controlled not implemented for Ackermann drive");
+        return;
     }
 
     public void SetPID(int motor, int p, int i, int d)
@@ -142,32 +138,19 @@ public class BaseAckDrive : Robot, IMotors,
         wheelController.SetPIDParams(motor, p, i, d);
     }
 
+    // Special Case: Servo of 1 (input, interpereter converts to 0) is wheel angle
     public void SetServo(int servo, int angle)
     {
-        servoController.SetServoPosition(servo, angle);
-    }
-
-    public void SetPose(int x, int y, int phi)
-    {
-        wheelController.SetPosition((int)x, (int)y, (int)phi);
-    }
-
-    public Int16[] GetPose()
-    {
-        Int16[] pos = new Int16[3];
-        float[] robPos = wheelController.GetPosition();
-        pos[0] = Convert.ToInt16(Math.Round(robPos[0] * 1000));
-        pos[1] = Convert.ToInt16(Math.Round(robPos[1] * 1000));
-        pos[2] = Convert.ToInt16(Math.Round(robPos[2]));
-        return pos;
-    }
-
-    public UInt16 GetPSD(int psd)
-    {
-        if (psdEnabled)
-            return psdController.GetPSDValue(psd);
+        if (servo == 0)
+            wheelController.SetTurnAngle(angle);
         else
-            return 0;
+            servoController.SetServoPosition(servo-1, angle);
+    }
+
+
+    public ushort GetPSD(int psd)
+    {
+        return psdController.GetPSDValue(psd);
     }
 
     public float MeanError
@@ -223,63 +206,6 @@ public class BaseAckDrive : Robot, IMotors,
     public void SetVisualize(bool val)
     {
         psdController.VisualiseAllSensors(val);
-    }
-
-    public void VWSetVehicleSpeed(int linear, int angular)
-    {
-        wheelController.SetSpeedManual(linear / 1000.0f, angular);
-    }
-
-    public Speed VWGetVehicleSpeed()
-    {
-        return wheelController.GetSpeed();
-    }
-
-    public void VWDriveStraight(int distance, int speed)
-    {
-        wheelController.DriveStraight((float)distance / 1000, (float)speed / 1000);
-    }
-
-    public void VWDriveTurn(int rotation, int velocity)
-    {
-        wheelController.DriveTurn(rotation, velocity);
-    }
-
-    public void VWDriveCurve(int distance, int rotation, int velocity)
-    {
-        wheelController.DriveCurve((float)distance / 1000, rotation, (float)velocity / 1000);
-    }
-
-    public int VWDriveRemaining()
-    {
-        return wheelController.DriveRemaining();
-    }
-
-    public bool VWDriveDone()
-    {
-        return wheelController.DriveDone();
-    }
-
-    public int VWDriveStalled()
-    {
-        throw new NotImplementedException();
-    }
-
-    public void VWDriveWait(Action<RobotConnection> doneCallback)
-    {
-        driveDoneDelegate = doneCallback;
-        wheelController.DriveDoneDelegate = DriveDoneCallback;
-    }
-
-    public void ClearVWWait()
-    {
-        driveDoneDelegate = null;
-        wheelController.DriveDoneDelegate = null;
-    }
-
-    public void InitalizeVW(int[] args)
-    {
-        throw new NotImplementedException();
     }
 
     public byte[] GetCameraOutput(int camera)

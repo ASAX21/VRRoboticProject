@@ -170,6 +170,20 @@ public class RobotInspectorWindow : TabWindow {
         saltPepperRatioSlider.interactable = val;
     }
 
+    public void SaltPepperNoisePercent(float val)
+    {
+        if (!(robot is ICameras))
+            return;
+        (robot as ICameras).SPPixelPercent = val;
+    }
+
+    public void SaltPepperNoiseRatio(float val)
+    {
+        if (!(robot is ICameras))
+            return;
+        (robot as ICameras).SPBWRatio = val;
+    }
+
     public void GaussianNoiseToggle(bool val)
     {
 

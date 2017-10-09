@@ -21,6 +21,7 @@ namespace UnityEngine.UI.Extensions.ColorPicker
         private float _alpha = 1;
 
         public Marker currentMarker;
+        public ColorImage colorImage;
         public ColorChangedEvent onValueChanged = new ColorChangedEvent();
         public HSVChangedEvent onHSVChanged = new HSVChangedEvent();
 
@@ -48,6 +49,7 @@ namespace UnityEngine.UI.Extensions.ColorPicker
 
         private void Start()
         {
+            RGBChanged();
             SendChangedEvent();
         }
 
@@ -64,6 +66,7 @@ namespace UnityEngine.UI.Extensions.ColorPicker
         public void Open(Marker marker, Color mColor, UnityAction<Color> callback)
         {
             onValueChanged.RemoveAllListeners();
+            onValueChanged.AddListener(colorImage.ColorChanged);
             onValueChanged.AddListener(callback);
             currentMarker = marker;
             CurrentColor = mColor;

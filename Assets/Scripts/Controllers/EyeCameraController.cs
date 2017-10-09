@@ -17,8 +17,30 @@ public class EyeCameraController : MonoBehaviour {
     public float gaussStdDev;
 
 	public byte[] GetBytes(int camera)
-    {   
-		return cameras [camera].GetBytes ();
+    {
+        byte[] image = cameras[camera].GetBytes();
+        for (int i = 0; i < cameras[camera].resWidth; i++)
+        {
+            for (int j = 0; j < cameras[camera].resHeight; j++)
+            {
+                if (UnityEngine.Random.value < saltPepperPercent)
+                {
+                    if (UnityEngine.Random.value > saltPepperRatio)
+                    {
+                        image[(j * cameras[camera].resWidth + i) * 3] = 0xFF;
+                        image[(j * cameras[camera].resWidth + i) * 3 + 1] = 0xFF;
+                        image[(j * cameras[camera].resWidth + i) * 3 + 2] = 0xFF;
+                    }
+                    else
+                    {
+                        image[(j * cameras[camera].resWidth + i) * 3] = 0x00;
+                        image[(j * cameras[camera].resWidth + i) * 3 + 1] = 0x00;
+                        image[(j * cameras[camera].resWidth + i) * 3 + 2] = 0x00;
+                    }
+                }
+            }
+        }
+        return image;
     }
 
     public void SetResolution(int camera, int width, int height)

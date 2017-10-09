@@ -13,6 +13,9 @@ namespace RobotComponents
 
         public float value = 0;
 		public Camera cameraComponent;
+
+        public int resWidth;
+        public int resHeight;
    
         public RenderTexture rendTex;
         private Texture2D tex;
@@ -49,6 +52,8 @@ namespace RobotComponents
         // Change the resolution of the renderer
         public void SetResolution(int width, int height)
         {
+            resWidth = width;
+            resHeight = height;
             rendTex = new RenderTexture(width, height, 16);
             tex.Resize(rendTex.width, rendTex.height, TextureFormat.RGB24, false);
             rect.Set(0, 0, rendTex.width, rendTex.height);

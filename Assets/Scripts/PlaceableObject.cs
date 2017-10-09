@@ -43,8 +43,9 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
     // UI Variables
     public bool isWindowOpen = false;
 
-    private void Awake()
+    internal virtual void Awake()
     {
+        Debug.Log("Awake!");
         if (centreOfMass != Vector3.zero)
         {
             GetComponent<Rigidbody>().centerOfMass = centreOfMass;
