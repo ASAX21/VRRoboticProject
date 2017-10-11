@@ -64,6 +64,9 @@ public class RobotInspectorWindow : TabWindow {
 
     public Toggle toggleVWAccurate;
 
+    // Robot Components
+    private PSDController psdController;
+
     // Use this for initialization
     public void Initialize () {
         if(robot is ICameras)
@@ -89,7 +92,9 @@ public class RobotInspectorWindow : TabWindow {
 
         if(robot is IPSDSensors)
         {
-            if((robot as IPSDSensors).UseGlobalError)
+            if ((psdController = robot.GetComponent<PSDController>()) == null)
+                Debug.Log("No PSD Controller");
+            if ((robot as IPSDSensors).UseGlobalError)
             {
                 psdMeanError.text = PSDController.globalMean.ToString("N2");
                 psdStdDevError.text = PSDController.globalStdDev.ToString("N2");
@@ -128,9 +133,9 @@ public class RobotInspectorWindow : TabWindow {
     void Update () {
         if (robot is IPSDSensors)
         {
-            psdLeftValue.text = (robot as IPSDSensors).GetPSD(0).ToString();
-            psdFrontValue.text = (robot as IPSDSensors).GetPSD(1).ToString();
-            psdRightValue.text = (robot as IPSDSensors).GetPSD(2).ToString();
+            psdLeftValue.text = psdController.GetPSDValue(0).ToString();
+            psdFrontValue.text = psdController.GetPSDValue(1).ToString();
+            psdRightValue.text = psdController.GetPSDValue(2).ToString();
         }
         if (!SimManager.instance.isPaused)
         {

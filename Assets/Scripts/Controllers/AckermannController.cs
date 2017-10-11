@@ -55,8 +55,12 @@ public class AckermannController : MonoBehaviour
 
     public void SetTurnAngle(int angle)
     {
-        targetTurnAngle = angle;
+        int ratio = 128 - angle;
+        targetTurnAngle = ratio * maxSteeringAngle;
+        turnWheels[0].transform.rotation = Quaternion.Euler(new Vector3(0f, targetTurnAngle, 0f));
+        turnWheels[1].transform.rotation = Quaternion.Euler(new Vector3(0f, targetTurnAngle, 0f));
     }
+
     // Set the speed of a single motor
     public void SetMotorSpeed(int motor, int speed)
     {

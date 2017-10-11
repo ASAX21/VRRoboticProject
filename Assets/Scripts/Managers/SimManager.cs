@@ -30,6 +30,11 @@ public class SimManager : MonoBehaviour {
     // Record number of total objects, used to assign ID
     private int totalObjects = 0;
 
+    // List of Objects used to save state
+    private List<ObjectState> defaultState;
+    private int stateID = 0;
+    private bool worldChanged = false;
+
     private void Awake()
     {
         if (instance == null || instance == this)
@@ -42,7 +47,8 @@ public class SimManager : MonoBehaviour {
         {
             osManager = new WindowsOSManager();
         }
-        else if (Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXEditor){
+        else if (Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXEditor)
+        {
             osManager = new MacOSManager();
         }
     }
@@ -51,7 +57,7 @@ public class SimManager : MonoBehaviour {
 
         allRobots = new List<Robot>();
         allWorldObjects = new List<WorldObject>();
-        world = WorldBuilder.instance.CreateBox();
+        world = WorldBuilder.instance.CreateBox(2000,2000);
     }
 
     private void OnApplicationQuit()
@@ -181,6 +187,7 @@ public class SimManager : MonoBehaviour {
 
     public void DestroyWorld()
     {
+        worldChanged = true;
         RemoveAllWorldObjects();
         RemoveAllRobots();
         Destroy(world.gameObject);
@@ -189,11 +196,80 @@ public class SimManager : MonoBehaviour {
     // Remove all objects and load the original world (box)
     public void ResetWorld()
     {
+        CreateNewBox(2000, 2000);
+    }
+
+    public void CreateNewBox(int width, int height)
+    {
         DestroyWorld();
         allRobots = new List<Robot>();
         allWorldObjects = new List<WorldObject>();
         totalObjects = 0;
-        world = WorldBuilder.instance.CreateBox();
+        world = WorldBuilder.instance.CreateBox(width, height);
+    }
+
+    // Save a State
+    public void SaveState()
+    {
+        defaultState = new List<ObjectState>();
+        worldChanged = false;
+        stateID = 0;
+        foreach(Robot robot in allRobots)
+        {
+            ObjectState state = new ObjectState();
+            state.id = robot.objectID;
+            state.type = robot.type;
+            state.pos = (robot.transform.position.x * 1000f).ToString() + ":" +
+                (robot.transform.position.z * 1000f).ToString() + ":" +
+                robot.transform.rotation.eulerAngles.y.ToString();
+            stateID = robot.objectID > stateID ? robot.objectID : stateID;
+            defaultState.Add(state);
+        }
+        foreach(WorldObject wObj in allWorldObjects)
+        {
+            ObjectState state = new ObjectState();
+            state.id = wObj.objectID;
+            state.type = wObj.type;
+            state.pos = (wObj.transform.position.x * 1000f).ToString() + ":" +
+                (wObj.transform.position.z * 1000f).ToString() + ":" +
+                wObj.transform.rotation.eulerAngles.y.ToString();
+            stateID = wObj.objectID > stateID ? wObj.objectID : stateID;
+            defaultState.Add(state);
+        }
+    }
+
+    public void RestoreState()
+    {
+        if(worldChanged)
+        {
+            Debug.Log("Can't restore state: World changed");
+            return;
+        }
+        RemoveAllWorldObjects();
+        RemoveAllRobots();
+        foreach(ObjectState state in defaultState)
+        {
+            totalObjects = state.id - 1;
+            switch (state.type)
+            {
+                case "LabBot":
+                    ObjectManager.instance.AddLabBotToScene(state.pos);
+                    break;
+                case "S4":
+                    ObjectManager.instance.AddS4ToScene(state.pos);
+                    break;
+                case "Can":
+                    ObjectManager.instance.AddCokeCanToScene(state.pos);
+                    break;
+                case "Soccer":
+                    ObjectManager.instance.AddSoccerBallToScene(state.pos);
+                    break;
+                default:
+                    Debug.Log("Restore State: Unknown object type");
+                    break;
+            }
+        }
+        totalObjects = stateID;
     }
 
     // Write the World object to a wld file
@@ -311,4 +387,11 @@ public class SimManager : MonoBehaviour {
         if(OnResume != null) OnResume();
         isPaused = false;
     }
+}
+
+internal class ObjectState
+{
+    public int id;
+    public string type;
+    public string pos;
 }

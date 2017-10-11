@@ -128,7 +128,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         else
         {
             string[] pos = args.Split(':');
-            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
+                AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
         }
     }
     public void AddCokeCanToScene(string args)

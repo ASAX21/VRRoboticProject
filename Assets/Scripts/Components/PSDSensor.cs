@@ -7,13 +7,18 @@ namespace RobotComponents
     public class PSDSensor : MonoBehaviour
     {
         public float value = 0;
+        public float visTime = 0f;
         public LineRenderer lineRend;
-        public bool showRaycast = false;
+        public LayerMask mask;
 
-        public void EnableVisualise(bool val)
+        private void Update()
         {
-            showRaycast = val;
-            lineRend.enabled = val;
+            if (visTime > 0 && !lineRend.enabled)
+                lineRend.enabled = true;
+            else if (visTime <= float.Epsilon && lineRend.enabled)
+                lineRend.enabled = false;
+            else if (visTime > float.Epsilon)
+                visTime -= Time.deltaTime;
         }
 
         // Calculate sensor values at each frame
@@ -21,12 +26,10 @@ namespace RobotComponents
         {
             Vector3 forward = transform.TransformDirection(Vector3.forward);
             RaycastHit hit;
-			Debug.DrawRay (transform.position, forward,Color.green);
-            if (Physics.Raycast(transform.position, forward, out hit, 2000))
+            if (Physics.Raycast(transform.position, forward, out hit, 2000, mask))
             {
                 value = hit.distance * 1000;
-                if (showRaycast)
-                    lineRend.SetPosition(1, Vector3.forward * hit.distance);
+                lineRend.SetPosition(1, Vector3.forward * hit.distance);
             }
             else
             {

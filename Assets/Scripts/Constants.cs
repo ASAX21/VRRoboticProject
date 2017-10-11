@@ -22,6 +22,7 @@ public static class PacketType  {
 public static class Layers
 {
     public const int GroundLayer = 10;
+    public const int IgnoreLayer = 14;
 }
 
 // Static helper functions

@@ -54,9 +54,9 @@ public class BaseAckDrive : Robot, IMotors,
         base.Awake();
     }
 
-    public void TEST2()
+    public void TEST()
     {
-        this.PostBuild();
+        SetServo(0, 0);
     }
 
     // Configure size of robot - single box collider, and position of the slider located at the back

@@ -91,6 +91,7 @@ public class LabBot : Robot,
 
     public UInt16 GetPSD(int psd)
     {
+        psdController.TriggerPSDPulse(psd);
         return psdController.GetPSDValue(psd);
     }
 

@@ -31,6 +31,8 @@ public class UIManager : MonoBehaviour {
     GameObject aboutWindow;
     [SerializeField]
     SettingsWindow settingsWindow;
+    [SerializeField]
+    CreateWorldWindow createWorldWindow;
 
     [Header("Window Prefabs")]
     public RobotInspectorWindow robotInspectorWindowPrefab;
@@ -112,6 +114,12 @@ public class UIManager : MonoBehaviour {
     public void LoadWorldFile()
     {
         worldFileFinder.OpenFileSelection();
+    }
+
+    public void CreateWorld()
+    {
+        createWorldWindow.gameObject.SetActive(true);
+        createWorldWindow.transform.SetAsLastSibling();
     }
 
     public void LoadRobotFile()

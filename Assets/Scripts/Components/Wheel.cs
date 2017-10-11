@@ -58,7 +58,9 @@ namespace RobotComponents
         {
             if (canTurn)
             {
-                transform.localRotation = Quaternion.Euler(new Vector3(0, angle, 0));
+                JointSpring newSpring = wheelHingeJoint.spring;
+                newSpring.targetPosition = angle;
+                wheelHingeJoint.spring = newSpring;
             }
         }
         // Apply wheel rotation to visual representation

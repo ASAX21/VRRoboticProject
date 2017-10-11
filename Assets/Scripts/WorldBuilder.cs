@@ -41,14 +41,14 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 		return world;
 	}
 
-    public GameObject CreateBox()
+    public GameObject CreateBox(int width, int height)
     {
         world = new GameObject("World");
-        addFloor(0f, 0f, 2f, 2f);
-		addWall(new Vector2(0, 0), new Vector2(0, 2f));
-		addWall(new Vector2(0, 2f), new Vector2(2f, 2f));
-		addWall(new Vector2(2f, 0), new Vector2(2f, 2f));
-		addWall(new Vector2(0, 0), new Vector2(2f, 0));
+        addFloor(0f, 0f, height / 1000f, width / 1000f);
+		addWall(new Vector2(0, 0), new Vector2(0, width / 1000f));
+		addWall(new Vector2(0, width / 1000f), new Vector2(height / 1000f, width / 1000f));
+		addWall(new Vector2(height / 1000f, 0), new Vector2(height / 1000f, width / 1000f));
+		addWall(new Vector2(0, 0), new Vector2(height / 1000f, 0));
         return world;
     }
 

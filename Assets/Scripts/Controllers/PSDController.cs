@@ -14,6 +14,9 @@ public class PSDController : MonoBehaviour {
     // Use global or loca values for calculating
     public bool useGlobalError = true;
 
+    private static float pulseTime = 0.5f;
+    public bool showRaycast = false;
+
     // If error enabled is false, no error will be added
     // regardless of useGlobalError value
 
@@ -36,8 +39,7 @@ public class PSDController : MonoBehaviour {
 
     public void VisualiseAllSensors(bool val)
     {
-        foreach (PSDSensor psd in sensors)
-            psd.EnableVisualise(val);
+        showRaycast = val;
     }
 
     // Box-Muller Implementation for Random Normal number
@@ -51,6 +53,13 @@ public class PSDController : MonoBehaviour {
             return globalMean + globalStdDev * randStdNormal;
         else
             return normalMean + normalStdDev * randStdNormal;
+    }
+
+    // Trigger the visualization of psd sensor
+    public void TriggerPSDPulse(int psd)
+    {
+        if (showRaycast)
+            sensors[psd].visTime = pulseTime;
     }
 
     public UInt16 GetPSDValue(int psd)
