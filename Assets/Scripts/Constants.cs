@@ -28,6 +28,7 @@ public static class Layers
 // Static helper functions
 public static class Eyesim
 {
+    public const float Scale = 1000f;
     public static int ClampInt(int value, int min, int max)
     {
         return value < min ? min : (value > max ? max : value);

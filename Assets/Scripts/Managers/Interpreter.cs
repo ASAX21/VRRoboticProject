@@ -448,12 +448,9 @@ public class Interpreter {
     // Set Robot Pose
     private void Command_2(byte[] recv, RobotConnection conn)
     {
-        int xPos = BitConverter.ToInt32(recv, 1);
-        int yPos = BitConverter.ToInt32(recv, 5);
-        int phi = BitConverter.ToInt32(recv, 9);
-        xPos = IPAddress.NetworkToHostOrder(xPos);
-        yPos = IPAddress.NetworkToHostOrder(yPos);
-
+        int xPos =IPAddress.NetworkToHostOrder(BitConverter.ToInt32(recv, 1));
+        int yPos = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(recv, 5));
+        int phi = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(recv, 9));
         conn.robot.SetRobotPosition(xPos, yPos, phi);
     }
 
@@ -489,7 +486,6 @@ public class Interpreter {
         int x = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(recv, 5));
         int y = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(recv, 9));
         int phi = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(recv, 13));
-        Debug.Log("SET: " + x + " " + y + " " + phi);
 
         PlaceableObject obj = SimManager.instance.GetObjectByID(id);
         if (obj == null)

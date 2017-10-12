@@ -1,5 +1,8 @@
-﻿using System.Collections;
+﻿using System.Linq;
+using System.IO;
+using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 
 public class WorldBuilder : MonoBehaviour, IFileReceiver {
@@ -30,12 +33,18 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
         if (!io.Load (filepath))
 			return null;
 		switch (io.extension (filepath)) {
-		case ".wld":
-			processwld ();
-			break;
-		case ".maz":
-			processmaz ();	
-			break;
+		    case ".wld":
+			    processwld ();
+			    break;
+		    case ".maz":
+                float size;
+                string last = File.ReadAllLines(filepath).Last();
+                if (float.TryParse(last, out size))
+                    size = size / Eyesim.Scale;
+                else
+                    size = 0.36f;
+			    processmaz (size);	
+			    break;
 		}
         SimManager.instance.world = world;
 		return world;
@@ -44,11 +53,11 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
     public GameObject CreateBox(int width, int height)
     {
         world = new GameObject("World");
-        addFloor(0f, 0f, height / 1000f, width / 1000f);
-		addWall(new Vector2(0, 0), new Vector2(0, width / 1000f));
-		addWall(new Vector2(0, width / 1000f), new Vector2(height / 1000f, width / 1000f));
-		addWall(new Vector2(height / 1000f, 0), new Vector2(height / 1000f, width / 1000f));
-		addWall(new Vector2(0, 0), new Vector2(height / 1000f, 0));
+        addFloor(0f, 0f, height / Eyesim.Scale, width / Eyesim.Scale);
+		addWall(new Vector2(0, 0), new Vector2(0, width / Eyesim.Scale));
+		addWall(new Vector2(0, width / Eyesim.Scale), new Vector2(height / Eyesim.Scale, width / Eyesim.Scale));
+		addWall(new Vector2(height / Eyesim.Scale, 0), new Vector2(height / Eyesim.Scale, width / Eyesim.Scale));
+		addWall(new Vector2(0, 0), new Vector2(height / Eyesim.Scale, 0));
         return world;
     }
 
@@ -129,9 +138,8 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 		return point;
 	}
 
-	public void processmaz (){
+	public void processmaz (float size){
 		string line;
-		float size = 0.36f; //default wall length
 		float ypos = 0;
 		float xmax = 0;
 		float ymax = 0;

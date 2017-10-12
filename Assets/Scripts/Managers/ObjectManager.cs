@@ -100,6 +100,8 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
             SimManager.instance.AddRobotToScene(newObj as Robot);
         else if (newObj is WorldObject)
             SimManager.instance.AddWorldObjectToScene(newObj as WorldObject);
+        else if (newObj is Marker)
+            newObj.transform.rotation = Quaternion.Euler(new Vector3(90f, 0f, 0f));
         else
         {
             Debug.Log("Error adding objects: Unknown type");
@@ -175,7 +177,22 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         else
         {
             string[] pos = args.Split(':');
-            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
+            try
+            {
+                if (pos.Length == 5)
+                {
+                    float r = float.Parse(pos[2]) / 255;
+                    float g = float.Parse(pos[3]) / 255;
+                    float b = float.Parse(pos[4]) / 255;
+                    newObj.GetComponent<Marker>().SetColor(new Color(r, g, b));
+                }
+            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), 0);
+            }
+            catch (FormatException e)
+            {
+                Debug.Log("Object Manager: Format exception whilst parsing Marker input parameters: " + e);
+                return;
+            }
         }
     }
 

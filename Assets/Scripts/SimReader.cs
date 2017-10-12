@@ -37,7 +37,12 @@ public class SimReader: MonoBehaviour, IFileReceiver {
 			if (line.Length > 0) {
 				//check for hashtag
 				if (line [0] != '#') {
-					process (line);
+					if(!process(line))
+                    {
+                        Debug.Log("Error processing Sim file");
+                        SimManager.instance.CreateNewBox(2000, 2000);
+                        SimManager.instance.ResumeSimulation();
+                    }
 				}
 			}
 		}
@@ -46,22 +51,22 @@ public class SimReader: MonoBehaviour, IFileReceiver {
         return null;
 	}
 
-	public void process(string line){
+	public bool process(string line){
 		string[] args = line.Split (new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
 
-		switch (args[0].ToLower()) {
-		    case "robi":
-			/*build robot
-			RobotBuilder rb = gameObject.AddComponent<RobotBuilder> ();
-			GameObject robot = rb.ReceiveFile (ApplicationHelper.localDataPath() + args [1]);
-			robot.transform.position = new Vector3 (float.Parse(args[3])/1000,0,float.Parse(args[4])/1000);
-			/*run client*/
-			    break;
+        switch (args[0].ToLower()) {
+            case "robi":
+                /*build robot
+                RobotBuilder rb = gameObject.AddComponent<RobotBuilder> ();
+                GameObject robot = rb.ReceiveFile (ApplicationHelper.localDataPath() + args [1]);
+                robot.transform.position = new Vector3 (float.Parse(args[3])/1000,0,float.Parse(args[4])/1000);
+                /*run client*/
+                break;
             case "labbot":
                 if (args.Length < 4)
                 {
                     Debug.Log("Incorrect number of arguments");
-                    return;
+                    return false;
                 }
                 ObjectManager.instance.AddLabBotToScene(args[1] + ":" + args[2] + ":" + args[3]);
                 if (args.Length == 5)
@@ -84,7 +89,7 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                 if (args.Length != 4)
                 {
                     Debug.Log("Incorrect number of arguments");
-                    return;
+                    return false;
                 }
                 ObjectManager.instance.AddS4ToScene(args[1] + ":" + args[2] + ":" + args[3]);
                 if (args.Length == 5)
@@ -98,7 +103,7 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                             execPath = execPath.Trim('"');
                         }
                         executables.Add(execPath);
-                    }  
+                    }
                 }
                 break;
 
@@ -106,7 +111,7 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                 if (args.Length != 4)
                 {
                     Debug.Log("Incorrect number of arguments");
-                    return;
+                    return false;
                 }
                 ObjectManager.instance.AddCokeCanToScene(args[1] + ":" + args[2] + ":" + args[3]);
                 break;
@@ -115,7 +120,7 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                 if (args.Length != 4)
                 {
                     Debug.Log("Incorrect number of arguments");
-                    return;
+                    return false;
                 }
                 ObjectManager.instance.AddSoccerBallToScene(args[1] + ":" + args[2] + ":" + args[3]);
                 break;
@@ -136,15 +141,60 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                 {
                     print(Path.GetExtension(wldPath));
                     Debug.Log("Invalid path to world");
-                    return;
+                    return false;
                 }
 
                 WorldBuilder.instance.ReceiveFile(Path.GetFullPath(wldPath));
-			    break;
+                break;
+            case "obj":
+                string objPath;
+                if (args[1][0] == '"')
+                {
+                    objPath = Regex.Matches(line, "\"[^\"]*\"")[0].ToString();
+                    objPath = objPath.Trim('"');
+                }
+                else
+                    objPath = args[1];
+                string objName = Path.GetFileNameWithoutExtension(objPath);
+                Debug.Log(objName);
+                // If object doesn't exist, load it
+                if (ObjectManager.instance.customObjects.Find(x => x.name == objName) == null)
+                    ObjectManager.instance.ReceiveFile(objPath);
+                break;
+            case "marker":
+                string pos;
+                if (args.Length == 3)
+                    pos = args[1] + ":" + args[2];
+                else if (args.Length == 6)
+                    pos = args[1] + ":" + args[2] + ":" + args[3] + ":" + args[4] + ":" + args[5];
+                else
+                {
+                    Debug.Log("Load Sim: Invalid number of arguments for marker: " + args.Length);
+                    return false;
+                }
 
-		    default:
+                ObjectManager.instance.AddMarkerToScene(pos);       
+                break;
+
+            // Check if string is an object name
+            default:
+                int index = ObjectManager.instance.customObjects.FindIndex(x => x.name == args[0]);
+                if(index != -1)
+                {
+                    if(args.Length == 4)
+                    {
+                        string objPos = args[1] + ":" + args[2] + ":" + args[3];
+                        ObjectManager.instance.AddCustomObjectToScene(index, objPos);
+                    }
+                    else
+                    {
+                        Debug.Log("Load Sim: Object argument <" + args[0] + "> requires 3 arguments for position, found " + (args.Length - 1).ToString());
+                        break;
+                    }
+                }
 			    break;
 		}
+        return true;
 	}
 
     // Launch executables

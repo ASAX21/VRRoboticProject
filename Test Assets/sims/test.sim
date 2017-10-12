@@ -1,6 +1,0 @@
-#comment
-world "Test Assets\worlds\hallway-sm.wld"
-
-# botname x y phi
-LabBot  200  200  0
-LabBot      500  200  90

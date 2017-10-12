@@ -1,6 +1,8 @@
-#comment
-world "C:\UNIVERSITY\EyeSim\RobotVR\Test Assets\worlds\hallway-sm.wld"
+# Example sim file
 
-# botname x y phi
-LabBot 200 200 0 "C:\UNIVERSITY\Roblab\test.exe"
-LabBot 500 200 90 "C:\UNIVERSITY\Roblab\test.exe"
+
+world "C:\UNIVERSITY\EyeSim\RobotVR\Test Assets\4k.wld"
+
+marker 1000 1000 255 0 0
+marker 3000 3000 0 255 0
+marker 2000 2000 0 0 255

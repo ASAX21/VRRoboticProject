@@ -7,6 +7,9 @@ public class Marker : PlaceableObject, IPointerClickHandler
 {
     public MarkerWindow myWindow;
 
+    [SerializeField]
+    private SpriteRenderer rend;
+
     override public void OpenInfoWindow()
     {
         if (!isWindowOpen)
@@ -21,8 +24,6 @@ public class Marker : PlaceableObject, IPointerClickHandler
                 myWindow.gameObject.SetActive(true);
         }
     }
-
-    
 
     override public void OnPointerClick(PointerEventData eventData)
     {
@@ -39,5 +40,10 @@ public class Marker : PlaceableObject, IPointerClickHandler
         }
         isPlaced = true;
         isInit = true;
+    }
+
+    public void SetColor(Color color)
+    {
+        rend.color = color;
     }
 }

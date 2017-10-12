@@ -8,6 +8,7 @@ namespace RobotComponents
     {
         public Rigidbody rigidBody;
 		public HingeJoint wheelHingeJoint;
+        public HingeJoint turnHinge;
 		public CapsuleCollider wheelCollider;
 
         public float speed;
@@ -56,12 +57,12 @@ namespace RobotComponents
         // Set Angle (if can)
         public void SetAngle(float angle)
         {
-            if (canTurn)
-            {
-                JointSpring newSpring = wheelHingeJoint.spring;
-                newSpring.targetPosition = angle;
-                wheelHingeJoint.spring = newSpring;
-            }
+            if (!canTurn)
+                return;
+            Debug.Log("setting spring to " + angle);
+            JointSpring newSpring = turnHinge.spring;
+            newSpring.targetPosition = angle;
+            turnHinge.spring = newSpring;
         }
         // Apply wheel rotation to visual representation
 		public void updateRotation()

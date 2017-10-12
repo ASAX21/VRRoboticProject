@@ -1,0 +1,29 @@
+# Example sim file
+
+# Comments start with a #
+
+# Entries start with a Keyword, defining what action to take
+# All keywords are convereted into lowercase (ie LabBot is the
+# same as labbot)
+
+# Paths can be relative to the EyeSim home directory, which can
+# be modified in-app through the Settings menu, or absolute Paths
+# Paths with spaces in them MUST be ecapsulated by DOULBE QUOTES ""
+
+# World File - keyword "world" and path to .wld file
+world "Path\To\World.wld"
+
+# Object Files - Keyword "obj" followed by path to an .esObj file
+obj "Path\To\customObject.esObj"
+
+# Robots - List of robots to place in the scene
+# RobotType x y phi path
+LabBot 1000 1000 0 "Path\To\Executable"
+
+# Objects
+# Any custom object must first be specified ABOVE with the "obj" keyword
+# The name of the object is the filename of the .esObj file (without extension)
+
+# ObjectType x y phi path
+customObject 1000 1000 180
+customObject 1000 500 180

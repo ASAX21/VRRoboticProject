@@ -128,7 +128,7 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
     // Dangerous: Could result in extreme behaviour with physics engine
     public void SetRobotPosition(int x, int z, int phi)
     {
-        transform.SetPositionAndRotation(new Vector3(x, 0.1f, z), Quaternion.Euler(new Vector3(0f, phi, 0f)));
+        transform.SetPositionAndRotation(new Vector3(x / Eyesim.Scale, 0.02f, z / Eyesim.Scale), Quaternion.Euler(new Vector3(0f, phi, 0f)));
     }
 
     public void ToggleTrail()

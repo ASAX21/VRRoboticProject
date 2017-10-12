@@ -49,6 +49,7 @@ public class ObjectBuilder : MonoBehaviour
                             objPath = args[1];
                         customObj = OBJLoader.LoadOBJFile(objPath);
                         customObj.transform.position = new Vector3(0f, -20f, 0f);
+                        customObj.name = Path.GetFileNameWithoutExtension(filepath);
                         customObj.AddComponent<Rigidbody>().isKinematic = true;
                         break;
 

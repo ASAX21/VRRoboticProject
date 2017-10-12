@@ -83,7 +83,7 @@ public class UIManager : MonoBehaviour {
         worldBuilder = WorldBuilder.instance;
         robotBuilder = RobotBuilder.instance;
         simBuilder = SimReader.instance;
-		worldFileFinder.Initialise("*.wld", FileBrowserType.File, worldBuilder);
+		worldFileFinder.Initialise("*.*", FileBrowserType.File, worldBuilder);
         robotFileFinder.Initialise("*.robi", FileBrowserType.File, robotBuilder);
         simFileFinder.Initialise("*.sim", FileBrowserType.File, simBuilder);
         scriptFileFinder.Initialise("*.c", FileBrowserType.File, SimManager.instance.osManager);
