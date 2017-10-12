@@ -3,12 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class EyesimLogger : MonoBehaviour {
-
+public class EyesimLogger : MonoBehaviour
+{
+    // Storage for log messages displayed in-app
     public int maxLogEntries;
     public string[] currentLog;
     public int currentFront;
 
+    // Event to fire when log is changed
+    public delegate void LogUpdated();
+    event LogUpdated logUpdatedEvent;
+
+    // File access
     bool logfileOpen = false;
     FileStream logFile;
     StreamWriter logWriter;
@@ -55,5 +61,7 @@ public class EyesimLogger : MonoBehaviour {
         currentFront = (currentFront + 1) % maxLogEntries;
         if (logfileOpen)
             WriteToLogFile(text);
+        if(logUpdatedEvent != null)
+            logUpdatedEvent.Invoke();
     }
 }

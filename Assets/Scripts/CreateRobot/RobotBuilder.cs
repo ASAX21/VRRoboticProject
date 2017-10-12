@@ -54,20 +54,20 @@ public class RobotBuilder: MonoBehaviour, IFileReceiver{
 			    addModel(args[1]);
 			    break;
             case "axis":
-				addAxel(float.Parse(args[1])/1000, float.Parse(args[2])/1000);
+				addAxel(float.Parse(args[1])/Eyesim.Scale, float.Parse(args[2])/Eyesim.Scale);
                 break;
 		    case "psd":
-				Vector3 position = new Vector3 (-1*float.Parse(args[4])/1000,float.Parse(args[5])/1000,float.Parse(args[3])/1000);
+				Vector3 position = new Vector3 (-1*float.Parse(args[4])/Eyesim.Scale,float.Parse(args[5])/Eyesim.Scale,float.Parse(args[3])/Eyesim.Scale);
 				Quaternion rotation = Quaternion.Euler (0, -1*float.Parse(args[6]), 0);
 				addPSD(args[1], args[2], position, rotation);
 			    break;
 		    case "wheel":
                 Debug.Log("ADDING WHEEL");
-                addWheels(float.Parse (args [1]) / 1000f, float.Parse(args[2]), int.Parse(args[3]), float.Parse (args [4]) / 1000f, 0);
+                addWheels(float.Parse (args [1]) / Eyesim.Scale, float.Parse(args[2]), int.Parse(args[3]), float.Parse (args [4]) / Eyesim.Scale, 0);
 			    break;
 			case "camera":
                 Debug.Log("ADDING CAMERA");
-				addCamera(new Vector3(float.Parse (args [2]) / 1000f, float.Parse (args [3]) / 1000f, float.Parse (args [1]) / 1000f), 
+				addCamera(new Vector3(float.Parse (args [2]) / Eyesim.Scale, float.Parse (args [3]) / Eyesim.Scale, float.Parse (args [1]) / Eyesim.Scale), 
 						float.Parse (args [4]), float.Parse (args [5]), int.Parse (args [6]), int.Parse (args [7]));
 				break;
 		    default:

@@ -62,8 +62,8 @@ public class BaseAckDrive : Robot, IMotors,
     // Configure size of robot - single box collider, and position of the slider located at the back
     public void ConfigureSize(float length, float width, float height)
     {
-        robotBody.size = new Vector3(width / 1000f, height / 1000f, length / 1000f);
-        robotBunt.center = new Vector3(0f, 0.025f, 0.5f * length / 1000f * 0.6f);
+        robotBody.size = new Vector3(width / Eyesim.Scale, height / Eyesim.Scale, length / Eyesim.Scale);
+        robotBunt.center = new Vector3(0f, 0.025f, 0.5f * length / Eyesim.Scale * 0.6f);
     }
 
     public void ConfigureMass(float mass, Vector3 com)

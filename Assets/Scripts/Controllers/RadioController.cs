@@ -8,7 +8,7 @@ public class RadioController : MonoBehaviour {
 
     public int numMessages = 0;
     private int totalMessageLength = 0;
-    private int maxByteInQueue = 1000;
+    private int maxByteInQueue = 1024;
 
     public Action<byte[]> receivedCallback = null;
 

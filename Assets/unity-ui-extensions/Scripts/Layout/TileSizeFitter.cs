@@ -97,8 +97,8 @@ namespace UnityEngine.UI.Extensions
 #if UNITY_EDITOR
         protected override void OnValidate()
         {
-            m_TileSize.x = Mathf.Clamp(m_TileSize.x, 0.001f, 1000f);
-            m_TileSize.y = Mathf.Clamp(m_TileSize.y, 0.001f, 1000f);
+            m_TileSize.x = Mathf.Clamp(m_TileSize.x, 0.001f, Eyesim.Scale);
+            m_TileSize.y = Mathf.Clamp(m_TileSize.y, 0.001f, Eyesim.Scale);
             SetDirty();
         }
 #endif

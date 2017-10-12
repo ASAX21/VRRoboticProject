@@ -83,8 +83,8 @@ public class LabBot : Robot,
     {
         Int16[] pos = new Int16[3];
         float[] robPos = wheelController.GetPosition();
-        pos[0] = Convert.ToInt16(Math.Round(robPos[0] * 1000));
-        pos[1] = Convert.ToInt16(Math.Round(robPos[1] * 1000));
+        pos[0] = Convert.ToInt16(Math.Round(robPos[0] * Eyesim.Scale));
+        pos[1] = Convert.ToInt16(Math.Round(robPos[1] * Eyesim.Scale));
         pos[2] = Convert.ToInt16(Math.Round(robPos[2]));
         return pos;
     }
@@ -152,7 +152,7 @@ public class LabBot : Robot,
 
     public void VWSetVehicleSpeed(int linear, int angular)
     {
-        wheelController.SetSpeedManual(linear/1000.0f, angular);
+        wheelController.SetSpeedManual(linear / Eyesim.Scale, angular);
     }
 
     public Speed VWGetVehicleSpeed()
@@ -162,7 +162,7 @@ public class LabBot : Robot,
 
     public void VWDriveStraight(int distance, int speed)
     {
-        wheelController.DriveStraight((float)distance / 1000, (float)speed / 1000);     
+        wheelController.DriveStraight( distance / Eyesim.Scale, speed / Eyesim.Scale);     
     }
 
     public void VWDriveTurn(int rotation, int velocity)
@@ -172,7 +172,7 @@ public class LabBot : Robot,
 
     public void VWDriveCurve(int distance, int rotation, int velocity)
     {
-		wheelController.DriveCurve ((float) distance/1000, rotation, (float) velocity/1000);
+		wheelController.DriveCurve (distance/Eyesim.Scale, rotation, velocity/Eyesim.Scale);
     }
 
     public int VWDriveRemaining()

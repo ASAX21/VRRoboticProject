@@ -49,8 +49,8 @@ public class WorldObjInspectorWindow : MonoBehaviour {
     void Update () {
         if (!SimManager.instance.isPaused)
         {
-            objXValue.text = (1000f * worldObj.transform.position.x).ToString("0.##");
-            objYValue.text = (1000f * worldObj.transform.position.z).ToString("N2");
+            objXValue.text = (Eyesim.Scale * worldObj.transform.position.x).ToString("0.##");
+            objYValue.text = (Eyesim.Scale * worldObj.transform.position.z).ToString("N2");
             objPhiValue.text = worldObj.transform.rotation.eulerAngles.y.ToString("0.##");
         }
     }
@@ -58,14 +58,14 @@ public class WorldObjInspectorWindow : MonoBehaviour {
     public void SetXPosition(string x)
     {
         Vector3 pos = worldObj.transform.position;
-        pos.x = float.Parse(x) / 1000f;
+        pos.x = float.Parse(x) / Eyesim.Scale;
         worldObj.transform.position = pos;
     }
 
     public void SetYPosition(string y)
     {
         Vector3 pos = worldObj.transform.position;
-        pos.z = float.Parse(y) / 1000f;
+        pos.z = float.Parse(y) / Eyesim.Scale;
         worldObj.transform.position = pos;
     }
 

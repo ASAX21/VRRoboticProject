@@ -139,8 +139,8 @@ public class RobotInspectorWindow : TabWindow {
         }
         if (!SimManager.instance.isPaused)
         {
-            robotXValue.text = (1000f * robot.transform.position.x).ToString("N2");
-            robotZValue.text = (1000f * robot.transform.position.z).ToString("N2");
+            robotXValue.text = (Eyesim.Scale * robot.transform.position.x).ToString("N2");
+            robotZValue.text = (Eyesim.Scale * robot.transform.position.z).ToString("N2");
             robotPhiValue.text = robot.transform.rotation.eulerAngles.y.ToString("N2");
         }
         if(robot is ICameras)
@@ -290,14 +290,14 @@ public class RobotInspectorWindow : TabWindow {
     public void SetXPosition(string x)
     {
         Vector3 pos = robot.transform.position;
-        pos.x = float.Parse(x)/1000f;
+        pos.x = float.Parse(x)/Eyesim.Scale;
         robot.transform.position = pos;
     }
 
     public void SetYPosition(string y)
     {
         Vector3 pos = robot.transform.position;
-        pos.z = float.Parse(y)/1000f;
+        pos.z = float.Parse(y)/Eyesim.Scale;
         robot.transform.position = pos;
     }
 

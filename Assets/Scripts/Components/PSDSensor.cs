@@ -28,7 +28,7 @@ namespace RobotComponents
             RaycastHit hit;
             if (Physics.Raycast(transform.position, forward, out hit, 2000, mask))
             {
-                value = hit.distance * 1000;
+                value = hit.distance * Eyesim.Scale;
                 lineRend.SetPosition(1, Vector3.forward * hit.distance);
             }
             else

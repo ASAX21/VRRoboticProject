@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour {
 
     // Front windows must be closed before anything else can be interacted with
     // Front blocking panel prevents opening menus
+    public int preventMouseZoom = 0;
     public bool windowOpen = false;
     public GameObject blockScenePanel;
     public GameObject blockUIPanel;

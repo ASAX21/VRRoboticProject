@@ -169,15 +169,15 @@ public class WheelMotorController : MonoBehaviour
 
     public void SetPosition(float x, float y, float phi)
     {
-        Pos.x = y / 1000;
-        Pos.z = x / 1000;
+        Pos.x = y / Eyesim.Scale;
+        Pos.z = x / Eyesim.Scale;
         Rot = phi;
 
         Quaternion axisDir = Quaternion.AngleAxis(phi + mainBot.transform.eulerAngles.y, mainBot.transform.up);
         VWOrigin.position = mainBot.transform.position;
         VWOrigin.rotation = axisDir;
-        VWOrigin.Translate(-VWOrigin.forward * (x / 1000), Space.World);
-        VWOrigin.Translate(VWOrigin.right * (y / 1000), Space.World);
+        VWOrigin.Translate(-VWOrigin.forward * (x / Eyesim.Scale), Space.World);
+        VWOrigin.Translate(VWOrigin.right * (y / Eyesim.Scale), Space.World);
     }
 
     public float[] GetPosition()

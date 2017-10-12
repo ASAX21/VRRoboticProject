@@ -84,12 +84,12 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 					case "floor":
 						if (parameters.Count < 2)
 							break;
-						addFloor(0,0,parameters[0]/1000, parameters[1]/1000);
+						addFloor(0,0,parameters[0]/Eyesim.Scale, parameters[1]/Eyesim.Scale);
 						break;
 					case "width":
 						if (parameters.Count < 1)
 							break;
-						width = parameters [0]/1000;
+						width = parameters [0]/Eyesim.Scale;
 						if(width >= 0 && height >= 0){
 							addFloor(0,0,width, height);
 						}
@@ -97,7 +97,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 					case "height":
 						if (parameters.Count < 1)
 							break;
-						height = parameters [0]/1000;
+						height = parameters [0]/Eyesim.Scale;
 						if(width >= 0 && height >= 0){
 							addFloor(0,0,width, height);
 						}
@@ -107,7 +107,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 					case "push":
 						if (parameters.Count < 3)
 							break;
-						relativepos.Push (new Vector3 (parameters [0]/1000, parameters [1]/1000, -parameters[2]));
+						relativepos.Push (new Vector3 (parameters [0]/Eyesim.Scale, parameters [1]/Eyesim.Scale, -parameters[2]));
 						break;
 					case "pop":
 						if (relativepos.Count <= 1)
@@ -117,8 +117,8 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 					default:
 						if (parameters.Count < 4)
 							break;
-						Vector2 p1 = mapDomain (new Vector2 (parameters [0]/1000, parameters [1]/1000), relativepos);
-						Vector2 p2 = mapDomain (new Vector2 (parameters [2]/1000, parameters [3]/1000), relativepos);
+						Vector2 p1 = mapDomain (new Vector2 (parameters [0]/Eyesim.Scale, parameters [1]/Eyesim.Scale), relativepos);
+						Vector2 p2 = mapDomain (new Vector2 (parameters [2]/Eyesim.Scale, parameters [3]/Eyesim.Scale), relativepos);
 						addWall (p1, p2);
 						break;
 					}
@@ -146,7 +146,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 		while ((line = io.readLine()) != "ENDOFFILE") {
 			if (line.Length > 0) {
 				try{
-					size = float.Parse(line)/1000;
+					size = float.Parse(line)/Eyesim.Scale;
 				} catch {
 					for(int i = 0; i<line.Length; i++){
 						float xpos = ((i+1) / 2) * size;

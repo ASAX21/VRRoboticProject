@@ -94,7 +94,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     public void AddObjectToSceneAtPos(PlaceableObject newObj, float x, float y, float phi)
     {
         newObj.objectID = totalObjects++;
-        newObj.transform.position = new Vector3(x/1000f, 0.03f, y/1000f);
+        newObj.transform.position = new Vector3(x/Eyesim.Scale, 0.03f, y/Eyesim.Scale);
         newObj.transform.rotation = Quaternion.Euler(new Vector3(0f, phi, 0f));
         if (newObj is Robot)
             SimManager.instance.AddRobotToScene(newObj as Robot);
@@ -294,7 +294,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         // Determine final validitiy of placement option
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        bool valid = objectOnMouse.updateValidity(Physics.Raycast(ray, out hit, 1000f, groundMask));
+        bool valid = objectOnMouse.updateValidity(Physics.Raycast(ray, out hit, Eyesim.Scale, groundMask));
         if (valid && canPlaceObject)
         {
             // If it is new object, add to sim manager
@@ -323,7 +323,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
 			if(ground.Raycast(ray, out distance)){
 				Vector3 hitpoint = ray.GetPoint (distance);
 				objectOnMouse.transform.position = new Vector3(hitpoint.x, objectOnMouse.vertPlaceOffset + verticalOffset, hitpoint.z);
-                if(Physics.Raycast(ray, 1000f, groundMask))
+                if(Physics.Raycast(ray, Eyesim.Scale, groundMask))
                     objectOnMouse.updateValidity(true);
                 else
                     objectOnMouse.updateValidity(false);

@@ -171,8 +171,7 @@ public class ObjectBuilder : MonoBehaviour
                         {
                             Debug.Log("Unknown input: " + args[0]);
                             break;
-                        }
-                        
+                        }                  
                 }
             }
         }

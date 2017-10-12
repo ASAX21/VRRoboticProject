@@ -135,7 +135,7 @@ public class RobotLoader: MonoBehaviour, IFileReceiver {
                     {
                         if (!CheckArguments(args, 5, "mass"))
                             return false;
-                        Vector3 com = new Vector3(float.Parse(args[2]) / 1000f, float.Parse(args[3]) / 1000f, float.Parse(args[4]) / 1000f);
+                        Vector3 com = new Vector3(float.Parse(args[2]) / Eyesim.Scale, float.Parse(args[3]) / Eyesim.Scale, float.Parse(args[4]) / Eyesim.Scale);
                         robotConfig.ConfigureMass(float.Parse(args[1]), com);
                         return true;
                     }
@@ -178,7 +178,7 @@ public class RobotLoader: MonoBehaviour, IFileReceiver {
                     {
                         if (!CheckArguments(args, 7, "psd"))
                             return false;
-                        Vector3 pos = new Vector3(float.Parse(args[3]) / 1000f, float.Parse(args[4]) / 1000f, float.Parse(args[5]) / 1000f);
+                        Vector3 pos = new Vector3(float.Parse(args[3]) / Eyesim.Scale, float.Parse(args[4]) / Eyesim.Scale, float.Parse(args[5]) / Eyesim.Scale);
                         robotConfig.AddPSDSensor(int.Parse(args[2]), args[1], pos, float.Parse(args[6]));
                     }
                     return true;
@@ -195,7 +195,7 @@ public class RobotLoader: MonoBehaviour, IFileReceiver {
                     {
                         if (!CheckArguments(args, 8, "camera"))
                             return false;
-                        Vector3 pos = new Vector3(float.Parse(args[1]) / 1000f, float.Parse(args[2]) / 1000f, float.Parse(args[3]) / 1000f);
+                        Vector3 pos = new Vector3(float.Parse(args[1]) / Eyesim.Scale, float.Parse(args[2]) / Eyesim.Scale, float.Parse(args[3]) / Eyesim.Scale);
                         robotConfig.ConfigureCamera(pos, float.Parse(args[4]), float.Parse(args[5]), float.Parse(args[6]), float.Parse(args[7]));
                     }
                     return true;

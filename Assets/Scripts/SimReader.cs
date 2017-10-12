@@ -59,7 +59,7 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                 /*build robot
                 RobotBuilder rb = gameObject.AddComponent<RobotBuilder> ();
                 GameObject robot = rb.ReceiveFile (ApplicationHelper.localDataPath() + args [1]);
-                robot.transform.position = new Vector3 (float.Parse(args[3])/1000,0,float.Parse(args[4])/1000);
+                robot.transform.position = new Vector3 (float.Parse(args[3])/Eyesim.Scale,0,float.Parse(args[4])/Eyesim.Scale);
                 /*run client*/
                 break;
             case "labbot":

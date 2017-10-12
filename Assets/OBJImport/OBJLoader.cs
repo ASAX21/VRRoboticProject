@@ -158,7 +158,7 @@ public class OBJLoader
             else if (cmps[0] == "Ns")
             {
                 float Ns = float.Parse(cmps[1]);
-                Ns = (Ns / 1000);
+                Ns = (Ns / Eyesim.Scale);
                 currentMaterial.SetFloat("_Glossiness", Ns);
 
             }

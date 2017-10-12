@@ -2,10 +2,13 @@
 
 public class CameraControl: MonoBehaviour
 {
+    // Prevent zooming with scrollwheel if mouse is over a scrollable UI element
+    [Header("Ortho camera settings")]
     public bool isOrtho = false;
     public float orthoPanSens = 1f;
     public float orthoZoomSens = 2f;
 
+    [Header("Perspective camera settings")]
     public float mouseLookSens = 5.0f;
     public float keyboardLookSens = 10.0f;
 
@@ -67,7 +70,8 @@ public class CameraControl: MonoBehaviour
                     Camera.main.transform.parent.Translate(new Vector3(Input.GetAxis("Horizontal") * orthoPanSens / 10f, 0, Input.GetAxis("Vertical") * orthoPanSens / 10f));
                 }
                 // Zoom
-                Camera.main.orthographicSize -= Input.GetAxis("Mouse ScrollWheel") * orthoZoomSens;
+                if (UIManager.instance.preventMouseZoom == 0)
+                    Camera.main.orthographicSize -= Input.GetAxis("Mouse ScrollWheel") * orthoZoomSens;
                 if (Input.GetAxis("Keyboard Zoom") != 0)
                 {
                     Camera.main.orthographicSize -= Input.GetAxis("Keyboard Zoom") * orthoZoomSens;
@@ -120,7 +124,8 @@ public class CameraControl: MonoBehaviour
                 }
 
                 // Zoom
-                transform.position += transform.forward * zoomSens * Input.GetAxis("Mouse ScrollWheel");
+                if (UIManager.instance.preventMouseZoom == 0)
+                    transform.position += transform.forward * zoomSens * Input.GetAxis("Mouse ScrollWheel");
                 if (Input.GetAxis("Keyboard Zoom") != 0)
                 {
                     transform.position += transform.forward * zoomSens * Input.GetAxis("Keyboard Zoom");

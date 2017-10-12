@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using System;
 
 // Controller for the View Robots window; displays all robots currently in the scene
-public class ViewRobotsWindow : MonoBehaviour {
+public class ViewRobotsWindow : Window{
 
     public static ViewRobotsWindow instance { get; private set; }
 

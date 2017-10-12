@@ -100,8 +100,8 @@ public class SimManager : MonoBehaviour {
         if (obj == null)
             return null;
         int[] pose = new int[3];
-        pose[0] = (int)Mathf.Round(1000 * obj.transform.position.x);
-        pose[1] = (int)Mathf.Round(1000 * obj.transform.position.z);
+        pose[0] = (int)Mathf.Round(Eyesim.Scale * obj.transform.position.x);
+        pose[1] = (int)Mathf.Round(Eyesim.Scale * obj.transform.position.z);
         pose[2] = (int)obj.transform.eulerAngles.y;
         return pose;
     } 
@@ -219,8 +219,8 @@ public class SimManager : MonoBehaviour {
             ObjectState state = new ObjectState();
             state.id = robot.objectID;
             state.type = robot.type;
-            state.pos = (robot.transform.position.x * 1000f).ToString() + ":" +
-                (robot.transform.position.z * 1000f).ToString() + ":" +
+            state.pos = (robot.transform.position.x * Eyesim.Scale).ToString() + ":" +
+                (robot.transform.position.z * Eyesim.Scale).ToString() + ":" +
                 robot.transform.rotation.eulerAngles.y.ToString();
             stateID = robot.objectID > stateID ? robot.objectID : stateID;
             defaultState.Add(state);
@@ -230,8 +230,8 @@ public class SimManager : MonoBehaviour {
             ObjectState state = new ObjectState();
             state.id = wObj.objectID;
             state.type = wObj.type;
-            state.pos = (wObj.transform.position.x * 1000f).ToString() + ":" +
-                (wObj.transform.position.z * 1000f).ToString() + ":" +
+            state.pos = (wObj.transform.position.x * Eyesim.Scale).ToString() + ":" +
+                (wObj.transform.position.z * Eyesim.Scale).ToString() + ":" +
                 wObj.transform.rotation.eulerAngles.y.ToString();
             stateID = wObj.objectID > stateID ? wObj.objectID : stateID;
             defaultState.Add(state);
@@ -285,8 +285,8 @@ public class SimManager : MonoBehaviour {
             {
                 if(item.name == "floor")
                 {
-                    int floorWidth = (int)world.transform.Find("floor").localScale.x * 1000;
-                    int floorHeight = (int)world.transform.Find("floor").localScale.z * 1000;
+                    int floorWidth = (int) (world.transform.Find("floor").localScale.x * Eyesim.Scale);
+                    int floorHeight = (int) (world.transform.Find("floor").localScale.z * Eyesim.Scale);
                     writer.WriteLine("floor " + floorWidth + " " + floorHeight);
                 }
                 else if(item.name == "wall")
@@ -295,8 +295,8 @@ public class SimManager : MonoBehaviour {
                     float wallAngle = -item.eulerAngles.y;
                     Vector3 wallCentre = item.position;
                     Vector3 offset = new Vector3(Mathf.Cos(wallAngle * Mathf.PI / 180f) * wallLength, 0f, Mathf.Sin(wallAngle * Mathf.PI / 180f) * wallLength);
-                    Vector3 wall1 = (wallCentre + offset) * 1000;
-                    Vector3 wall2 = (wallCentre - offset) * 1000;
+                    Vector3 wall1 = (wallCentre + offset) * Eyesim.Scale;
+                    Vector3 wall2 = (wallCentre - offset) * Eyesim.Scale;
                     writer.WriteLine((int)wall1.x + " " + (int)wall1.z + " " + (int)wall2.x + " " + (int)wall2.z);
                 }           
             }
@@ -319,13 +319,13 @@ public class SimManager : MonoBehaviour {
             // Save robot locations
             writer.WriteLine("# Robots");
             foreach(Robot rob in allRobots)
-                writer.WriteLine(rob.type + " " + (int)Math.Floor(rob.transform.position.x * 1000f) + " " + (int)Math.Floor(rob.transform.position.z * 1000f) + " " + (int)Math.Floor(rob.transform.eulerAngles.y));
+                writer.WriteLine(rob.type + " " + (int)Math.Floor(rob.transform.position.x * Eyesim.Scale) + " " + (int)Math.Floor(rob.transform.position.z * Eyesim.Scale) + " " + (int)Math.Floor(rob.transform.eulerAngles.y));
             writer.WriteLine();
 
             // Save object locations
             writer.WriteLine("# Objects");
             foreach(WorldObject wObj in allWorldObjects)
-                writer.WriteLine(wObj.type + " " + (int)Math.Floor(wObj.transform.position.x * 1000f) + " " + (int)Math.Floor(wObj.transform.position.z * 1000f) + " " + (int)Math.Floor(wObj.transform.eulerAngles.y));
+                writer.WriteLine(wObj.type + " " + (int)Math.Floor(wObj.transform.position.x * Eyesim.Scale) + " " + (int)Math.Floor(wObj.transform.position.z * Eyesim.Scale) + " " + (int)Math.Floor(wObj.transform.eulerAngles.y));
             ResumeSimulation();
         }
     }

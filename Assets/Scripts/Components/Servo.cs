@@ -34,7 +34,7 @@ namespace RobotComponents
         {
             hinge = GetComponent<HingeJoint>();
             motor = hinge.motor;
-            motor.force = 100000;
+            motor.force = 10000f;
             hinge.useMotor = true;
             motor.targetVelocity = 0;
             motor.freeSpin = true;

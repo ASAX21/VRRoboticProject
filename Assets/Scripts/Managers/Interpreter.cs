@@ -431,8 +431,8 @@ public class Interpreter {
     // Get Robot Pose
     private void Command_1(byte[] recv, RobotConnection conn)
     {
-        int xPos = (int) Mathf.Round( 1000 * conn.robot.transform.position.x);
-        int yPos = (int) Mathf.Round( 1000 * conn.robot.transform.position.z);
+        int xPos = (int) Mathf.Round( Eyesim.Scale * conn.robot.transform.position.x);
+        int yPos = (int) Mathf.Round( Eyesim.Scale * conn.robot.transform.position.z);
         int phi = (int)Mathf.Round((360 - conn.robot.transform.rotation.eulerAngles.y) % 360);
 
         Packet p = new Packet();
@@ -492,7 +492,7 @@ public class Interpreter {
             Debug.Log("Set Position: Invalid ID argument");
         else
         {
-            obj.transform.position = new Vector3(x / 1000f, obj.defaultVerticalOffset, y / 1000f);
+            obj.transform.position = new Vector3(x / Eyesim.Scale, obj.defaultVerticalOffset, y / Eyesim.Scale);
             obj.transform.rotation = Quaternion.Euler(new Vector3(0, phi, 0));
         }
         

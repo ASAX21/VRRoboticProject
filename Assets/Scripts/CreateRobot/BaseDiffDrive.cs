@@ -48,27 +48,28 @@ public class BaseDiffDrive : Robot, IMotors,
     Action<RobotConnection> driveDoneDelegate;
     Action<RobotConnection, byte[]> radioMessageDelegate;
 
-    private void Awake()
+    internal override void Awake()
     {
         psdController.sensors = new List<PSDSensor>();
+        base.Awake();
     }
     public void TEST()
     {
         //   PSD_FRONT 1 30 0 80 0
-        Vector3 p = new Vector3(30 / 1000f, 50/1000f, 80 / 1000f);
+        Vector3 p = new Vector3(30 / Eyesim.Scale, 50/Eyesim.Scale, 80 / Eyesim.Scale);
         AddPSDSensor(1, "PSD_FRONT", p, 0f);
     }
 
     public void TEST2()
     {
-        ConfigureCamera(new Vector3(0, 50/1000f, 70/ 1000f), 0f, 0f, 90f, 90f);
+        ConfigureCamera(new Vector3(0, 50/Eyesim.Scale, 70/ Eyesim.Scale), 0f, 0f, 90f, 90f);
     }
 
     // Configure size of robot - single box collider, and position of the slider located at the back
     public void ConfigureSize(float length, float width, float height)
     {
-        robotBody.size = new Vector3(width / 1000f, height / 1000f, length / 1000f);
-        robotBunt.center = new Vector3(0f, 0.025f, 0.5f * length / 1000f * 0.6f);
+        robotBody.size = new Vector3(width / Eyesim.Scale, height / Eyesim.Scale, length / Eyesim.Scale);
+        robotBunt.center = new Vector3(0f, 0.025f, 0.5f * length / Eyesim.Scale * 0.6f);
     }
 
     public void ConfigureMass(float mass, Vector3 com)
@@ -80,22 +81,22 @@ public class BaseDiffDrive : Robot, IMotors,
     // Configure axel height (vertical into robot) and position along z-axis (forward)
     public void ConfigureAxel(float axelHeight, float axelPos, AxelType type)
     {
-        axel.localPosition = new Vector3(0f, axelHeight / 1000f, axelPos / 1000f);
+        axel.localPosition = new Vector3(0f, axelHeight / Eyesim.Scale, axelPos / Eyesim.Scale);
     }
 
     public void ConfigureWheels(float diameter, float maxVel, int ticksPerRev, float track)
     {
         Wheel leftWheel = wheelController.wheels[0];
-        leftWheel.GetComponent<HingeJoint>().connectedAnchor = new Vector3(-track / 1000f, axel.localPosition.y, axel.localPosition.z);
-        leftWheel.transform.localPosition = new Vector3(-track / 1000f, 0f, 0f);
-        leftWheel.transform.localScale = new Vector3(diameter / 1000f, diameter / 1000f, diameter / 1000f);
+        leftWheel.GetComponent<HingeJoint>().connectedAnchor = new Vector3(-track / Eyesim.Scale, axel.localPosition.y, axel.localPosition.z);
+        leftWheel.transform.localPosition = new Vector3(-track / Eyesim.Scale, 0f, 0f);
+        leftWheel.transform.localScale = new Vector3(diameter / Eyesim.Scale, diameter / Eyesim.Scale, diameter / Eyesim.Scale);
         leftWheel.encoderRate = ticksPerRev;
         leftWheel.maxSpeed = maxVel;
 
         Wheel rightWheel = wheelController.wheels[1];
-        rightWheel.GetComponent<HingeJoint>().connectedAnchor = new Vector3(track / 1000f, axel.localPosition.y, axel.localPosition.z);
-        rightWheel.transform.localPosition = new Vector3(track / 1000f, 0f, 0f);
-        rightWheel.transform.localScale = new Vector3(diameter / 1000f, diameter / 1000f, diameter / 1000f);
+        rightWheel.GetComponent<HingeJoint>().connectedAnchor = new Vector3(track / Eyesim.Scale, axel.localPosition.y, axel.localPosition.z);
+        rightWheel.transform.localPosition = new Vector3(track / Eyesim.Scale, 0f, 0f);
+        rightWheel.transform.localScale = new Vector3(diameter / Eyesim.Scale, diameter / Eyesim.Scale, diameter / Eyesim.Scale);
         rightWheel.encoderRate = ticksPerRev;
         rightWheel.maxSpeed = maxVel;
     }
@@ -168,8 +169,8 @@ public class BaseDiffDrive : Robot, IMotors,
     {
         Int16[] pos = new Int16[3];
         float[] robPos = wheelController.GetPosition();
-        pos[0] = Convert.ToInt16(Math.Round(robPos[0] * 1000));
-        pos[1] = Convert.ToInt16(Math.Round(robPos[1] * 1000));
+        pos[0] = Convert.ToInt16(Math.Round(robPos[0] * Eyesim.Scale));
+        pos[1] = Convert.ToInt16(Math.Round(robPos[1] * Eyesim.Scale));
         pos[2] = Convert.ToInt16(Math.Round(robPos[2]));
         return pos;
     }
@@ -239,7 +240,7 @@ public class BaseDiffDrive : Robot, IMotors,
 
     public void VWSetVehicleSpeed(int linear, int angular)
     {
-        wheelController.SetSpeedManual(linear / 1000.0f, angular);
+        wheelController.SetSpeedManual(linear / Eyesim.Scale, angular);
     }
 
     public Speed VWGetVehicleSpeed()
@@ -249,7 +250,7 @@ public class BaseDiffDrive : Robot, IMotors,
 
     public void VWDriveStraight(int distance, int speed)
     {
-        wheelController.DriveStraight((float)distance / 1000, (float)speed / 1000);
+        wheelController.DriveStraight((float)distance / Eyesim.Scale, (float)speed / Eyesim.Scale);
     }
 
     public void VWDriveTurn(int rotation, int velocity)
@@ -259,7 +260,7 @@ public class BaseDiffDrive : Robot, IMotors,
 
     public void VWDriveCurve(int distance, int rotation, int velocity)
     {
-        wheelController.DriveCurve((float)distance / 1000, rotation, (float)velocity / 1000);
+        wheelController.DriveCurve((float)distance / Eyesim.Scale, rotation, (float)velocity / Eyesim.Scale);
     }
 
     public int VWDriveRemaining()
