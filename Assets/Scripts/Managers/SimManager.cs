@@ -167,6 +167,8 @@ public class SimManager : MonoBehaviour {
         if (robot.myWindow != null)
             Destroy(robot.myWindow.gameObject);
         // Remove the object from the scene
+        if (robot is IVWDrivable)
+            (robot as IVWDrivable).RemoveVWOrigin();
         Destroy(robot.gameObject);
         ViewRobotsWindow.instance.UpdateRobotList();
     }

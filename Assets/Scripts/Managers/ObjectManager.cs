@@ -103,7 +103,9 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     {
         newObj.objectID = totalObjects++;
         newObj.transform.position = new Vector3(x/Eyesim.Scale, newObj.defaultVerticalOffset, y/Eyesim.Scale);
+        Debug.Log("POSITION: " + newObj.defaultVerticalOffset);
         newObj.transform.rotation = Quaternion.Euler(new Vector3(0f, phi, 0f));
+        newObj.isInit = true;
         if (newObj is Robot)
             SimManager.instance.AddRobotToScene(newObj as Robot);
         else if (newObj is WorldObject)
@@ -139,7 +141,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         else
         {
             string[] pos = args.Split(':');
-                AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
+            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
         }
     }
 
@@ -156,7 +158,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
                 newObj = Instantiate(cokeCanPrefab).GetComponent<PlaceableObject>();
                 newObj.name = "Can";
                 break;
-            case "sovver":
+            case "soccer":
                 newObj = Instantiate(soccerBallPrefab).GetComponent<PlaceableObject>();
                 newObj.name = "Soccer Ball";
                 break;

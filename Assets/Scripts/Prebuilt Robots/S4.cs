@@ -201,10 +201,15 @@ IRadio
 
     public void InitalizeVW(int[] args)
 	{
-		throw new NotImplementedException();
+        return;
 	}
 
-	public byte[] GetCameraOutput(int camera)
+    public void RemoveVWOrigin()
+    {
+        Destroy(wheelController.VWOrigin.gameObject);
+    }
+
+    public byte[] GetCameraOutput(int camera)
 	{
 		return eyeCamController.GetBytes(camera);
 	}

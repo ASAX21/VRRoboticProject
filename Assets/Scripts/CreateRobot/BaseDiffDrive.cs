@@ -290,6 +290,11 @@ public class BaseDiffDrive : Robot, IMotors,
         wheelController.DriveDoneDelegate = null;
     }
 
+    public void RemoveVWOrigin()
+    {
+        Destroy(wheelController.VWOrigin.gameObject);
+    }
+
     public void InitalizeVW(int[] args)
     {
         throw new NotImplementedException();
