@@ -51,13 +51,20 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     public float verticalOffset;
     private bool canPlaceObject = false;
 
+    // Mouse raycast variables
+    Ray ray;
+    RaycastHit hit;
+
     // Enviroment placement variables
-    public GameObject testBeacon;
     private GameObject wallBeingPlaced = null;
-    private bool isWallBeingPlaced = false;
-    private bool wallStarted = false;
+    public bool isWallBeingPlaced = false;
+    public bool wallStarted = false;
     public Vector3 wallStart;
     public Vector3 mousePos;
+
+    public bool removingWalls = false;
+    public delegate void CancelRemoveWallsDelegate();
+    public CancelRemoveWallsDelegate cancelRemoveEvent;
 
     private Plane ground;
 
@@ -121,7 +128,8 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     public void AddCustomObjectToScene(int index, string args)
     {
         if (isMouseOccupied)
-            return;
+            FreeMouse();
+
         PlaceableObject newObj = Instantiate(customObjects[index]).GetComponent<PlaceableObject>();
         newObj.gameObject.SetActive(true);
         newObj.name = customObjects[index].name;
@@ -133,13 +141,48 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
                 AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
         }
     }
+
+    public void AddWorldObjectToScene(string type, string args)
+    {
+        if (isMouseOccupied)
+            FreeMouse();
+
+        PlaceableObject newObj;
+        switch (type)
+        {
+            case "Can":
+                newObj = Instantiate(cokeCanPrefab).GetComponent<PlaceableObject>();
+                newObj.name = "Can";
+                break;
+            case "Soccer":
+                newObj = Instantiate(cokeCanPrefab).GetComponent<PlaceableObject>();
+                newObj.name = "Soccer";
+                break;
+            case "Crate":
+                newObj = Instantiate(cokeCanPrefab).GetComponent<PlaceableObject>();
+                newObj.name = "Crate";
+                break;
+            default:
+                Debug.Log("Unknown object type");
+                return;
+        }
+        
+        if (args.Length == 0)
+            AddObjectToSceneOnMouse(newObj);
+        else
+        {
+            string[] pos = args.Split(':');
+            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
+        }
+    }
+
     public void AddCokeCanToScene(string args)
     {
         if (isMouseOccupied)
-            return;
+            FreeMouse();
 
         PlaceableObject newObj = Instantiate(cokeCanPrefab).GetComponent<PlaceableObject>();
-        newObj.name = "Coke Can";
+        newObj.name = "Can";
         if(args.Length == 0)
             AddObjectToSceneOnMouse(newObj);
         else
@@ -152,7 +195,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     public void AddSoccerBallToScene(string args)
     {
         if (isMouseOccupied)
-            return;
+            FreeMouse();
 
         PlaceableObject newObj = Instantiate(soccerBallPrefab).GetComponent<PlaceableObject>();
         newObj.name = "Soccer Ball";
@@ -168,7 +211,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     public void AddMarkerToScene(string args)
     {
         if (isMouseOccupied)
-            return;
+            FreeMouse();
 
         PlaceableObject newObj = Instantiate(markerPrefab).GetComponent<PlaceableObject>();
         newObj.name = "Marker";
@@ -199,7 +242,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     public void AddLabBotToScene(string args)
     {
         if (isMouseOccupied)
-            return;
+            FreeMouse();
 
         PlaceableObject newObj = Instantiate(labBotPrefab).GetComponent<PlaceableObject>();
         newObj.name = "LabBot";
@@ -215,7 +258,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
 	public void AddS4ToScene(string args)
 	{
         if (isMouseOccupied)
-            return;
+            FreeMouse();
 
         PlaceableObject newObj = Instantiate(S4Prefab).GetComponent<PlaceableObject>();
 		newObj.name = "S4";
@@ -228,11 +271,35 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         }
     }
 
+    public void DeleteObjectOnMouse()
+    {
+        if (!objectOnMouse.isInit)
+        {
+            Destroy(objectOnMouse.gameObject);
+            objectOnMouse = null;
+            isMouseOccupied = false;
+        }
+        else
+        {
+            if (objectOnMouse is Robot)
+                SimManager.instance.RemoveRobotFromScene(objectOnMouse as Robot);
+            else if (objectOnMouse is WorldObject)
+                SimManager.instance.RemoveWorldObjectFromScene(objectOnMouse as WorldObject);
+            else
+            {
+                Debug.Log("Delete on mouse failed");
+                return;
+            }
+            objectOnMouse = null;
+            isMouseOccupied = false;
+        }
+    }
+
     // ----- Add World Elements -----
     public void AddWallToScene()
     {
         if (isMouseOccupied)
-            return;
+            FreeMouse();
 
         isMouseOccupied = true;
         isWallBeingPlaced = true;
@@ -257,19 +324,37 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         wallStarted = false;
         canPlaceObject = false;
         wallBeingPlaced = null;
+        isWallBeingPlaced = false;
         isMouseOccupied = false;
     }
 
     public void CancelWallPlacement()
     {
         if (!isWallBeingPlaced)
-            return;
+            FreeMouse();
         Destroy(wallBeingPlaced);
         wallStarted = false;
+        isWallBeingPlaced = false;
         canPlaceObject = false;
         wallBeingPlaced = null;
         isMouseOccupied = false;
+    }
 
+    public void RemoveWall()
+    {
+        if (isMouseOccupied)
+            FreeMouse();
+
+        isMouseOccupied = true;
+        removingWalls = true;
+    }
+
+    public void CancelRemoveWall()
+    {
+        removingWalls = false;
+        isMouseOccupied = false;
+        if (cancelRemoveEvent != null)
+            cancelRemoveEvent.Invoke();
     }
         
     // ----- Handle placement of object via mouse -----
@@ -292,8 +377,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     public void TryPlaceObject()
     {
         // Determine final validitiy of placement option
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         bool valid = objectOnMouse.updateValidity(Physics.Raycast(ray, out hit, Eyesim.Scale, groundMask));
         if (valid && canPlaceObject)
         {
@@ -313,12 +397,22 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         }
     }
 
+    private void FreeMouse()
+    {
+        if (objectOnMouse != null)
+            DeleteObjectOnMouse();
+        else if (isWallBeingPlaced)
+            CancelWallPlacement();
+        else if (removingWalls)
+            CancelRemoveWall();
+    }
+
     private void Update()
     {
 		if (objectOnMouse != null)
         {
             // Anchor object to the ground plane
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			float distance;
 			if(ground.Raycast(ray, out distance)){
 				Vector3 hitpoint = ray.GetPoint (distance);
@@ -330,42 +424,17 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
             }
             // Left click
             if (Input.GetMouseButtonDown(0))
-            {
                 TryPlaceObject();
-            }
             // Escape - If object isn't initalized (has never been placed), destroy it.
             else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Delete))
-            {
-                if (!objectOnMouse.isInit)
-                {
-                    Destroy(objectOnMouse.gameObject);
-                    objectOnMouse = null;
-                    isMouseOccupied = false;
-                }
-                else
-                {
-                    if (objectOnMouse is Robot)
-                        SimManager.instance.RemoveRobotFromScene(objectOnMouse as Robot);
-                    else if (objectOnMouse is WorldObject)
-                        SimManager.instance.RemoveWorldObjectFromScene(objectOnMouse as WorldObject);
-                    else
-                    {
-                        Debug.Log("Delete on mouse failed");
-                        return;
-                    }
-                    objectOnMouse = null;
-                    isMouseOccupied = false;
-                }
-            }
+                DeleteObjectOnMouse();
             // Rotate using - and + keys
             else
-            {
                 objectOnMouse.transform.Rotate(new Vector3(0, Input.GetAxisRaw("Rotate Object") * 2f, 0));
-            }
         }
         else if (isWallBeingPlaced)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             float distance;
             if (ground.Raycast(ray, out distance))
                 mousePos = ray.GetPoint(distance);
@@ -403,6 +472,11 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
                 wallBeingPlaced.transform.localScale = new Vector3(Vector3.Distance(wallStart, mousePos), 0.3f, 0.01f);
                 wallBeingPlaced.transform.eulerAngles = new Vector3(0, Mathf.Atan2(mousePos.x - wallStart.x, mousePos.z - wallStart.z) * 180 / Mathf.PI + 90F, 0);
             }
+        }
+        else if(removingWalls)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+                CancelRemoveWall();
         }
     }
 }

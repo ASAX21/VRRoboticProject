@@ -27,7 +27,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
 	public int collisionCount = 0;
 
     public float defaultVerticalOffset = 0f;
-    public float vertPlaceOffset = 0.03f;
+    public float vertPlaceOffset = 0.01f;
 
     // Physics
     public Vector3 centreOfMass;

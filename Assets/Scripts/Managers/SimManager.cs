@@ -53,11 +53,33 @@ public class SimManager : MonoBehaviour {
         }
     }
 
-    private void Start() {
+    // Check for command line arguments (input sim file)
+    private bool GetCommandLineArguments()
+    {
+        string[] args = Environment.GetCommandLineArgs();
 
-        allRobots = new List<Robot>();
-        allWorldObjects = new List<WorldObject>();
-        world = WorldBuilder.instance.CreateBox(2000,2000);
+        // Check if exactly one extra argument is given (simFile)
+        if (args.Length != 2)
+            return false;
+
+        string simPath = args[1];
+
+        if (Path.GetExtension(simPath) != ".sim" || !File.Exists(simPath))
+            return false;
+        else
+            SimReader.instance.ReceiveFile(simPath);
+
+        return true;
+    }
+
+    private void Start()
+    {
+        if (!GetCommandLineArguments())
+        {
+            allRobots = new List<Robot>();
+            allWorldObjects = new List<WorldObject>();
+            world = WorldBuilder.instance.CreateBox(2000, 2000);
+        }
     }
 
     private void OnApplicationQuit()
@@ -196,7 +218,7 @@ public class SimManager : MonoBehaviour {
     // Remove all objects and load the original world (box)
     public void ResetWorld()
     {
-        CreateNewBox(2000, 2000);
+        CreateNewBox((int) (2 * Eyesim.Scale),  (int) (2 * Eyesim.Scale) );
     }
 
     public void CreateNewBox(int width, int height)

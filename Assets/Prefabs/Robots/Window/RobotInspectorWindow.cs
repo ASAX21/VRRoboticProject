@@ -46,7 +46,6 @@ public class RobotInspectorWindow : TabWindow {
     [SerializeField]
     private Input gaussMeanInput, gaussStdDevInput;
 
-
     // Position variables
     [Header("Driving")]
     public InputField robotXValue;
@@ -55,6 +54,9 @@ public class RobotInspectorWindow : TabWindow {
     public Text vwXtext;
     public Text vwYtext;
     public Text vwPhiText;
+
+    [Header("Control")]
+    public Text controlName;
 
     // Icon Images
     [Header("Icons")]
@@ -114,6 +116,8 @@ public class RobotInspectorWindow : TabWindow {
             vwYtext.text = pos[1].ToString("N2");
             vwPhiText.text = pos[2].ToString("N2");
         }
+
+        controlName.text = robot.controlBinaryName;
         
         SaltPepperNoiseToggle(false);
         GaussianNoiseToggle(false);

@@ -118,7 +118,7 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
 
     public RobotConnection myConnection = null;
     private Process controlBinary = null;
-    public string controlBinaryPath = "";
+    public string controlBinaryName = "";
     public TrailRenderer trail;
 
     // Robot Info Window
@@ -179,7 +179,9 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
         try
         {
             controlBinary.Start();
-            controlBinaryPath = Path.GetFileName(filepath);
+            controlBinaryName = Path.GetFileName(filepath);
+            if (myWindow != null)
+                myWindow.controlName.text = controlBinaryName;
         }
         catch (Win32Exception w)
         {
@@ -217,7 +219,9 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
                 UnityEngine.Debug.Log("Already Closed");
             }
             controlBinary = null;
-            controlBinaryPath = "";
+            controlBinaryName = "";
+            if (myWindow != null)
+                myWindow.controlName.text = controlBinaryName;
         }
         else
         {
