@@ -47,7 +47,8 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 			    break;
 		}
         SimManager.instance.world = world;
-		return world;
+        SimManager.instance.worldChanged = true;
+        return world;
 	}
 
     public GameObject CreateBox(int width, int height)
@@ -58,6 +59,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 		addWall(new Vector2(0, width / Eyesim.Scale), new Vector2(height / Eyesim.Scale, width / Eyesim.Scale));
 		addWall(new Vector2(height / Eyesim.Scale, 0), new Vector2(height / Eyesim.Scale, width / Eyesim.Scale));
 		addWall(new Vector2(0, 0), new Vector2(height / Eyesim.Scale, 0));
+        SimManager.instance.worldChanged = true;
         return world;
     }
 

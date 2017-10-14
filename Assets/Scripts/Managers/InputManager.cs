@@ -10,8 +10,7 @@ public class InputManager : MonoBehaviour {
 	void Update () {
 		if(Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.R))
         {
-            SimManager.instance.RemoveAllWorldObjects();
-            SimManager.instance.RemoveAllRobots();
+            SimManager.instance.RestoreState();
         }
 	}
 }

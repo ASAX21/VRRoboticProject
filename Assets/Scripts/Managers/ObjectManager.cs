@@ -22,6 +22,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     [Header("Prefab World Ojbects")]
     public GameObject cokeCanPrefab;
     public GameObject soccerBallPrefab;
+    public GameObject cratePrefab;
     public GameObject markerPrefab;
 
     // Robot Prefabs
@@ -101,7 +102,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     public void AddObjectToSceneAtPos(PlaceableObject newObj, float x, float y, float phi)
     {
         newObj.objectID = totalObjects++;
-        newObj.transform.position = new Vector3(x/Eyesim.Scale, 0.03f, y/Eyesim.Scale);
+        newObj.transform.position = new Vector3(x/Eyesim.Scale, newObj.defaultVerticalOffset, y/Eyesim.Scale);
         newObj.transform.rotation = Quaternion.Euler(new Vector3(0f, phi, 0f));
         if (newObj is Robot)
             SimManager.instance.AddRobotToScene(newObj as Robot);
@@ -142,25 +143,34 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         }
     }
 
-    public void AddWorldObjectToScene(string type, string args)
+    // Callback for creating objects of a known type
+    public void AddPredefinedObjectToScene(string type, string args)
     {
         if (isMouseOccupied)
             FreeMouse();
 
         PlaceableObject newObj;
-        switch (type)
+        switch (type.ToLower())
         {
-            case "Can":
+            case "can":
                 newObj = Instantiate(cokeCanPrefab).GetComponent<PlaceableObject>();
                 newObj.name = "Can";
                 break;
-            case "Soccer":
-                newObj = Instantiate(cokeCanPrefab).GetComponent<PlaceableObject>();
-                newObj.name = "Soccer";
+            case "sovver":
+                newObj = Instantiate(soccerBallPrefab).GetComponent<PlaceableObject>();
+                newObj.name = "Soccer Ball";
                 break;
-            case "Crate":
-                newObj = Instantiate(cokeCanPrefab).GetComponent<PlaceableObject>();
+            case "crate":
+                newObj = Instantiate(cratePrefab).GetComponent<PlaceableObject>();
                 newObj.name = "Crate";
+                break;
+            case "labbot":
+                newObj = Instantiate(labBotPrefab).GetComponent<PlaceableObject>();
+                newObj.name = "LabBot";
+                break;
+            case "s4":
+                newObj = Instantiate(S4Prefab).GetComponent<PlaceableObject>();
+                newObj.name = "S4";
                 break;
             default:
                 Debug.Log("Unknown object type");
@@ -176,36 +186,20 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         }
     }
 
+    // Single argument callbakcs for UI buttons
     public void AddCokeCanToScene(string args)
     {
-        if (isMouseOccupied)
-            FreeMouse();
-
-        PlaceableObject newObj = Instantiate(cokeCanPrefab).GetComponent<PlaceableObject>();
-        newObj.name = "Can";
-        if(args.Length == 0)
-            AddObjectToSceneOnMouse(newObj);
-        else
-        {
-            string[] pos = args.Split(':');
-            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
-        }
+        AddPredefinedObjectToScene("Can", args);
     }
 
     public void AddSoccerBallToScene(string args)
     {
-        if (isMouseOccupied)
-            FreeMouse();
+        AddPredefinedObjectToScene("Soccer", args);
+    }
 
-        PlaceableObject newObj = Instantiate(soccerBallPrefab).GetComponent<PlaceableObject>();
-        newObj.name = "Soccer Ball";
-        if(args.Length == 0)
-            AddObjectToSceneOnMouse(newObj);
-        else
-        {
-            string[] pos = args.Split(':');
-            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
-        }
+    public void AddCrateToScene(string args)
+    {
+        AddPredefinedObjectToScene("Crate", args);
     }
 
     public void AddMarkerToScene(string args)
@@ -326,6 +320,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         wallBeingPlaced = null;
         isWallBeingPlaced = false;
         isMouseOccupied = false;
+        SimManager.instance.worldChanged = true;
     }
 
     public void CancelWallPlacement()
@@ -397,7 +392,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         }
     }
 
-    private void FreeMouse()
+    public void FreeMouse()
     {
         if (objectOnMouse != null)
             DeleteObjectOnMouse();

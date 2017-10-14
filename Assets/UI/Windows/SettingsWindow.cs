@@ -184,6 +184,7 @@ public class SettingsWindow : TabWindow, IFileReceiver
 
     public void InputHomeDir(string dirpath)
     {
+        Debug.Log(dirpath);
         if (Directory.Exists(dirpath))
         {
             SettingsManager.instance.ChangeSettingsValue("homedir", dirpath);

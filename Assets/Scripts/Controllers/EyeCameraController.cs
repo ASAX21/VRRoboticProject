@@ -19,23 +19,26 @@ public class EyeCameraController : MonoBehaviour {
 	public byte[] GetBytes(int camera)
     {
         byte[] image = cameras[camera].GetBytes();
-        for (int i = 0; i < cameras[camera].resWidth; i++)
+        if (useSNPNoise)
         {
-            for (int j = 0; j < cameras[camera].resHeight; j++)
+            for (int i = 0; i < cameras[camera].resWidth; i++)
             {
-                if (UnityEngine.Random.value < saltPepperPercent)
+                for (int j = 0; j < cameras[camera].resHeight; j++)
                 {
-                    if (UnityEngine.Random.value > saltPepperRatio)
+                    if (UnityEngine.Random.value < saltPepperPercent)
                     {
-                        image[(j * cameras[camera].resWidth + i) * 3] = 0xFF;
-                        image[(j * cameras[camera].resWidth + i) * 3 + 1] = 0xFF;
-                        image[(j * cameras[camera].resWidth + i) * 3 + 2] = 0xFF;
-                    }
-                    else
-                    {
-                        image[(j * cameras[camera].resWidth + i) * 3] = 0x00;
-                        image[(j * cameras[camera].resWidth + i) * 3 + 1] = 0x00;
-                        image[(j * cameras[camera].resWidth + i) * 3 + 2] = 0x00;
+                        if (UnityEngine.Random.value > saltPepperRatio)
+                        {
+                            image[(j * cameras[camera].resWidth + i) * 3] = 0xFF;
+                            image[(j * cameras[camera].resWidth + i) * 3 + 1] = 0xFF;
+                            image[(j * cameras[camera].resWidth + i) * 3 + 2] = 0xFF;
+                        }
+                        else
+                        {
+                            image[(j * cameras[camera].resWidth + i) * 3] = 0x00;
+                            image[(j * cameras[camera].resWidth + i) * 3 + 1] = 0x00;
+                            image[(j * cameras[camera].resWidth + i) * 3 + 2] = 0x00;
+                        }
                     }
                 }
             }

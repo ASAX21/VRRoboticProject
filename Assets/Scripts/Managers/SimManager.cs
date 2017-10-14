@@ -33,7 +33,7 @@ public class SimManager : MonoBehaviour {
     // List of Objects used to save state
     private List<ObjectState> defaultState;
     private int stateID = 0;
-    private bool worldChanged = false;
+    public bool worldChanged = false;
 
     private void Awake()
     {
@@ -267,29 +267,13 @@ public class SimManager : MonoBehaviour {
             Debug.Log("Can't restore state: World changed");
             return;
         }
+        ObjectManager.instance.FreeMouse();
         RemoveAllWorldObjects();
         RemoveAllRobots();
         foreach(ObjectState state in defaultState)
         {
             totalObjects = state.id - 1;
-            switch (state.type)
-            {
-                case "LabBot":
-                    ObjectManager.instance.AddLabBotToScene(state.pos);
-                    break;
-                case "S4":
-                    ObjectManager.instance.AddS4ToScene(state.pos);
-                    break;
-                case "Can":
-                    ObjectManager.instance.AddCokeCanToScene(state.pos);
-                    break;
-                case "Soccer":
-                    ObjectManager.instance.AddSoccerBallToScene(state.pos);
-                    break;
-                default:
-                    Debug.Log("Restore State: Unknown object type");
-                    break;
-            }
+            ObjectManager.instance.AddPredefinedObjectToScene(state.type, state.pos);
         }
         totalObjects = stateID;
     }

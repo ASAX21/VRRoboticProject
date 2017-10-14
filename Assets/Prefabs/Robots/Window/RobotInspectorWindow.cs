@@ -177,6 +177,7 @@ public class RobotInspectorWindow : TabWindow {
             t.color = val ? Color.black : Color.gray;
         saltPepperPercentSlider.interactable = val;
         saltPepperRatioSlider.interactable = val;
+        (robot as ICameras).SaltPepperNoise = val;
     }
 
     public void SaltPepperNoisePercent(float val)

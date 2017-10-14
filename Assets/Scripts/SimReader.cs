@@ -125,6 +125,15 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                 ObjectManager.instance.AddSoccerBallToScene(args[1] + ":" + args[2] + ":" + args[3]);
                 break;
 
+            case "crate":
+                if (args.Length != 4)
+                {
+                    Debug.Log("Incorrect number of arguments");
+                    return false;
+                }
+                ObjectManager.instance.AddCrateToScene(args[1] + ":" + args[2] + ":" + args[3]);
+                break;
+
             case "world":
                 // Check for quoted expression
                 string wldPath;
