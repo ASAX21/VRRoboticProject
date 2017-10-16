@@ -13,7 +13,6 @@ public class SimManager : MonoBehaviour {
     public static SimManager instance { get; private set; }
 
     public ServerManager server;
-    public OSManager osManager;
 
     // Current robots, objects, and world
     public List<Robot> allRobots;
@@ -41,57 +40,6 @@ public class SimManager : MonoBehaviour {
             instance = this;
         else
             Destroy(this);
-
-        // To platform specific things in Awake - Ready for other scripts in Start
-        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
-        {
-            osManager = new WindowsOSManager();
-        }
-        else if (Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXEditor)
-        {
-            osManager = new MacOSManager();
-        }
-    }
-
-    // Check for command line arguments (input sim file)
-    private bool GetCommandLineArguments()
-    {
-        string[] args = Environment.GetCommandLineArgs();
-
-        // Check if exactly one extra argument is given (simFile)
-        if (args.Length != 2)
-            return false;
-
-        string simPath = args[1];
-
-        if (Path.GetExtension(simPath) != ".sim" || !File.Exists(simPath))
-            return false;
-        else
-            SimReader.instance.ReceiveFile(simPath);
-
-        return true;
-    }
-
-    private void Start()
-    {
-        if (!GetCommandLineArguments())
-        {
-            allRobots = new List<Robot>();
-            allWorldObjects = new List<WorldObject>();
-            world = WorldBuilder.instance.CreateBox(2000, 2000);
-        }
-    }
-
-    private void OnApplicationQuit()
-    {
-        if (osManager != null)
-            osManager.Terminate();
-    }
-
-    public void LaunchTerminal()
-    {
-        if(osManager != null)
-           osManager.LaunchTerminal();
     }
 
     // Search only Robots
@@ -167,8 +115,8 @@ public class SimManager : MonoBehaviour {
         if (robot.myWindow != null)
             Destroy(robot.myWindow.gameObject);
         // Remove the object from the scene
-        if (robot is IVWDrivable)
-            (robot as IVWDrivable).RemoveVWOrigin();
+        if (robot is IVWDrive)
+            (robot as IVWDrive).RemoveVWOrigin();
         Destroy(robot.gameObject);
         ViewRobotsWindow.instance.UpdateRobotList();
     }
@@ -229,7 +177,7 @@ public class SimManager : MonoBehaviour {
         allRobots = new List<Robot>();
         allWorldObjects = new List<WorldObject>();
         totalObjects = 0;
-        world = WorldBuilder.instance.CreateBox(width, height);
+        WorldBuilder.instance.CreateBox(width, height);
     }
 
     // Save a State

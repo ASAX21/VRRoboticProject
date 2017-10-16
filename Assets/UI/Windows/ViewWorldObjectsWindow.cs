@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class ViewWorldObjectsWindow : MonoBehaviour {
+public class ViewWorldObjectsWindow : Window {
 
     public static ViewWorldObjectsWindow instance { get; private set; }
 

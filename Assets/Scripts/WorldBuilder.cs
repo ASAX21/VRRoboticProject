@@ -9,6 +9,9 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 
     public static WorldBuilder instance = null;
 
+    public GameObject floorPrefab;
+    public GameObject wallPrefab;
+
     public GameObject world;
 	public string filepath;
 	IO io;
@@ -25,10 +28,10 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
     {
         SimManager.instance.DestroyWorld();
 		this.filepath = filepath;
+        EyesimLogger.instance.Log("Loading world: " + filepath);
         world = new GameObject();
 		world.name = "World";
 		io = new IO();
-
 
         if (!io.Load (filepath))
 			return null;
@@ -59,6 +62,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 		addWall(new Vector2(0, width / Eyesim.Scale), new Vector2(height / Eyesim.Scale, width / Eyesim.Scale));
 		addWall(new Vector2(height / Eyesim.Scale, 0), new Vector2(height / Eyesim.Scale, width / Eyesim.Scale));
 		addWall(new Vector2(0, 0), new Vector2(height / Eyesim.Scale, 0));
+        SimManager.instance.world = world;
         SimManager.instance.worldChanged = true;
         return world;
     }
@@ -173,7 +177,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 	}
 
 	void addWall (Vector2 start, Vector2 end) {
-		GameObject wall = Instantiate(Resources.Load("Wall")) as GameObject;
+		GameObject wall = Instantiate(wallPrefab);
 		wall.name = "wall";
         wall.layer = 0;
 		wall.transform.localScale = new Vector3 (Vector2.Distance(start, end),0.3f,0.01f);
@@ -183,7 +187,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 	}
 
 	void addFloor (float xpos, float ypos, float width, float height) {
-		GameObject floor = Instantiate(Resources.Load("Floor")) as GameObject;
+		GameObject floor = Instantiate(floorPrefab);
 		floor.name = "floor";
         floor.layer = Layers.GroundLayer;
 		floor.transform.localScale = new Vector3 (width,0.1f,height);

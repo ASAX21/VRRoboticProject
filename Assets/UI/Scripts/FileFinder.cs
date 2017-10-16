@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+// Interface for a class that can receive a file (filepath)
 public interface IFileReceiver
 {
     GameObject ReceiveFile(string filepath);
@@ -19,6 +20,7 @@ public class FileFinder : MonoBehaviour
     protected FileBrowser m_fileBrowser;
 
     private FileBrowserType m_type;
+
 
     [SerializeField]
     protected Texture2D m_directoryImage,
@@ -41,14 +43,15 @@ public class FileFinder : MonoBehaviour
         }
     }
 
-	public void OpenFileSelection(){
+	public void OpenFileSelection(string dirpath){
 		uiManager.openWindow(BlockingType.UI);
 		m_fileBrowser = new FileBrowser(
 			new Rect(100, 100, 600, 500),
             windowTitle,
             m_type,
-            FileSelectedCallback
-		);
+            FileSelectedCallback,
+            dirpath
+        );
 		m_fileBrowser.SelectionPattern = m_selectPattern;
 		m_fileBrowser.DirectoryImage = m_directoryImage;
 		m_fileBrowser.FileImage = m_fileImage;

@@ -91,6 +91,8 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     public GameObject ReceiveFile(string filepath)
     {
         GameObject newCustomObj = objectBuilder.BuildObjectFromFile(filepath);
+        if (newCustomObj == null)
+            return null;
         WorldObject newWorldObj = newCustomObj.GetComponent<WorldObject>();
 
         MenuBarManager.instance.AddCustomObjectToMenu(newCustomObj.name, customObjects.Count);

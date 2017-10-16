@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
 
+public enum SetDirectory { Home, World, Sim, Object, Robot, Control};
+
 public class SettingsWindow : TabWindow, IFileReceiver
 {
     [Header("Camera")]
@@ -27,18 +29,23 @@ public class SettingsWindow : TabWindow, IFileReceiver
     public Slider orthoZoomSlider;
     public InputField orthoZoomInput;
 
-    [Header("Home Directory")]
-    public FileFinder homeDirFinder;
-    public InputField dirInput;
+    [Header("Directories")]
+    public FileFinder dirFinder;
+
+    public InputField homeDirInput;
+    public InputField worldDirInput;
+    public InputField simDirInput;
 
     [Header("Error")]
     public GaussianDrawer gaussDrawer;
+
+    private SetDirectory dirSet;
 
     void OnEnable ()
     {
         windowTitle.color = UIManager.instance.windowHeaderTextColor;
         windowHeader.color = UIManager.instance.windowHeaderColor;
-        homeDirFinder.Initialise("*", FileBrowserType.Directory, this);
+        dirFinder.Initialise("*", FileBrowserType.Directory, this);
         UpdateAllValues();
     }
 
@@ -70,7 +77,9 @@ public class SettingsWindow : TabWindow, IFileReceiver
         orthoZoomSlider.value = SettingsManager.instance.cameraController.orthoZoomSens;
 
         // Set home dir
-        dirInput.text = SettingsManager.instance.homeDirectory;
+        homeDirInput.text = SettingsManager.instance.homeDirectory;
+        worldDirInput.text = SettingsManager.instance.worldDirectory;
+        simDirInput.text = SettingsManager.instance.simDirectory;
     }
 	
     // ----- Camera Settings -----
@@ -179,7 +188,8 @@ public class SettingsWindow : TabWindow, IFileReceiver
     // Home Directory
     public void OpenHomeDirSelect()
     {
-        homeDirFinder.OpenFileSelection();
+        dirSet = SetDirectory.Home;
+        dirFinder.OpenFileSelection(SettingsManager.instance.GetSetting("homedir", ""));
     }
 
     public void InputHomeDir(string dirpath)
@@ -188,20 +198,82 @@ public class SettingsWindow : TabWindow, IFileReceiver
         if (Directory.Exists(dirpath))
         {
             SettingsManager.instance.ChangeSettingsValue("homedir", dirpath);
+            homeDirInput.text = SettingsManager.instance.homeDirectory;
         }
         else
         {
             Debug.Log("Bad Dirpath");
-            dirInput.text = SettingsManager.instance.homeDirectory;
+            homeDirInput.text = SettingsManager.instance.homeDirectory;
         }
     }
+
+    // Home Directory
+    public void OpenWorldDirSelect()
+    {
+        dirSet = SetDirectory.World;
+        dirFinder.OpenFileSelection(SettingsManager.instance.GetSetting("worlddir", ""));
+    }
+
+    public void InputWorldDir(string dirpath)
+    {
+        Debug.Log(dirpath);
+        if (Directory.Exists(dirpath))
+        {
+            SettingsManager.instance.ChangeSettingsValue("worlddir", dirpath);
+            worldDirInput.text = SettingsManager.instance.worldDirectory;
+        }
+        else
+        {
+            Debug.Log("Bad Dirpath");
+            worldDirInput.text = SettingsManager.instance.homeDirectory;
+        }
+    }
+
+    // Home Directory
+    public void OpenSimDirSelect()
+    {
+        dirSet = SetDirectory.Sim;
+        dirFinder.OpenFileSelection(SettingsManager.instance.GetSetting("simdir", ""));
+    }
+
+    public void InputSimDir(string dirpath)
+    {
+        Debug.Log(dirpath);
+        if (Directory.Exists(dirpath))
+        {
+            SettingsManager.instance.ChangeSettingsValue("simdir", dirpath);
+            simDirInput.text = SettingsManager.instance.simDirectory;
+        }
+        else
+        {
+            Debug.Log("Bad Dirpath");
+            simDirInput.text = SettingsManager.instance.homeDirectory;
+        }
+    }
+
 
     public GameObject ReceiveFile(string dirpath)
     {
         if (Directory.Exists(dirpath))
         {
-            SettingsManager.instance.ChangeSettingsValue("homedir", dirpath);
-            dirInput.text = dirpath;
+            switch (dirSet)
+            {
+                case SetDirectory.Home:        
+                    SettingsManager.instance.ChangeSettingsValue("homedir", dirpath);
+                    homeDirInput.text = dirpath;
+                    break;
+                case SetDirectory.World:
+                    SettingsManager.instance.ChangeSettingsValue("worlddir", dirpath);
+                    worldDirInput.text = dirpath;
+                    break;
+                case SetDirectory.Sim:
+                    SettingsManager.instance.ChangeSettingsValue("simdir", dirpath);
+                    simDirInput.text = dirpath;
+                    break;
+                default:
+                    Debug.Log("Failure to set directory");
+                    break;
+            }
         }
         return null;
     }
@@ -231,9 +303,9 @@ public class SettingsWindow : TabWindow, IFileReceiver
     }
 
     // Close Window
-    public void CloseWindow()
+    public override void Close()
     {
         UIManager.instance.closeWindow();
-        gameObject.SetActive(false);
+        base.Close();
     }
 }

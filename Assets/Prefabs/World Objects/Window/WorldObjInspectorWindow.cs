@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class WorldObjInspectorWindow : MonoBehaviour {
+public class WorldObjInspectorWindow : Window {
 
     public WorldObject worldObj;
 
@@ -24,7 +24,8 @@ public class WorldObjInspectorWindow : MonoBehaviour {
     public Sprite lockedImage;
 
     // Use this for initialization
-    void Start () {
+    public void Initialize()
+    {
         lockButtonImage.sprite = lockedImage;
         objNumber.text = "ID # " + worldObj.objectID.ToString();
         objName.text = worldObj.name;
@@ -97,12 +98,6 @@ public class WorldObjInspectorWindow : MonoBehaviour {
     public void DeleteButton()
     {
         SimManager.instance.RemoveWorldObjectFromScene(worldObj);
-        Destroy(gameObject);
-    }
-
-    public void CloseWindow()
-    {
-        worldObj.isWindowOpen = false;
         Destroy(gameObject);
     }
 }

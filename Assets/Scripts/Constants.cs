@@ -34,3 +34,8 @@ public static class Eyesim
         return value < min ? min : (value > max ? max : value);
     }
 }
+
+public static class EyesimDebug
+{
+    public const bool Verbose = false;
+}

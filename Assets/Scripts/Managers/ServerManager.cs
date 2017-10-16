@@ -64,7 +64,7 @@ public class ServerManager : MonoBehaviour
 
     byte[] recvBuf = new byte[1024];
 
-    void Awake()
+    private void Awake()
     {
         if (instance == null || instance == this)
             instance = this;
@@ -74,14 +74,17 @@ public class ServerManager : MonoBehaviour
         // Create an interpreter for RoBIOS Commands
         interpreter = new Interpreter();
         interpreter.serverManager = this;
+    }
 
+    private void Start()
+    {
         // Listener for TCP connections
         listener = new TcpListener(localAddr, port);
         listener.Start();
 
         // Periodically check if connections are active
         StartCoroutine(CheckConnections());
-        Debug.Log("Server Started");
+        EyesimLogger.instance.Log("Simulation server started");
     }
 
     // This is used as a delegate for SimReader, to pause
@@ -98,7 +101,10 @@ public class ServerManager : MonoBehaviour
         conn.tcpClient.Close();
         conn.robot.TerminateControlBinary();
         if (!conns.Remove(conn))
+        {
             Debug.Log("Failed to remove connection");
+            EyesimLogger.instance.Log("Server: Failed to remove connection - ID: " + conn.robot.objectID);
+        }
         else
             connsChanged = true;
     }
@@ -136,6 +142,7 @@ public class ServerManager : MonoBehaviour
         if (activeRobot == null)
         {
             Debug.Log("Control program connected but no robot active");
+            EyesimLogger.instance.Log("Server: Received connection request with no active robot");
             TcpClient client = listener.AcceptTcpClient();
             RobotConnection newClient = new RobotConnection(client, -1);
             RejectConnection(newClient);
@@ -155,6 +162,7 @@ public class ServerManager : MonoBehaviour
             
             // Reply to the robot to begin control
             Debug.Log("Accepted a connection");
+            EyesimLogger.instance.Log("Server: Connection accepted. Executing on robot ID " + activeRobot.objectID);
             ReplyHandshake(newClient);
             connectionReceived = true;
         }
@@ -193,6 +201,7 @@ public class ServerManager : MonoBehaviour
         {
             // If failed, flush the read buffer
             Debug.Log("Failed to read packet header");
+            EyesimLogger.instance.Log("Server: Packet read failure");
             while (stream.DataAvailable)
             {
                 stream.Read(recvBuf, 0, recvBuf.Length);
@@ -270,6 +279,7 @@ public class ServerManager : MonoBehaviour
                     if (conn.tcpClient.Client.Receive(buf, SocketFlags.Peek) == 0)
                     {
                         Debug.Log("Connection lost");
+                        EyesimLogger.instance.Log("Server: Connection closed by remote host - robot ID " + conn.robot.objectID);
                         CloseConnection(conn);
                         break;
                     }

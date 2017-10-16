@@ -1,13 +1,13 @@
 fileFormatVersion: 2
 guid: 3af3effb31c3d994bb18f246136033c2
-timeCreated: 1491884668
+timeCreated: 1508039364
 licenseType: Free
 MonoImporter:
   serializedVersion: 2
   defaultReferences:
   - fileFinderPrefab: {fileID: 114778104765584724, guid: 52e80a7aac313054f94b953aa36f5ce7,
       type: 2}
-  executionOrder: 0
+  executionOrder: -50
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 

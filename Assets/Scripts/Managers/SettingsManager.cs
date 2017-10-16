@@ -17,6 +17,8 @@ public class SettingsManager : MonoBehaviour {
     public Dictionary<string, Func<string, bool, string>> stringSettings;
 
     public string homeDirectory;
+    public string worldDirectory;
+    public string simDirectory;
 
     private void Awake()
     {
@@ -26,6 +28,8 @@ public class SettingsManager : MonoBehaviour {
             Destroy(this);
 
         homeDirectory = Directory.GetCurrentDirectory();
+        worldDirectory = Directory.GetCurrentDirectory();
+        simDirectory = Directory.GetCurrentDirectory();
     }
 
     private void Start()
@@ -37,6 +41,7 @@ public class SettingsManager : MonoBehaviour {
     }
 
     // Build the settings dictionary
+    // Lamba: x is a string identifying, y is a boolean (True for set value, false for get value)
     private void ConfigureSettings()
     {
         floatSettings.Add("mouseLook", (x, y) => y ? cameraController.mouseLookSens = x : cameraController.mouseLookSens);
@@ -49,6 +54,8 @@ public class SettingsManager : MonoBehaviour {
         floatSettings.Add("psdStdDevError", (x, y) => y ? PSDController.globalStdDev = x : PSDController.globalStdDev);
 
         stringSettings.Add("homedir", (x, y) => y ? homeDirectory = x : homeDirectory);
+        stringSettings.Add("worlddir", (x, y) => y ? worldDirectory = x : worldDirectory);
+        stringSettings.Add("simdir", (x, y) => y ? simDirectory = x : simDirectory);
     }
 
     public void SaveSettings()
@@ -72,17 +79,28 @@ public class SettingsManager : MonoBehaviour {
     }
 
     // ----- Settings -----
+    // Floats
     public void ChangeSettingsValue(string setting, float val)
     {
         if (!floatSettings.ContainsKey(setting))
         {
-            Debug.Log("Settings: " + setting + " - No such entry");
+            Debug.Log("Set settings: " + setting + " - No such entry");
             return;
         }
 
         floatSettings[setting](val, true);
     }
+    public float GetSetting(string setting, float defaultValue)
+    {
+        if(!floatSettings.ContainsKey(setting))
+        {
+            Debug.Log("Get settings: " + setting + " - No such entry");
+            return defaultValue;
+        }
+        return floatSettings[setting](0, false);
+    }
 
+    // Strings
     public void ChangeSettingsValue(string setting, string val)
     {
         if (!stringSettings.ContainsKey(setting))
@@ -91,5 +109,15 @@ public class SettingsManager : MonoBehaviour {
             return;
         }
         stringSettings[setting](val, true);
+    }
+
+    public string GetSetting(string setting, string defaultValue)
+    {
+        if (!stringSettings.ContainsKey(setting))
+        {
+            Debug.Log("Get settings: " + setting + " - No such entry");
+            return defaultValue;
+        }
+        return stringSettings[setting]("", false);
     }
 }

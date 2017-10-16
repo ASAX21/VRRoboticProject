@@ -6,7 +6,7 @@ using RobotComponents;
 public class BaseAckDrive : Robot, IMotors,
     IPIDUsable,
     IPSDSensors,
-    IServoSettable,
+    IServos,
     ICameras,
     IAudio,
     IRadio,

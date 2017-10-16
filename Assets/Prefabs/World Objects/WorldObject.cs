@@ -3,12 +3,21 @@ using UnityEngine.EventSystems;
 
 public class WorldObject : PlaceableObject, IPointerClickHandler {
 
+    WorldObjInspectorWindow myWindow;
+
     override public void OpenInfoWindow()
     {
         if (!isWindowOpen)
         {
             isWindowOpen = true;
-            objectSelector.DisplayWorldObjInfoWindow(this);
+            if (myWindow == null)
+            {
+                myWindow = Instantiate(UIManager.instance.worldObjInspectorWindowPrefab, UIManager.instance.gameWindowContainer);
+                myWindow.worldObj = this;
+                myWindow.Initialize();
+            }
+            else
+                myWindow.Open();
         }
     }
 
@@ -19,5 +28,11 @@ public class WorldObject : PlaceableObject, IPointerClickHandler {
             OpenInfoWindow();
         }
         base.OnPointerClick(eventData);
+    }
+
+    private void OnDestroy()
+    {
+        if (myWindow != null)
+            Destroy(myWindow.gameObject);
     }
 }

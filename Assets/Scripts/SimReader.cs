@@ -11,6 +11,7 @@ public class SimReader: MonoBehaviour, IFileReceiver {
 
     // Store each executable in sim file, begin executing after the world is completely loaded
     private List<string> executables;
+    private int lineNum = 0;
 
     private void Awake()
     {
@@ -24,13 +25,16 @@ public class SimReader: MonoBehaviour, IFileReceiver {
     {
         SimManager.instance.ResetWorld();
         SimManager.instance.PauseSimulation();
+        EyesimLogger.instance.Log("Loading sim file: " + path);
         executables = new List<string>();
+        lineNum = 0;
         IO io = new IO ();
 		if (!io.Load (path))
 			return null;
 		while (true)
         {
-			string line = io.readLine ();
+            lineNum++;
+            string line = io.readLine ();
 			if (line == "ENDOFFILE")
 				break;
 			//make sure line isnt blank
@@ -42,6 +46,7 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                         Debug.Log("Error processing Sim file");
                         SimManager.instance.CreateNewBox(2000, 2000);
                         SimManager.instance.ResumeSimulation();
+                        return null;
                     }
 				}
 			}
@@ -66,6 +71,7 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                 if (args.Length < 4)
                 {
                     Debug.Log("Incorrect number of arguments");
+                    EyesimLogger.instance.Log("Error parsing sim file line " + lineNum + ": Incorrect number of arguments for LabBot - " + args.Length);
                     return false;
                 }
                 ObjectManager.instance.AddLabBotToScene(args[1] + ":" + args[2] + ":" + args[3]);
@@ -89,6 +95,7 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                 if (args.Length != 4)
                 {
                     Debug.Log("Incorrect number of arguments");
+                    EyesimLogger.instance.Log("Error parsing sim file line " + lineNum + ": Incorrect number of arguments for S4 - " + args.Length);
                     return false;
                 }
                 ObjectManager.instance.AddS4ToScene(args[1] + ":" + args[2] + ":" + args[3]);
@@ -110,7 +117,7 @@ public class SimReader: MonoBehaviour, IFileReceiver {
             case "can":
                 if (args.Length != 4)
                 {
-                    Debug.Log("Incorrect number of arguments");
+                    EyesimLogger.instance.Log("Error parsing sim file line " + lineNum + ": Incorrect number of arguments for Can - " + args.Length);
                     return false;
                 }
                 ObjectManager.instance.AddCokeCanToScene(args[1] + ":" + args[2] + ":" + args[3]);
@@ -120,6 +127,7 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                 if (args.Length != 4)
                 {
                     Debug.Log("Incorrect number of arguments");
+                    EyesimLogger.instance.Log("Error parsing sim file line " + lineNum + ": Incorrect number of arguments for Soccer - " + args.Length);
                     return false;
                 }
                 ObjectManager.instance.AddSoccerBallToScene(args[1] + ":" + args[2] + ":" + args[3]);
@@ -129,6 +137,7 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                 if (args.Length != 4)
                 {
                     Debug.Log("Incorrect number of arguments");
+                    EyesimLogger.instance.Log("Error parsing sim file line " + lineNum + ": Incorrect number of arguments for Crate - " + args.Length);
                     return false;
                 }
                 ObjectManager.instance.AddCrateToScene(args[1] + ":" + args[2] + ":" + args[3]);
@@ -150,6 +159,7 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                 {
                     print(Path.GetExtension(wldPath));
                     Debug.Log("Invalid path to world");
+                    EyesimLogger.instance.Log("Error parsing sim file line " + lineNum + ": Bad path to world file");
                     return false;
                 }
 
@@ -168,7 +178,8 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                 Debug.Log(objName);
                 // If object doesn't exist, load it
                 if (ObjectManager.instance.customObjects.Find(x => x.name == objName) == null)
-                    ObjectManager.instance.ReceiveFile(objPath);
+                    if (ObjectManager.instance.ReceiveFile(objPath) == null)
+                        return false;
                 break;
             case "marker":
                 string pos;
@@ -179,6 +190,7 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                 else
                 {
                     Debug.Log("Load Sim: Invalid number of arguments for marker: " + args.Length);
+                    EyesimLogger.instance.Log("Error parsing sim file line " + lineNum + ": Incorrect number of arguments for Marker - " + args.Length);
                     return false;
                 }
 
@@ -198,6 +210,7 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                     else
                     {
                         Debug.Log("Load Sim: Object argument <" + args[0] + "> requires 3 arguments for position, found " + (args.Length - 1).ToString());
+                        EyesimLogger.instance.Log("Error parsing sim file line " + lineNum + ": Incorrect number of arguments for " + args[0] + " - " + args.Length);
                         break;
                     }
                 }
@@ -210,7 +223,8 @@ public class SimReader: MonoBehaviour, IFileReceiver {
     // Launch process one by one, wait until connection received until continuing
     IEnumerator LaunchExecutables()
     {
-        for(int i = 0; i < executables.Count; i++)
+        EyesimLogger.instance.Log("Launching control programs");
+        for (int i = 0; i < executables.Count; i++)
         {
             ServerManager.instance.connectionReceived = false;
             SimManager.instance.allRobots[i].ReceiveFile(@executables[i]);
@@ -218,5 +232,6 @@ public class SimReader: MonoBehaviour, IFileReceiver {
         }
 
         SimManager.instance.ResumeSimulation();
+        EyesimLogger.instance.Log("Finsihed loading sim file");
     }
 }

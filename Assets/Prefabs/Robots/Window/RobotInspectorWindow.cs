@@ -109,9 +109,9 @@ public class RobotInspectorWindow : TabWindow {
             useGlobalError = (robot as IPSDSensors).UseGlobalError;
         }
 
-        if(robot is IVWDrivable)
+        if(robot is IVWDrive)
         {
-            Int16[] pos = (robot as IVWDrivable).GetPose();
+            Int16[] pos = (robot as IVWDrive).GetPose();
             vwXtext.text = pos[0].ToString("N2");
             vwYtext.text = pos[1].ToString("N2");
             vwPhiText.text = pos[2].ToString("N2");
@@ -151,9 +151,9 @@ public class RobotInspectorWindow : TabWindow {
         {
             cameraResolution.text = (robot as ICameras).GetCameraResolution(0);
         }
-        if (robot is IVWDrivable)
+        if (robot is IVWDrive)
         {
-            Int16[] pos = (robot as IVWDrivable).GetPose();
+            Int16[] pos = (robot as IVWDrive).GetPose();
             vwXtext.text = pos[0].ToString("N2");
             vwYtext.text = pos[1].ToString("N2");
             vwPhiText.text = pos[2].ToString("N2");
@@ -329,10 +329,10 @@ public class RobotInspectorWindow : TabWindow {
         Destroy(gameObject);
     }
 
-    public void CloseWindow()
+    public override void Close()
     {
         robot.isWindowOpen = false;
-        gameObject.SetActive(false);
+        base.Close();
     }
 
     public void ToggleAccurate(bool toggle)

@@ -2,7 +2,7 @@
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-public abstract class Window : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
+public class Window : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
 
     private bool mouseOverWindow = false;
 
@@ -22,6 +22,17 @@ public abstract class Window : MonoBehaviour, IPointerEnterHandler, IPointerExit
     {
         if (mouseOverWindow)
             UIManager.instance.preventMouseZoom--;
+    }
+
+    public virtual void Open()
+    {
+        gameObject.SetActive(true);
+        transform.SetAsLastSibling();
+    }
+
+    public virtual void Close()
+    {
+        gameObject.SetActive(false);
     }
 }
 

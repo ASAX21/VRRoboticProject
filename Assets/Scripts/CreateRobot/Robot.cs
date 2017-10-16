@@ -18,7 +18,7 @@ public interface IPIDUsable
     void SetPID(int motor, int p, int i, int d);
 }
     
-public interface IVWDrivable
+public interface IVWDrive
 {
     void InitalizeVW(int[] args);
     Int16[] GetPose();
@@ -36,7 +36,7 @@ public interface IVWDrivable
     void RemoveVWOrigin();
 }
 
-public interface IServoSettable
+public interface IServos
 {
     void SetServo(int servo, int angle);
 }
@@ -149,7 +149,7 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
             // If no window exists, make a new one
             if (myWindow == null)
             {
-                myWindow = Instantiate(UIManager.instance.robotInspectorWindowPrefab,UIManager.instance.gameWindowContainer);
+                myWindow = Instantiate(UIManager.instance.robotInspectorWindowPrefab, UIManager.instance.gameWindowContainer);
                 myWindow.robot = this;
                 myWindow.Initialize();
 
@@ -203,10 +203,10 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
     // Remove control binary - invoked from ServerManager on disconnect
     public void TerminateControlBinary()
     {
-        if(this is IVWDrivable)
+        if(this is IVWDrive)
         {
             UnityEngine.Debug.Log("VWDriveable! clearing wait");
-            (this as IVWDrivable).ClearVWWait();
+            (this as IVWDrive).ClearVWWait();
         }
         if(controlBinary != null)
         {
@@ -242,9 +242,15 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
     {
         if (isInit == false)
         {
-            if (this is IVWDrivable)
-                (this as IVWDrivable).SetPose(0, 0, 0);
+            if (this is IVWDrive)
+                (this as IVWDrive).SetPose(0, 0, 0);
         }
         base.PlaceObject();
+    }
+
+    private void OnDestroy()
+    {
+        if (myWindow != null)
+            Destroy(myWindow.gameObject);
     }
 }

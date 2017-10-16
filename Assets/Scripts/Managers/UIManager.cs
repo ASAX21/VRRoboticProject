@@ -29,11 +29,13 @@ public class UIManager : MonoBehaviour {
     [SerializeField]
     ViewWorldObjectsWindow viewWorldObjectsWindow;
     [SerializeField]
-    GameObject aboutWindow;
+    Window aboutWindow;
     [SerializeField]
     SettingsWindow settingsWindow;
     [SerializeField]
     CreateWorldWindow createWorldWindow;
+    [SerializeField]
+    LogWindow logWindow;
 
     [Header("Window Prefabs")]
     public RobotInspectorWindow robotInspectorWindowPrefab;
@@ -81,13 +83,14 @@ public class UIManager : MonoBehaviour {
 
     void Start()
     {
+        EyesimLogger.instance.logUpdatedEvent += logWindow.UpdateLogDisplay;
         worldBuilder = WorldBuilder.instance;
         robotBuilder = RobotBuilder.instance;
         simBuilder = SimReader.instance;
 		worldFileFinder.Initialise("*.*", FileBrowserType.File, worldBuilder);
         robotFileFinder.Initialise("*.robi", FileBrowserType.File, robotBuilder);
         simFileFinder.Initialise("*.sim", FileBrowserType.File, simBuilder);
-        scriptFileFinder.Initialise("*.c", FileBrowserType.File, SimManager.instance.osManager);
+        //scriptFileFinder.Initialise("*.c", FileBrowserType.File, SimManager.instance.osManager);
         customObjFileFinder.Initialise("*.esObj", FileBrowserType.File, ObjectManager.instance);
     }
 
@@ -109,12 +112,12 @@ public class UIManager : MonoBehaviour {
 
     public void LoadSimFile()
     {
-        simFileFinder.OpenFileSelection();
+        simFileFinder.OpenFileSelection(SettingsManager.instance.simDirectory);
     }
 
     public void LoadWorldFile()
     {
-        worldFileFinder.OpenFileSelection();
+        worldFileFinder.OpenFileSelection(SettingsManager.instance.worldDirectory);
     }
 
     public void CreateWorld()
@@ -125,7 +128,7 @@ public class UIManager : MonoBehaviour {
 
     public void LoadRobotFile()
     {
-        robotFileFinder.OpenFileSelection();
+        robotFileFinder.OpenFileSelection(SettingsManager.instance.homeDirectory);
     }
 
     public void LoadControlProgram(Robot robot)
@@ -134,45 +137,34 @@ public class UIManager : MonoBehaviour {
             controlFileFinder.Initialise("*.exe", FileBrowserType.File, robot);
         else if (Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXEditor)
             controlFileFinder.Initialise("*", FileBrowserType.File, robot);
-        controlFileFinder.OpenFileSelection();
+        controlFileFinder.OpenFileSelection(SettingsManager.instance.homeDirectory);
     }
 
     public void LoadScriptFile()
     {
-        scriptFileFinder.OpenFileSelection();
+        scriptFileFinder.OpenFileSelection(SettingsManager.instance.homeDirectory);
     }
 
     public void LoadCustomObject()
     {
-        customObjFileFinder.OpenFileSelection();
+        customObjFileFinder.OpenFileSelection(SettingsManager.instance.homeDirectory);
     }
 
     public void OpenSettings()
     {
-        if (settingsWindow.gameObject.activeInHierarchy)
-            settingsWindow.transform.SetAsLastSibling();
-        else
-        {
-            settingsWindow.gameObject.SetActive(true);
-            openWindow(BlockingType.Scene);
-        }
+        settingsWindow.Open();
+        openWindow(BlockingType.Scene);
     }
 
     // Simulation Menu
     public void OpenViewRobotWindow()
     {
-        if (viewRobotsWindow.gameObject.activeInHierarchy)
-            viewRobotsWindow.transform.SetAsLastSibling();
-        else
-            viewRobotsWindow.gameObject.SetActive(true);
+        viewRobotsWindow.Open();
     }
 
     public void OpenViewObjectsWindow()
     {
-        if (viewWorldObjectsWindow.gameObject.activeInHierarchy)
-            viewWorldObjectsWindow.transform.SetAsLastSibling();
-        else
-            viewWorldObjectsWindow.gameObject.SetActive(true);
+        viewWorldObjectsWindow.Open();
     }
 
     // Help Menu Buttons
@@ -186,9 +178,14 @@ public class UIManager : MonoBehaviour {
         Application.OpenURL(@"http://robotics.ee.uwa.edu.au/eyebot7/Robios7.html");
     }
 
+    public void OpenLog()
+    {
+        logWindow.Open();
+    }
+
     public void OpenAbout()
     {
-
+        aboutWindow.Open();
     }
 
     // Pause/Resume/FastForward UI Buttons

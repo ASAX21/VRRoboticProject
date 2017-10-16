@@ -138,14 +138,17 @@ public class FileBrowser
 
     protected GUISkin gui_skin;
 
-    public FileBrowser(Rect screenRect, string name, FileBrowserType type, FinishedCallback callback)
+    public FileBrowser(Rect screenRect, string name, FileBrowserType type, FinishedCallback callback, string dirpath)
     {
         m_name = name;
         m_screenRect = screenRect;
         m_browserType = type;
         m_callback = callback;
         UIManager.instance.windowOpen = true;
-        SetNewDirectory(SettingsManager.instance.homeDirectory);
+        if(Directory.Exists(dirpath))
+            SetNewDirectory(dirpath);
+        else
+            SetNewDirectory(Directory.GetCurrentDirectory());
         SwitchDirectoryNow();
     }
 

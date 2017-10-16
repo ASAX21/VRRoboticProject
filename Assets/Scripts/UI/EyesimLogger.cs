@@ -2,29 +2,36 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class EyesimLogger : MonoBehaviour
 {
+    public static EyesimLogger instance;
+
     // Storage for log messages displayed in-app
-    public int maxLogEntries;
+    public int maxLogEntries = 100;
     public string[] currentLog;
     public int currentFront;
+    public Text uiLog;
 
     // Event to fire when log is changed
-    public delegate void LogUpdated();
-    event LogUpdated logUpdatedEvent;
+    public delegate void LogUpdated(string logText);
+    public event LogUpdated logUpdatedEvent;
 
     // File access
     bool logfileOpen = false;
     FileStream logFile;
     StreamWriter logWriter;
 
-    public void TEST()
+    private void Awake()
     {
-        CreateNewLogFile("test.txt");
-        WriteToLogFile("hi there man!");
-        WriteToLogFile("hi there man 2!!");
-        CloseLogFile();
+        if (instance == null || instance == this)
+            instance = this;
+        else
+            Destroy(this);
+
+        currentLog = new string[maxLogEntries];
     }
 
     public void CreateNewLogFile(string filename)
@@ -57,11 +64,14 @@ public class EyesimLogger : MonoBehaviour
 
     public void Log(string text)
     {
-        currentLog[currentFront] = text;
+        string time = "[" + ((int) Time.time/3600).ToString("00") + 
+            ":" + ((int) Time.time%3600/60).ToString("00") +
+            ":" + ((int) Time.time % 60).ToString("00") + "] ";
+        currentLog[currentFront] = time + text;
         currentFront = (currentFront + 1) % maxLogEntries;
         if (logfileOpen)
-            WriteToLogFile(text);
+            WriteToLogFile(time + text);
         if(logUpdatedEvent != null)
-            logUpdatedEvent.Invoke();
+            logUpdatedEvent.Invoke(time + text);
     }
 }

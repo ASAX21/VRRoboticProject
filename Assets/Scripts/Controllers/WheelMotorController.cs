@@ -54,6 +54,11 @@ public class WheelMotorController : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        Destroy(VWOrigin.gameObject);
+    }
+
     // Get the encoder ticks from a quad
     public int GetEncoderTicks(int quad)
     {

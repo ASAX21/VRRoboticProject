@@ -9,7 +9,6 @@ using UnityEngine.EventSystems;
 // Robots, cans, cubes, etc.
 public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    protected ObjectSelector objectSelector;
     protected ObjectManager objectManager;
 
     public int objectID;
@@ -54,7 +53,6 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
 
     private void Start()
     {
-        objectSelector = ObjectSelector.instance;
         objectManager = ObjectManager.instance;
         validMat = ObjectManager.instance.validMat;
         invalidMat = ObjectManager.instance.invalidMat;
@@ -166,6 +164,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
         */
     }
 
+    /*
     protected void Select()
     {
         isSelected = true;
@@ -181,6 +180,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
         SetHighlightLayer(gameObject, currLayer);
     }
 
+
     public void SetHighlightLayer(GameObject obj, int layer)
     {
         obj.layer = layer;
@@ -189,6 +189,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
             SetHighlightLayer(child.gameObject, layer);
         }
     }
+    */
 
     public void AttachToMouse()
     {

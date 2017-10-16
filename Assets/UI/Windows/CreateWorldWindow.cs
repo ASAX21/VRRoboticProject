@@ -20,6 +20,7 @@ public class CreateWorldWindow : MonoBehaviour {
             Debug.Log("Create New Box Dialogue: Failed to parse height");
             return;
         }
+        EyesimLogger.instance.Log("Creating new emtpy world " + width + " x " + height);
         SimManager.instance.CreateNewBox(width, height);
         Cancel();
     }

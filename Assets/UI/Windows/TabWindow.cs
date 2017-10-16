@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public abstract class TabWindow : MonoBehaviour {
+public abstract class TabWindow : Window {
 
     [SerializeField]
     protected Text windowTitle;
@@ -14,16 +14,6 @@ public abstract class TabWindow : MonoBehaviour {
     public List<Tab> tabs;
 
     public Tab openTab;
-
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
     public void CloseAllContent()
     {

@@ -98,11 +98,11 @@ public class Interpreter {
     // Set Servo position
     private void Command_s(byte[] recv, RobotConnection conn)
     {
-        if(conn.robot is IServoSettable)
+        if(conn.robot is IServos)
         {
             int servo = recv[1] - 1;
             int angle = Convert.ToInt32(recv[2]);
-            (conn.robot as IServoSettable).SetServo(servo, angle);
+            (conn.robot as IServos).SetServo(servo, angle);
         }
         else
         {
@@ -136,9 +136,9 @@ public class Interpreter {
     // Get Vehicle Pose
     private void Command_q(byte[] recv, RobotConnection conn)   
     {
-        if(conn.robot is IVWDrivable)
+        if(conn.robot is IVWDrive)
         {
-            Int16[] pose = (conn.robot as IVWDrivable).GetPose();         
+            Int16[] pose = (conn.robot as IVWDrive).GetPose();         
             Packet packet = new Packet();
             packet.packetType = PacketType.SERVER_MESSAGE;
             packet.dataSize = 6;
@@ -159,12 +159,12 @@ public class Interpreter {
     // Set Pose
     private void Command_Q(byte[] recv, RobotConnection conn)
     {
-        if (conn.robot is IVWDrivable)
+        if (conn.robot is IVWDrive)
         {
             int x = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 1));
             int y = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 3));
             int phi = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 5));
-            (conn.robot as IVWDrivable).SetPose(x, y, phi);
+            (conn.robot as IVWDrive).SetPose(x, y, phi);
         }
         else
         {
@@ -201,46 +201,46 @@ public class Interpreter {
     // VW Drive Straight
     private void Command_y(byte[] recv, RobotConnection conn)
     {
-        if(conn.robot is IVWDrivable)
+        if(conn.robot is IVWDrive)
         {
             // Velocity is first byte, distance is second byte
             // Order revered in input array to match function call semantics
             int distance = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 3));
             int speed = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 1));
-            (conn.robot as IVWDrivable).VWDriveStraight(distance, speed);
+            (conn.robot as IVWDrive).VWDriveStraight(distance, speed);
         }
     }
 
     // VW Drive Turn
     private void Command_Y(byte[] recv, RobotConnection conn)
     {
-        if (conn.robot is IVWDrivable)
+        if (conn.robot is IVWDrive)
         {
             int velocity = IPAddress.HostToNetworkOrder(BitConverter.ToInt16(recv, 1));
             int angle = IPAddress.HostToNetworkOrder(BitConverter.ToInt16(recv, 3));
-            (conn.robot as IVWDrivable).VWDriveTurn(angle, velocity);
+            (conn.robot as IVWDrive).VWDriveTurn(angle, velocity);
         }
     }
 
     // VW Drive Curve
     private void Command_C(byte[] recv, RobotConnection conn)
     {
-        if (conn.robot is IVWDrivable)
+        if (conn.robot is IVWDrive)
         {
             int distance = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 1));
             int angle = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 3));
             int speed = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 5));     
-            (conn.robot as IVWDrivable).VWDriveCurve(distance, angle, speed);
+            (conn.robot as IVWDrive).VWDriveCurve(distance, angle, speed);
         }
     }
 
     // Get Speed
     private void Command_X(byte[] recv, RobotConnection conn)
     {
-        if(conn.robot is IVWDrivable)
+        if(conn.robot is IVWDrive)
         {
             Packet p = new Packet();
-            Speed speed = (conn.robot as IVWDrivable).VWGetVehicleSpeed();
+            Speed speed = (conn.robot as IVWDrive).VWGetVehicleSpeed();
             byte[] lin = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(speed.linear));
             byte[] ang = BitConverter.GetBytes(IPAddress.HostToNetworkOrder(speed.angular));
             p.packetType = PacketType.SERVER_MESSAGE;
@@ -255,20 +255,20 @@ public class Interpreter {
     // Set Speed
     private void Command_x(byte[] recv, RobotConnection conn)
     {
-        if(conn.robot is IVWDrivable)
+        if(conn.robot is IVWDrive)
         {
             int linSpeed = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 1));
             int angSpeed = IPAddress.NetworkToHostOrder(BitConverter.ToInt16(recv, 3));
-            (conn.robot as IVWDrivable).VWSetVehicleSpeed(linSpeed, angSpeed);
+            (conn.robot as IVWDrive).VWSetVehicleSpeed(linSpeed, angSpeed);
         }
     }
 
     // Drive Done
     private void Command_Z(byte[] recv, RobotConnection conn)
     {
-        if (conn.robot is IVWDrivable)
+        if (conn.robot is IVWDrive)
         {
-            bool done = (conn.robot as IVWDrivable).VWDriveDone();
+            bool done = (conn.robot as IVWDrive).VWDriveDone();
             Packet p = new Packet();
             p.packetType = PacketType.SERVER_MESSAGE;
             p.dataSize = 1;
@@ -284,9 +284,9 @@ public class Interpreter {
     //Drive Wait
     private void Command_L(byte[] recv, RobotConnection conn)
     {
-        if (conn.robot is IVWDrivable)
+        if (conn.robot is IVWDrive)
         {
-            (conn.robot as IVWDrivable).VWDriveWait(ReturnDriveDone);
+            (conn.robot as IVWDrive).VWDriveWait(ReturnDriveDone);
         }
         else
         {
@@ -297,9 +297,9 @@ public class Interpreter {
     // Drive Remaining
     private void Command_z(byte[] recv, RobotConnection conn)
     {
-        if (conn.robot is IVWDrivable)
+        if (conn.robot is IVWDrive)
         {
-            bool done = (conn.robot as IVWDrivable).VWDriveDone();
+            bool done = (conn.robot as IVWDrive).VWDriveDone();
             Packet p = new Packet();
             p.packetType = PacketType.SERVER_MESSAGE;
             p.dataSize = 1;

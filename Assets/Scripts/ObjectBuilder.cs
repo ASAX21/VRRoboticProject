@@ -15,10 +15,12 @@ public class ObjectBuilder : MonoBehaviour
         IO io = new IO();
         GameObject customObj = null;
         string line;
+        EyesimLogger.instance.Log("Building object: " + filepath);
 
         if (!io.Load(filepath))
         {
             Debug.Log("Couldn't load file");
+            EyesimLogger.instance.Log("Error loading file");
             return null;
         }
 
@@ -57,6 +59,7 @@ public class ObjectBuilder : MonoBehaviour
                         if (customObj == null)
                         {
                             Debug.Log("obj must be first input in .esObj file");
+                            EyesimLogger.instance.Log("First input in .esObj file must be path to .obj");
                             return null;
                         }
                         try
@@ -66,6 +69,7 @@ public class ObjectBuilder : MonoBehaviour
                         catch
                         {
                             Debug.Log("Error in scale: Invalid argument");
+                            EyesimLogger.instance.Log("Error parsing scale argument");
                             return null;
                         }
                         break;
@@ -75,6 +79,7 @@ public class ObjectBuilder : MonoBehaviour
                         if(customObj == null)
                         {
                             Debug.Log("obj must be first input in .esObj file");
+                            EyesimLogger.instance.Log("First input in .esObj file must be path to .obj");
                             return null;
                         }
                         try
@@ -86,6 +91,7 @@ public class ObjectBuilder : MonoBehaviour
                         catch
                         {
                             Debug.Log("Error in mass: Invalid argument");
+                            EyesimLogger.instance.Log("Error parsing mass argument");
                             Destroy(customObj);
                             return null;
                         }
@@ -98,6 +104,7 @@ public class ObjectBuilder : MonoBehaviour
                             if (customObj == null)
                             {
                                 Debug.Log("obj must be first input in .esObj file");
+                                EyesimLogger.instance.Log("First input in .esObj file must be path to .obj");
                                 return null;
                             }
                             CapsuleCollider col = customObj.AddComponent<CapsuleCollider>();
@@ -118,6 +125,7 @@ public class ObjectBuilder : MonoBehaviour
                             catch
                             {
                                 Debug.Log("Error in capsule: Invalid arguments");
+                                EyesimLogger.instance.Log("Error parsing capsule arguments");
                                 Destroy(customObj);
                                 return null;
                             }
@@ -129,6 +137,7 @@ public class ObjectBuilder : MonoBehaviour
                             if (customObj == null)
                             {
                                 Debug.Log("obj must be first input in .esObj file");
+                                EyesimLogger.instance.Log("First input in .esObj file must be path to .obj");
                                 return null;
                             }
                             SphereCollider col = customObj.AddComponent<SphereCollider>();
@@ -140,6 +149,7 @@ public class ObjectBuilder : MonoBehaviour
                             catch
                             {
                                 Debug.Log("Error in sphere: Invalid arguments");
+                                EyesimLogger.instance.Log("Error parsing sphere arguments");
                                 Destroy(customObj);
                                 return null;
                             }
@@ -151,6 +161,7 @@ public class ObjectBuilder : MonoBehaviour
                             if (customObj == null)
                             {
                                 Debug.Log("obj must be first input in .esObj file");
+                                EyesimLogger.instance.Log("First input in .esObj file must be path to .obj");
                                 return null;
                             }
                             BoxCollider col = customObj.AddComponent<BoxCollider>();
@@ -161,7 +172,8 @@ public class ObjectBuilder : MonoBehaviour
                             }
                             catch
                             {
-                                Debug.Log("Error in capsule: Invalid arguments");
+                                Debug.Log("Error in box: Invalid arguments");
+                                EyesimLogger.instance.Log("Error box capsule arguments");
                                 Destroy(customObj);
                                 return null;
                             }
@@ -170,6 +182,7 @@ public class ObjectBuilder : MonoBehaviour
                     default:
                         {
                             Debug.Log("Unknown input: " + args[0]);
+                            EyesimLogger.instance.Log("Unknown input type: " + args[0]);
                             break;
                         }                  
                 }
