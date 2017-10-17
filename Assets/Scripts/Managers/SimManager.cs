@@ -42,6 +42,19 @@ public class SimManager : MonoBehaviour {
             Destroy(this);
     }
 
+    public void CreateInitialWorld()
+    {
+        if (SettingsManager.instance.defaultSim != "")
+        {
+            EyesimLogger.instance.Log("Loading default sim");
+            SimReader.instance.ReceiveFile(SettingsManager.instance.defaultSim);
+            SaveState();
+        }
+        else
+            CreateNewBox(2000, 2000);
+
+    }
+
     // Search only Robots
     public Robot GetRobotByID(int id)
     {
@@ -115,8 +128,6 @@ public class SimManager : MonoBehaviour {
         if (robot.myWindow != null)
             Destroy(robot.myWindow.gameObject);
         // Remove the object from the scene
-        if (robot is IVWDrive)
-            (robot as IVWDrive).RemoveVWOrigin();
         Destroy(robot.gameObject);
         ViewRobotsWindow.instance.UpdateRobotList();
     }
@@ -173,7 +184,8 @@ public class SimManager : MonoBehaviour {
 
     public void CreateNewBox(int width, int height)
     {
-        DestroyWorld();
+        if(world != null)
+            DestroyWorld();
         allRobots = new List<Robot>();
         allWorldObjects = new List<WorldObject>();
         totalObjects = 0;

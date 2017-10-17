@@ -57,7 +57,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     RaycastHit hit;
 
     // Enviroment placement variables
-    private GameObject wallBeingPlaced = null;
+    private Wall wallBeingPlaced = null;
     public bool isWallBeingPlaced = false;
     public bool wallStarted = false;
     public Vector3 wallStart;
@@ -306,18 +306,17 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     public void StartWallPlacement(Vector3 position)
     {
         wallStart = position;
-        wallBeingPlaced = Instantiate(wallPrefab, SimManager.instance.world.transform);
+        wallBeingPlaced = Instantiate(wallPrefab, SimManager.instance.world.transform).GetComponent<Wall>();
         wallBeingPlaced.transform.position = wallStart;
         wallBeingPlaced.transform.localScale = Vector3.zero;
-        tempMat = wallBeingPlaced.GetComponent<Renderer>().material;
-        wallBeingPlaced.GetComponent<Renderer>().material = validMat;
-        wallBeingPlaced.name = "wall";
+        wallBeingPlaced.BeginPlacement();
         wallStarted = true;
+        StartCoroutine(DelayPlacement());
     }
 
     public void FinishWallPlacement()
     {
-        wallBeingPlaced.GetComponent<Renderer>().material = tempMat;
+        wallBeingPlaced.FinishPlacement();
         wallStarted = false;
         canPlaceObject = false;
         wallBeingPlaced = null;
@@ -368,6 +367,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
 
     IEnumerator DelayPlacement()
     {
+        canPlaceObject = false;
         yield return new WaitForSeconds(0.2f);
         canPlaceObject = true;
     }
@@ -445,10 +445,8 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
             {
                 // If this is the first click, set initial location
                 if (!wallStarted && canPlaceObject)
-                {
                     StartWallPlacement(mousePos);
-                }
-                else if (wallStarted && canPlaceObject)
+                else if (wallStarted && canPlaceObject && wallBeingPlaced.CanPlace())
                 {
                     FinishWallPlacement();
                     if (Input.GetKey(KeyCode.LeftShift))

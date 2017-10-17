@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
 
-public enum SetDirectory { Home, World, Sim, Object, Robot, Control};
+public enum SetDirectory { Home, World, Sim, Object, Robot, Control, DefaultSim};
 
 public class SettingsWindow : TabWindow, IFileReceiver
 {
@@ -31,10 +31,12 @@ public class SettingsWindow : TabWindow, IFileReceiver
 
     [Header("Directories")]
     public FileFinder dirFinder;
+    public FileFinder defSimFinder;
 
     public InputField homeDirInput;
     public InputField worldDirInput;
     public InputField simDirInput;
+    public InputField defaultSimDirInput;
 
     [Header("Error")]
     public GaussianDrawer gaussDrawer;
@@ -46,6 +48,7 @@ public class SettingsWindow : TabWindow, IFileReceiver
         windowTitle.color = UIManager.instance.windowHeaderTextColor;
         windowHeader.color = UIManager.instance.windowHeaderColor;
         dirFinder.Initialise("*", FileBrowserType.Directory, this);
+        defSimFinder.Initialise("*.sim", FileBrowserType.File, this);
         UpdateAllValues();
     }
 
@@ -80,6 +83,7 @@ public class SettingsWindow : TabWindow, IFileReceiver
         homeDirInput.text = SettingsManager.instance.homeDirectory;
         worldDirInput.text = SettingsManager.instance.worldDirectory;
         simDirInput.text = SettingsManager.instance.simDirectory;
+        defaultSimDirInput.text = SettingsManager.instance.defaultSim;
     }
 	
     // ----- Camera Settings -----
@@ -198,16 +202,14 @@ public class SettingsWindow : TabWindow, IFileReceiver
         if (Directory.Exists(dirpath))
         {
             SettingsManager.instance.ChangeSettingsValue("homedir", dirpath);
-            homeDirInput.text = SettingsManager.instance.homeDirectory;
+            EyesimLogger.instance.Log("Setting home directory to " + dirpath);
         }
         else
-        {
             Debug.Log("Bad Dirpath");
-            homeDirInput.text = SettingsManager.instance.homeDirectory;
-        }
+        homeDirInput.text = SettingsManager.instance.homeDirectory;
     }
 
-    // Home Directory
+    // World Directory
     public void OpenWorldDirSelect()
     {
         dirSet = SetDirectory.World;
@@ -220,16 +222,14 @@ public class SettingsWindow : TabWindow, IFileReceiver
         if (Directory.Exists(dirpath))
         {
             SettingsManager.instance.ChangeSettingsValue("worlddir", dirpath);
-            worldDirInput.text = SettingsManager.instance.worldDirectory;
+            EyesimLogger.instance.Log("Setting world directory to " + dirpath);
         }
         else
-        {
             Debug.Log("Bad Dirpath");
-            worldDirInput.text = SettingsManager.instance.homeDirectory;
-        }
+        worldDirInput.text = SettingsManager.instance.worldDirectory;
     }
 
-    // Home Directory
+    // Sim Dir Directory
     public void OpenSimDirSelect()
     {
         dirSet = SetDirectory.Sim;
@@ -242,19 +242,38 @@ public class SettingsWindow : TabWindow, IFileReceiver
         if (Directory.Exists(dirpath))
         {
             SettingsManager.instance.ChangeSettingsValue("simdir", dirpath);
-            simDirInput.text = SettingsManager.instance.simDirectory;
+            EyesimLogger.instance.Log("Setting sim directory to " + dirpath);
         }
         else
-        {
             Debug.Log("Bad Dirpath");
-            simDirInput.text = SettingsManager.instance.homeDirectory;
+
+        simDirInput.text = SettingsManager.instance.simDirectory;
+    }
+
+    // Sim Dir Directory
+    public void OpenDefaultSimDirSelect()
+    {
+        dirSet = SetDirectory.DefaultSim;
+        defSimFinder.OpenFileSelection(SettingsManager.instance.GetSetting("simdir", ""));
+    }
+
+    public void InputDefaultSimDir(string dirpath)
+    {
+        if (Directory.Exists(dirpath) || dirpath == "")
+        {
+            SettingsManager.instance.ChangeSettingsValue("defaultsim", dirpath);
+            EyesimLogger.instance.Log("Setting default sim path to " + dirpath);
         }
+        else
+            Debug.Log("Bad Dirpath");
+         simDirInput.text = SettingsManager.instance.defaultSim;
     }
 
 
     public GameObject ReceiveFile(string dirpath)
     {
-        if (Directory.Exists(dirpath))
+        Debug.Log(dirpath);
+        if (Directory.Exists(dirpath) || File.Exists(dirpath))
         {
             switch (dirSet)
             {
@@ -269,6 +288,10 @@ public class SettingsWindow : TabWindow, IFileReceiver
                 case SetDirectory.Sim:
                     SettingsManager.instance.ChangeSettingsValue("simdir", dirpath);
                     simDirInput.text = dirpath;
+                    break;
+                case SetDirectory.DefaultSim:
+                    SettingsManager.instance.ChangeSettingsValue("defaultsim", dirpath);
+                    defaultSimDirInput.text = dirpath;
                     break;
                 default:
                     Debug.Log("Failure to set directory");

@@ -108,7 +108,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!isPlaced && other.tag != "Marker")
+        if (!isPlaced && other.tag != "NonPhysical")
         {
 			collisionCount++;
         }
@@ -116,9 +116,10 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
 
     private void OnTriggerExit(Collider other)
     {
-        if (!isPlaced && other.tag != "Marker")
+        if (!isPlaced && other.tag != "NonPhysical")
         {
-			collisionCount--;
+            if (--collisionCount < 0)
+                collisionCount = 0;
         }
     }
 

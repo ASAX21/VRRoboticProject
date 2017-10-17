@@ -19,6 +19,7 @@ public class SettingsManager : MonoBehaviour {
     public string homeDirectory;
     public string worldDirectory;
     public string simDirectory;
+    public string defaultSim;
 
     private void Awake()
     {
@@ -30,6 +31,7 @@ public class SettingsManager : MonoBehaviour {
         homeDirectory = Directory.GetCurrentDirectory();
         worldDirectory = Directory.GetCurrentDirectory();
         simDirectory = Directory.GetCurrentDirectory();
+        defaultSim = "";
     }
 
     private void Start()
@@ -56,6 +58,7 @@ public class SettingsManager : MonoBehaviour {
         stringSettings.Add("homedir", (x, y) => y ? homeDirectory = x : homeDirectory);
         stringSettings.Add("worlddir", (x, y) => y ? worldDirectory = x : worldDirectory);
         stringSettings.Add("simdir", (x, y) => y ? simDirectory = x : simDirectory);
+        stringSettings.Add("defaultsim", (x, y) => y ? defaultSim = x : defaultSim);
     }
 
     public void SaveSettings()

@@ -33,7 +33,6 @@ public interface IVWDrive
     int VWDriveStalled();
     void VWDriveWait(Action<RobotConnection> doneCallback);
     void ClearVWWait();
-    void RemoveVWOrigin();
 }
 
 public interface IServos

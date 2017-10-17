@@ -16,6 +16,9 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 	public string filepath;
 	IO io;
 
+    // Hacky workaround to fix fact that mazes build backwards
+    float floorMazeOffset = 0;
+
     private void Awake()
     {
         if (instance == null || instance == this)
@@ -46,7 +49,8 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
                     size = size / Eyesim.Scale;
                 else
                     size = 0.36f;
-			    processmaz (size);	
+			    processmaz (size);
+                world.transform.position = new Vector3(0, 0, floorMazeOffset);
 			    break;
 		}
         SimManager.instance.world = world;
@@ -193,5 +197,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 		floor.transform.localScale = new Vector3 (width,0.1f,height);
 		floor.transform.position = new Vector3 (xpos + width/2,-0.05f,ypos + height/2);
 		floor.transform.SetParent (world.transform);
-	}
+        floorMazeOffset = -2f * floor.transform.position.z;
+
+    }
 }

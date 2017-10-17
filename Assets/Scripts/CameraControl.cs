@@ -23,8 +23,14 @@ public class CameraControl: MonoBehaviour
     {
         if (isOrtho)
             ToggleCameraOrtho();
+        Transform floor = GameObject.Find("floor").transform;
+        Vector3 cameraPos;
+        if (floor == null)
+            cameraPos = new Vector3(0f, 1.35f, -0.7f);
+        else
+            cameraPos = new Vector3(floor.position.x, 1.35f, -floor.position.z/2);
         Camera.main.transform.rotation = Quaternion.Euler(new Vector3(40f, 0f, 0f));
-        Camera.main.transform.parent.position = new Vector3(0f, 1.35f, -0.7f);
+        Camera.main.transform.parent.position = cameraPos;
         Camera.main.transform.localPosition = Vector3.zero;
     }
 

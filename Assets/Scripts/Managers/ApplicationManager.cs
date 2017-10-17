@@ -22,7 +22,7 @@ public class ApplicationManager : MonoBehaviour {
     private void Start()
     {
         if (!GetCommandLineArguments())
-            SimManager.instance.CreateNewBox(2000, 2000);
+            SimManager.instance.CreateInitialWorld();
     }
 
     // Check for command line arguments (input sim file)
@@ -40,7 +40,7 @@ public class ApplicationManager : MonoBehaviour {
             return false;
         else
         {
-            EyesimLogger.instance.Log("Sim file provided from command line");
+            EyesimLogger.instance.Log("Sim file provided from command line " + simPath);
             SimReader.instance.ReceiveFile(simPath);
         }
         return true;

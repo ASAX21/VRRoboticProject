@@ -23,4 +23,9 @@ public abstract class TabWindow : Window {
             go.SetColor(UIManager.instance.windowHeaderTextColor, UIManager.instance.windowHeaderColor);
         }
     }
+
+    public override void Close()
+    {
+        base.Close();
+    }
 }

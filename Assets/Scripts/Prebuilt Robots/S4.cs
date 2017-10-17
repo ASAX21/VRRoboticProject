@@ -204,11 +204,6 @@ IRadio
         return;
 	}
 
-    public void RemoveVWOrigin()
-    {
-        Destroy(wheelController.VWOrigin.gameObject);
-    }
-
     public byte[] GetCameraOutput(int camera)
 	{
 		return eyeCamController.GetBytes(camera);
