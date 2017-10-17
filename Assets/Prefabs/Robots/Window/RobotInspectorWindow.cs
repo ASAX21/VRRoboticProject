@@ -343,6 +343,8 @@ public class RobotInspectorWindow : TabWindow {
             (robot as S4).wheelController.realCoords = toggle;
     }
 
+    // Control content
+
     public void AddRobotControl()
     {
         UIManager.instance.LoadControlProgram(robot);
@@ -351,5 +353,10 @@ public class RobotInspectorWindow : TabWindow {
     public void DisconnectRobotControl()
     {
         robot.DisconnectRobot();
+    }
+
+    public void EnterVRMode()
+    {
+        VRControl.instance.ViewFromRobotPerspective(robot);
     }
 }
