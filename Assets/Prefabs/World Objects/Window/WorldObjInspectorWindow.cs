@@ -56,6 +56,12 @@ public class WorldObjInspectorWindow : Window {
         }
     }
 
+    public override void Close()
+    {
+        worldObj.isWindowOpen = false;
+        base.Close();
+    }
+
     public void SetXPosition(string x)
     {
         Vector3 pos = worldObj.transform.position;

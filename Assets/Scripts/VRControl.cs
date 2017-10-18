@@ -44,7 +44,7 @@ public class VRControl : MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.B))
             ChangeCamera0();
-        else if (Input.GetKeyDown(KeyCode.N))
+        else if (Input.GetKeyDown(KeyCode.N) && VRDevice.isPresent)
         {
             if (VREnabled)
                 ResetVRCharacter();
