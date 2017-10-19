@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "eyesim"
-#define MyAppVersion "0.7"
+#define MyAppVersion "0.7.1"
 #define MyAppPublisher "UWA CSSE"
 #define MyAppURL "https://github.com/Joelfrewy/RobotVR"
 #define MyAppExeName "eyesim.exe"

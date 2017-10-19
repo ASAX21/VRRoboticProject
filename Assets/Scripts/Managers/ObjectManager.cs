@@ -282,6 +282,8 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
                 SimManager.instance.RemoveRobotFromScene(objectOnMouse as Robot);
             else if (objectOnMouse is WorldObject)
                 SimManager.instance.RemoveWorldObjectFromScene(objectOnMouse as WorldObject);
+            else if (objectOnMouse is Marker)
+                Destroy(objectOnMouse.gameObject);
             else
             {
                 Debug.Log("Delete on mouse failed");
@@ -329,7 +331,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     {
         if (!isWallBeingPlaced)
             FreeMouse();
-        Destroy(wallBeingPlaced);
+        Destroy(wallBeingPlaced.gameObject);
         wallStarted = false;
         isWallBeingPlaced = false;
         canPlaceObject = false;

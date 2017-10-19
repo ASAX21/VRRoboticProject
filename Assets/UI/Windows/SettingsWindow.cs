@@ -266,7 +266,7 @@ public class SettingsWindow : TabWindow, IFileReceiver
         }
         else
             Debug.Log("Bad Dirpath");
-         simDirInput.text = SettingsManager.instance.defaultSim;
+        defaultSimDirInput.text = SettingsManager.instance.defaultSim;
     }
 
 

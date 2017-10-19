@@ -28,7 +28,7 @@ public class ViewWorldObjectsWindow : Window {
         foreach(WorldObject wObj in SimManager.instance.allWorldObjects)
         {
             GameObject newbutton = Instantiate(objectButtonPrefab, content, false);
-            newbutton.transform.GetChild(0).GetComponent<Text>().text = wObj.name + wObj.objectID;
+            newbutton.transform.GetChild(0).GetComponent<Text>().text = wObj.name + " #" + wObj.objectID;
             newbutton.GetComponent<Button>().onClick.AddListener(wObj.OpenInfoWindow);
         }
     }
