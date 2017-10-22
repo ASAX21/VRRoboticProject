@@ -21,6 +21,7 @@ public class MenuBarManager : MonoBehaviour {
     // Manipulateable Windows
     [Header("Submenus")]
     public Transform objectsSubmenu;
+    public Transform robotsSubmenu;
     public MenuBarItem objectMenuButton;
 
     private void Awake()
@@ -37,5 +38,14 @@ public class MenuBarManager : MonoBehaviour {
         newObjectButton.GetComponentInChildren<Text>().text = "Add " + name;
         newObjectButton.callbackIndex = index;
         newObjectButton.callback.AddListener(newObjectButton.CustomObjectCallback);
+    }
+
+    public void AddCustomRobotToMenu(string name, int index)
+    {
+        MenuBarItem newObjectButton = Instantiate(objectMenuButton, robotsSubmenu);
+        newObjectButton.GetComponentInChildren<Text>().text = "Add " + name;
+        newObjectButton.callbackIndex = index;
+        newObjectButton.callback.AddListener(newObjectButton.CustomRobotCallback);
+        Debug.Log("Added!");
     }
 }

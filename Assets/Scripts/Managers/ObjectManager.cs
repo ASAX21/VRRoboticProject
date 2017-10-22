@@ -40,7 +40,10 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     // ----- Custom Objects: Loaded at run-time -----
     [Header("Builder References")]
     public ObjectBuilder objectBuilder;
+
+    [Header("Custom Objects")]
     public List<GameObject> customObjects;
+    public List<GameObject> customRobots;
 
     // ---------------------------------------------------------------------
 
@@ -79,6 +82,9 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         {
             Destroy(this);
         }
+
+        customObjects = new List<GameObject>();
+        customRobots = new List<GameObject>();
     }
 
     // Use this for initialization
@@ -93,11 +99,22 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         GameObject newCustomObj = objectBuilder.BuildObjectFromFile(filepath);
         if (newCustomObj == null)
             return null;
-        WorldObject newWorldObj = newCustomObj.GetComponent<WorldObject>();
+        //WorldObject newWorldObj = newCustomObj.GetComponent<WorldObject>();
 
         MenuBarManager.instance.AddCustomObjectToMenu(newCustomObj.name, customObjects.Count);
         customObjects.Add(newCustomObj);
         return null;
+    }
+
+    public void StoreCustomRobot(GameObject customRobot)
+    {
+        if (customRobot.GetComponent<Robot>() == null)
+            return;
+
+        customRobot.transform.position = new Vector3(0, -20f, 0);
+
+        MenuBarManager.instance.AddCustomRobotToMenu(customRobot.name, customRobots.Count);
+        customRobots.Add(customRobot);
     }
 
     // ---- Add Objects -----
@@ -236,6 +253,24 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         }
     }
 
+    // ----- Add Robots -----
+
+    public void AddCustomRobotToScene(int index, string args)
+    {
+        if (isMouseOccupied)
+            FreeMouse();
+
+        PlaceableObject newObj = Instantiate(customRobots[index]).GetComponent<PlaceableObject>();
+        newObj.gameObject.SetActive(true);
+        if (args.Length == 0)
+            AddObjectToSceneOnMouse(newObj);
+        else
+        {
+            string[] pos = args.Split(':');
+            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
+        }
+    }
+    
     public void AddLabBotToScene(string args)
     {
         if (isMouseOccupied)

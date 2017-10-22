@@ -7,10 +7,11 @@ public class LaserScanController : MonoBehaviour {
     public Transform laserScanner;
     public Transform robot;
 
+    public int numPoints = 360;
+    public float rot = -1.0f;
     public LayerMask mask;
 
     public LineRenderer lineRend;
-
     public bool showRaycast = false;
     private float visTime = 0f;
 
@@ -31,11 +32,11 @@ public class LaserScanController : MonoBehaviour {
         if(showRaycast)
             visTime = 0.5f;
 
-        int[] dists = new int[360];
+        int[] dists = new int[numPoints];
         laserScanner.rotation = Quaternion.Euler(0, robot.eulerAngles.y, 0);
-        for(int i = 0; i < 360; i++)
+        for(int i = 0; i < numPoints; i++)
         {
-            laserScanner.Rotate(laserScanner.up, -1.0f);
+            laserScanner.Rotate(laserScanner.up, rot);
             Vector3 fwd = laserScanner.TransformDirection(Vector3.forward);
             RaycastHit hit;
             if (Physics.Raycast(laserScanner.position, fwd, out hit, 2000, mask))

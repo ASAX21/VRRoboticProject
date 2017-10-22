@@ -19,12 +19,11 @@ public class SimManager : MonoBehaviour {
     public List<WorldObject> allWorldObjects;
     public GameObject world;
 
+    [NonSerialized]
     public bool isPaused = false;
     public delegate void PauseAction();
     public PauseAction OnPause;
     public PauseAction OnResume;
-
-    public GameObject testBeacon;
 
     // Record number of total objects, used to assign ID
     private int totalObjects = 0;
@@ -32,6 +31,8 @@ public class SimManager : MonoBehaviour {
     // List of Objects used to save state
     private List<ObjectState> defaultState;
     private int stateID = 0;
+
+    [NonSerialized]
     public bool worldChanged = false;
 
     private void Awake()
@@ -42,6 +43,7 @@ public class SimManager : MonoBehaviour {
             Destroy(this);
     }
 
+    // Called by application manager on launch (if no default sim file)
     public void CreateInitialWorld()
     {
         if (SettingsManager.instance.defaultSim != "")
@@ -52,7 +54,6 @@ public class SimManager : MonoBehaviour {
         }
         else
             CreateNewBox(2000, 2000);
-
     }
 
     // Search only Robots
@@ -357,6 +358,7 @@ public class SimManager : MonoBehaviour {
     }
 }
 
+// Helper class to save and restore object states
 internal class ObjectState
 {
     public int id;

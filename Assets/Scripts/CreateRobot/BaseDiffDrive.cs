@@ -15,20 +15,26 @@ public class BaseDiffDrive : Robot, IMotors,
     ConfigureableRobot
 {
     // Components of the robot
+    [Header("Physical Components")]
     public BoxCollider robotBody;
     public CapsuleCollider robotBunt;
-    public GameObject robotModel;
     public Rigidbody robotRigidbody;
-
     public Transform axel;
 
+    [Header("Model")]
+    public Transform modelContainer;
+    public GameObject robotModel;
+
+    [Header("PSD")]
     public Transform PSDContainer;
     public GameObject PSDPrefab;
 
     // EyeCam position is the top level servo (ServoPan)
+    [Header("Camera")]
     public HingeJoint eyeCamPosition;
 
     // Controllers
+    [Header("Controller References")]
     public WheelMotorController wheelController;
     public PSDController psdController;
     public ServoController servoController;
@@ -38,6 +44,7 @@ public class BaseDiffDrive : Robot, IMotors,
     public LaserScanController laserScanController;
 
     // Enabled parameters
+    [Header("Enabled Systems")]
     public bool psdEnabled;
     public bool servoEnabled;
     public bool camEnabled;
@@ -53,16 +60,25 @@ public class BaseDiffDrive : Robot, IMotors,
         psdController.sensors = new List<PSDSensor>();
         base.Awake();
     }
+
     public void TEST()
     {
-        //   PSD_FRONT 1 30 0 80 0
-        Vector3 p = new Vector3(30 / Eyesim.Scale, 50/Eyesim.Scale, 80 / Eyesim.Scale);
-        AddPSDSensor(1, "PSD_FRONT", p, 0f);
+        ConfigureCamera(new Vector3(0, 50/Eyesim.Scale, 70/ Eyesim.Scale), 0f, 0f, 90f, 90f);
     }
 
-    public void TEST2()
+    public void ConfigureModel(GameObject newModel, Vector3 pos, Vector3 rot)
     {
-        ConfigureCamera(new Vector3(0, 50/Eyesim.Scale, 70/ Eyesim.Scale), 0f, 0f, 90f, 90f);
+        if (robotModel != null)
+            Destroy(robotModel);
+
+        // Set container position to offset model if required
+        modelContainer.localPosition = pos;
+        modelContainer.localRotation = Quaternion.Euler(rot);
+        // Put model into container
+        robotModel = newModel;
+        robotModel.transform.parent = modelContainer;
+        robotModel.transform.localPosition = Vector3.zero;
+        robotModel.transform.localRotation = Quaternion.identity;
     }
 
     // Configure size of robot - single box collider, and position of the slider located at the back
@@ -128,7 +144,16 @@ public class BaseDiffDrive : Robot, IMotors,
         servoController.servos[1].maxAngle = maxTilt;
         servoController.servos[1].minAngle = -maxTilt;
         camEnabled = true;
+        servoEnabled = true;
     }
+
+    public void ConfigureLidar(int numPoints, int tilt)
+    {
+        laserScanController.numPoints = numPoints;
+        laserScanController.rot = (float) -360.0 / numPoints;
+        laserScanController.laserScanner.localRotation = Quaternion.Euler(new Vector3(-tilt, 0, 0));
+    }
+
 
     public void DriveDoneCallback()
     {
@@ -440,6 +465,6 @@ public class BaseDiffDrive : Robot, IMotors,
         if (laserEnabled)
             return laserScanController.Scan();
         else
-            return null;
+            return new int[360];
     }
 }

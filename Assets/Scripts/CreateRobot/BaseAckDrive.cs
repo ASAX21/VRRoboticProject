@@ -14,13 +14,16 @@ public class BaseAckDrive : Robot, IMotors,
     ConfigureableRobot
 {
     // Components of the robot
+    [Header("Physical Components")]
     public BoxCollider robotBody;
     public CapsuleCollider robotBunt;
-    public GameObject robotModel;
     public Rigidbody robotRigidbody;
-
     public Transform axelTurn;
     public Transform axelDrive;
+
+    [Header("Model")]
+    public Transform modelContainer;
+    public GameObject robotModel;
 
     public Transform PSDContainer;
     public GameObject PSDPrefab;
@@ -29,6 +32,7 @@ public class BaseAckDrive : Robot, IMotors,
     public HingeJoint eyeCamPosition;
 
     // Controllers
+    [Header("Controller References")]
     public AckermannController wheelController;
     public PSDController psdController;
     public ServoController servoController;
@@ -70,6 +74,21 @@ public class BaseAckDrive : Robot, IMotors,
     {
         robotRigidbody.mass = mass;
         robotRigidbody.centerOfMass = com;
+    }
+
+    public void ConfigureModel(GameObject newModel, Vector3 pos, Vector3 rot)
+    {
+        if (robotModel != null)
+            Destroy(robotModel);
+
+        // Set container position to offset model if required
+        modelContainer.localPosition = pos;
+        modelContainer.localRotation = Quaternion.Euler(rot);
+        // Put model into container
+        robotModel = newModel;
+        robotModel.transform.parent = modelContainer;
+        robotModel.transform.localPosition = Vector3.zero;
+        robotModel.transform.rotation = Quaternion.identity;
     }
 
     // Configure axel height (vertical into robot) and position along z-axis (forward)

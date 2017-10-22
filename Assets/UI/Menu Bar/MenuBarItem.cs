@@ -126,4 +126,9 @@ public class MenuBarItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
     {
         ObjectManager.instance.AddCustomObjectToScene(callbackIndex, "");
     }
+
+    public void CustomRobotCallback()
+    {
+        ObjectManager.instance.AddCustomRobotToScene(callbackIndex, "");
+    }
 }

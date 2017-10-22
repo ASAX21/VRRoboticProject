@@ -15,6 +15,7 @@ public class LabBot : Robot,
     ILaser
 {
     // Controllers
+    [Header("Controller References")]
     public WheelMotorController wheelController;
     public PSDController psdController;
     public ServoController servoController;
@@ -25,24 +26,6 @@ public class LabBot : Robot,
 
     Action<RobotConnection> driveDoneDelegate;
     Action<RobotConnection, byte[]> radioMessageDelegate;
-
-    // This function sets the controllers for a newly created LabBot object
-    // Used when a robot is created from file
-    public void Initialize()
-    {
-        wheelController = gameObject.AddComponent<WheelMotorController>();
-        psdController = gameObject.AddComponent<PSDController>();
-        servoController = gameObject.AddComponent<ServoController>();
-        eyeCamController = gameObject.AddComponent<EyeCameraController>();
-        audioController = gameObject.AddComponent<AudioController>();
-        radioController = gameObject.AddComponent<RadioController>();
-        laserScanController = gameObject.AddComponent<LaserScanController>();
-
-        wheelController.wheels = new List<Wheel>();
-        psdController.sensors = new List<PSDSensor>();
-        servoController.servos = new List<Servo>();
-        eyeCamController.cameras = new List<EyeCamera>();
-    }
 
     public void DriveDoneCallback()
     {

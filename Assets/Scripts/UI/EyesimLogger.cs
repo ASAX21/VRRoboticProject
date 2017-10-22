@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
 
 public class EyesimLogger : MonoBehaviour
 {
@@ -43,6 +41,7 @@ public class EyesimLogger : MonoBehaviour
         Debug.Log(path);
         logFile = File.Open(path, FileMode.Create);
         logWriter = new StreamWriter(logFile, System.Text.Encoding.ASCII);
+        logWriter.Write("Log File Created " + DateTime.Now.ToString());
         logfileOpen = true;
     }
 

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Text.RegularExpressions;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -54,6 +56,7 @@ public class RobotLoader: MonoBehaviour, IFileReceiver {
             }
         }
         robotObject.GetComponent<PlaceableObject>().PostBuild();
+        ObjectManager.instance.StoreCustomRobot(robotObject);
         return robotObject;
     }
 
@@ -114,20 +117,60 @@ public class RobotLoader: MonoBehaviour, IFileReceiver {
                                 return false;
                         }
                         robotConfig = robotObject.GetComponent<ConfigureableRobot>();
+                        robotObject.name = "Custom Robot " + ObjectManager.instance.customRobots.Count + 1;
+                        robotObject.SetActive(false);
                         return true;
                     }
                 case "name":
                     {
                         if (!CheckArguments(args, 2, "name"))
                             return false;
+                        // Check if name already exists
+                        if (args[1].ToLower() == "labbot" || args[1].ToLower() == "s4")
+                        {
+                            EyesimLogger.instance.Log("Error loading robot - Robot with name " + args[1] + " already exists");
+                            return false;
+                        }
+
+                        foreach (GameObject obj in ObjectManager.instance.customRobots)
+                        {
+                            if (obj.name.ToLower() == args[1].ToLower())
+                            {
+                                EyesimLogger.instance.Log("Error loading robot - Robot with name " + args[1] + " already exists");
+                                return false;
+                            }
+                        }
                         robotObject.name = args[1];
                         return true;
                     }
                 // Path to robot model (.obj file)
                 case "model":
                     {
-                        if (!CheckArguments(args, 2, "model"))
+                        if (! (CheckArguments(args, 2, "model") || CheckArguments(args, 8, "model")))
                             return false;
+                        // Load object model
+                        string modelPath = null;
+                        int argOffset = 0;
+                        if (args[1][0] == '"')
+                        {
+                            modelPath = Regex.Matches(line, "\"[^\"]*\"")[0].ToString();
+                            modelPath = modelPath.Trim('"');
+                            argOffset = 1;
+                        }
+                        else
+                            modelPath = args[1];
+                        GameObject modelObj = OBJLoader.LoadOBJFile(modelPath);
+                        if (modelObj == null)
+                            return false;
+
+                        if (args.Length == 2)
+                            robotConfig.ConfigureModel(modelObj, Vector3.zero, Vector3.zero);
+                        else
+                        {
+                            Vector3 modelPos = new Vector3(float.Parse(args[2 + argOffset]) / Eyesim.Scale, float.Parse(args[3 + argOffset]) / Eyesim.Scale, float.Parse(args[4 + argOffset]) / Eyesim.Scale);
+                            Vector3 modelRot = new Vector3(float.Parse(args[5 + argOffset]), float.Parse(args[6 + argOffset]), float.Parse(args[7 + argOffset]));
+                            robotConfig.ConfigureModel(modelObj, modelPos, modelRot);
+                        }
                         return true;
                     }
                 // Centre of mass, and mass in kg
@@ -208,6 +251,8 @@ public class RobotLoader: MonoBehaviour, IFileReceiver {
         catch (FormatException e)
         {
             Debug.Log("Error parsing arguments for " + args[0] + ": " + e.Message);
+            foreach (string s in args)
+                Debug.Log(s);
             return false;
         }
     }

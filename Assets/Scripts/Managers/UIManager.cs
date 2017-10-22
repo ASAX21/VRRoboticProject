@@ -47,11 +47,6 @@ public class UIManager : MonoBehaviour {
     public Color windowHeaderColor;
     public Color windowHeaderTextColor;
 
-    // Builders
-    private WorldBuilder worldBuilder;
-    private RobotBuilder robotBuilder;
-    private SimReader simBuilder;
-
     // FileFinder
     [Header("File Finders")]
     public FileFinder worldFileFinder;
@@ -84,12 +79,9 @@ public class UIManager : MonoBehaviour {
     void Start()
     {
         EyesimLogger.instance.logUpdatedEvent += logWindow.UpdateLogDisplay;
-        worldBuilder = WorldBuilder.instance;
-        robotBuilder = RobotBuilder.instance;
-        simBuilder = SimReader.instance;
-		worldFileFinder.Initialise("*.*", FileBrowserType.File, worldBuilder);
-        robotFileFinder.Initialise("*.robi", FileBrowserType.File, robotBuilder);
-        simFileFinder.Initialise("*.sim", FileBrowserType.File, simBuilder);
+		worldFileFinder.Initialise("*.*", FileBrowserType.File, WorldBuilder.instance);
+        robotFileFinder.Initialise("*.robi", FileBrowserType.File, RobotLoader.instance);
+        simFileFinder.Initialise("*.sim", FileBrowserType.File, SimReader.instance);
         //scriptFileFinder.Initialise("*.c", FileBrowserType.File, SimManager.instance.osManager);
         customObjFileFinder.Initialise("*.esObj", FileBrowserType.File, ObjectManager.instance);
     }

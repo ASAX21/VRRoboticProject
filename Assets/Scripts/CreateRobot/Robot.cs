@@ -99,7 +99,7 @@ public class Speed
     }
 }
 // Interface for building robot from robi file
-public enum AxelType { None, Drive, Turn };
+public enum AxelType { None, Drive, Turn, Omni };
 
 public interface ConfigureableRobot
 {
@@ -109,17 +109,22 @@ public interface ConfigureableRobot
     void ConfigureWheels(float diameter, float maxVel, int ticksPerRev, float track);
     bool AddPSDSensor(int id, string name, Vector3 pos, float rot);
     void ConfigureCamera(Vector3 pos, float pan, float tilt, float maxPan, float maxTilt);
+    void ConfigureModel(GameObject model, Vector3 pos, Vector3 rot);
 }
 
 // Abstract robot
 // Universal functions
 public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiver
 {
+    [Space(10)]
+    [Header("Robot Settings")]
     public int axels = 0;
 
     public RobotConnection myConnection = null;
     private Process controlBinary = null;
+    [HideInInspector]
     public string controlBinaryName = "";
+    [Header("Object References")]
     public TrailRenderer trail;
 
     // Robot Info Window

@@ -11,35 +11,40 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
 {
     protected ObjectManager objectManager;
 
+    [Header("Object Identifiers")]
     public int objectID;
     public string type;
 
     // Placement variables
-    public bool isInit = false;
-    public bool isPlaced = true;
-    public bool isSelected = false;
-    public bool locked = false;
-    public bool unpausedLockState = false;
-    public bool isValidPlacement = true;
+    [HideInInspector]
+    public bool isInit = false, isPlaced = true, isSelected = false;
+    [HideInInspector]
+    public bool locked = false, unpausedLockState = false, isValidPlacement = true;
 
     private LayerMask currLayer = 0;
-	public int collisionCount = 0;
+    [HideInInspector]
+    public int collisionCount = 0;
 
+    [Header("Vertical Offsets")]
     public float defaultVerticalOffset = 0f;
     public float vertPlaceOffset = 0.01f;
 
     // Physics
+    [Header("Centre of Mass")]
     public Vector3 centreOfMass;
 
     // List of all materials
+    [HideInInspector]
     public List<MaterialContainer> matContainer;
     private Material validMat;
     private Material invalidMat;
 
     // Unity Components
+    [HideInInspector]
     public List<PhysicalContainer> physContainer;
 
     // UI Variables
+    [HideInInspector]
     public bool isWindowOpen = false;
 
     internal virtual void Awake()

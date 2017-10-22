@@ -14,8 +14,9 @@ ICameras,
 IAudio,
 IRadio
 {
-	// Controllers
-	public WheelMotorController wheelController;
+    // Controllers
+    [Header("Controller References")]
+    public WheelMotorController wheelController;
 	public PSDController psdController;
 	public ServoController servoController;
 	public EyeCameraController eyeCamController;
