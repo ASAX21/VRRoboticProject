@@ -148,6 +148,7 @@ public class LabBot : Robot,
     public void SetVisualize(bool val)
     {
         psdController.VisualiseAllSensors(val);
+        laserScanController.showRaycast = val;
     }
 
     public void VWSetVehicleSpeed(int linear, int angular)

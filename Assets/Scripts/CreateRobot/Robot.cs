@@ -84,6 +84,7 @@ public interface IRadio
 public interface ILaser
 {
     int[] LaserScan();
+    void SetVisualize(bool val);
 }
 // Class used to pass data back to client
 public class Speed

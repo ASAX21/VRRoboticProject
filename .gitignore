@@ -8,6 +8,7 @@
 /Xming
 /Linux
 /Test Assets
+/InstallerScript/Output/*
 
 # Visual Studio 2015 cache directory
 /.vs/

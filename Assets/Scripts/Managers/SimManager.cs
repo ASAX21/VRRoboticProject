@@ -303,9 +303,7 @@ public class SimManager : MonoBehaviour {
     {
         if (isPaused)
             return;
-
         isPaused = true;
-        if(OnPause != null) OnPause();
         foreach (Robot rob in allRobots)
         {
             foreach (PhysicalContainer phys in rob.physContainer)
@@ -321,6 +319,8 @@ public class SimManager : MonoBehaviour {
                 phys.rigidBody.isKinematic = true;
             }
         }
+        if (OnPause != null)
+            OnPause();
     }
 
     public void ResumeSimulation()

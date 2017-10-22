@@ -24,12 +24,13 @@ namespace RobotComponents
         // Calculate sensor values at each frame
         void FixedUpdate()
         {
-            Vector3 forward = transform.TransformDirection(Vector3.forward);
+            Vector3 fwd = transform.TransformDirection(Vector3.forward);
             RaycastHit hit;
-            if (Physics.Raycast(transform.position, forward, out hit, 2000, mask))
+            if (Physics.Raycast(transform.position, fwd, out hit, 2000, mask))
             {
                 value = hit.distance * Eyesim.Scale;
-                lineRend.SetPosition(1, Vector3.forward * hit.distance);
+                value = value > 9999 ? 9999 : value;
+                lineRend.SetPosition(1, Vector3.forward * hit.distance);            
             }
             else
             {
