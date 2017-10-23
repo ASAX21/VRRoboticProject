@@ -1,9 +1,17 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class WorldObject : PlaceableObject, IPointerClickHandler {
 
     WorldObjInspectorWindow myWindow;
+    public Color myColor;
+
+    override internal void Start()
+    {
+        myColor = Color.white;
+        base.Start();
+    }
 
     override public void OpenInfoWindow()
     {
@@ -34,5 +42,18 @@ public class WorldObject : PlaceableObject, IPointerClickHandler {
     {
         if (myWindow != null)
             Destroy(myWindow.gameObject);
+    }
+
+    public void ChangeColor(Color newColor)
+    {
+        // Set color of each default material
+        foreach(MaterialContainer m in matContainer)
+        {
+            for(int i = 0; i < m.defaultMats.Length; i++)
+                m.defaultMats[i].color = newColor;
+        }
+
+        myColor = newColor;
+        myWindow.colorDisplay.color = myColor;
     }
 }

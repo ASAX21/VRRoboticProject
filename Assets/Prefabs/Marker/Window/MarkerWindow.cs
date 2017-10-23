@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions.ColorPicker;
 
-public class MarkerWindow : MonoBehaviour {
+public class MarkerWindow : Window {
 
     public Marker marker;
     private SpriteRenderer rend;
@@ -13,17 +13,29 @@ public class MarkerWindow : MonoBehaviour {
     public Image colorDisplay;
     public ColorPickerControl colorPicker;
 
+    private bool colPickerOpen = false;
+
     public void Initialize(Marker newMarker)
     {
-        colorPicker = ColorPickerControl.instance;
         marker = newMarker;
         rend = marker.GetComponent<SpriteRenderer>();
         myColor = rend.color;
     }
 
+    public void CloseColorPicker()
+    {
+        colPickerOpen = false;
+    }
+
     public void OpenColorPicker()
     {
-        colorPicker.Open(marker, myColor, SetMarkerColor);
+        if(colPickerOpen)
+            colorPicker.transform.SetAsLastSibling();
+        else
+        {
+            colorPicker = Instantiate(UIManager.instance.colorPickerPrefab, UIManager.instance.gameWindowContainer);
+            colorPicker.Open(myColor, SetMarkerColor, CloseColorPicker);
+        }
     }
 
     public void SetMarkerColor(Color color)
@@ -33,10 +45,10 @@ public class MarkerWindow : MonoBehaviour {
         rend.color = myColor;
     }
 
-    public void CloseWindow()
+    override public void Close()
     {
         marker.isWindowOpen = false;
-        gameObject.SetActive(false);
+        base.Close();
     }
 
     public void DeleteMarker()

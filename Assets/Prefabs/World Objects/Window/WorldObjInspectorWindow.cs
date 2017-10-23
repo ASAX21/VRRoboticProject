@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UI.Extensions.ColorPicker;
 
 public class WorldObjInspectorWindow : Window {
 
@@ -22,6 +23,12 @@ public class WorldObjInspectorWindow : Window {
     [Header("Icons")]
     public Image lockButtonImage;
     public Sprite lockedImage;
+
+    [Header("Color Picker")]
+    public Image colorDisplay;
+    public ColorPickerControl colorPicker;
+
+    private bool colPickerOpen = false;
 
     // Use this for initialization
     public void Initialize()
@@ -79,6 +86,23 @@ public class WorldObjInspectorWindow : Window {
     public void SetPhiPosition(string phi)
     {
         worldObj.transform.rotation = Quaternion.Euler(0, float.Parse(phi), 0);
+    }
+
+    public void CloseColorPicker()
+    {
+        colPickerOpen = false;
+    }
+
+    public void OpenColorPicker()
+    {
+        if (colPickerOpen)
+            colorPicker.transform.SetAsLastSibling();
+        else
+        {
+            colorPicker = Instantiate(UIManager.instance.colorPickerPrefab, UIManager.instance.gameWindowContainer);
+            colorPicker.Open(worldObj.myColor, worldObj.ChangeColor, CloseColorPicker);
+        }
+        colPickerOpen = true;
     }
 
     public void OnSimPaused()

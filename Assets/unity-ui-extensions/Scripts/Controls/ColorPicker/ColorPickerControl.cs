@@ -6,10 +6,8 @@ using UnityEngine.Events;
 namespace UnityEngine.UI.Extensions.ColorPicker
 {
 
-    public class ColorPickerControl : MonoBehaviour
+    public class ColorPickerControl : Window
     {
-        public static ColorPickerControl instance;
-
         private float _hue = 0;
         private float _saturation = 0;
         private float _brightness = 0;
@@ -20,10 +18,12 @@ namespace UnityEngine.UI.Extensions.ColorPicker
 
         private float _alpha = 1;
 
-        public Marker currentMarker;
         public ColorImage colorImage;
         public ColorChangedEvent onValueChanged = new ColorChangedEvent();
         public HSVChangedEvent onHSVChanged = new HSVChangedEvent();
+
+        public delegate void onClose();
+        public onClose CloseCallback;
 
         public Color CurrentColor
         {
@@ -53,31 +53,20 @@ namespace UnityEngine.UI.Extensions.ColorPicker
             SendChangedEvent();
         }
 
-        private void Awake()
+        public void Open(Color mColor, UnityAction<Color> callback, onClose closeCallback)
         {
-            if (instance == this || instance == null)
-                instance = this;
-            else
-                Destroy(this);
-
-            gameObject.SetActive(false);
-        }
-
-        public void Open(Marker marker, Color mColor, UnityAction<Color> callback)
-        {
-            onValueChanged.RemoveAllListeners();
-            onValueChanged.AddListener(colorImage.ColorChanged);
             onValueChanged.AddListener(callback);
-            currentMarker = marker;
+            CloseCallback += closeCallback;
             CurrentColor = mColor;
             gameObject.SetActive(true);
-            transform.SetAsLastSibling();
+            SendChangedEvent();
         }
 
-        public void Close()
+        public override void Close()
         {
-            currentMarker = null;
-            gameObject.SetActive(false);
+            if(CloseCallback != null)
+                CloseCallback.Invoke();
+            Destroy(gameObject);
         }
 
         public float H

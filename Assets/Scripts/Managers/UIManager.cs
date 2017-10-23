@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UI.Extensions.ColorPicker;
 
 public enum BlockingType { UI, Scene }
 
@@ -41,6 +42,7 @@ public class UIManager : MonoBehaviour {
     public RobotInspectorWindow robotInspectorWindowPrefab;
     public WorldObjInspectorWindow worldObjInspectorWindowPrefab;
     public MarkerWindow markerWindowPrefab;
+    public ColorPickerControl colorPickerPrefab;
 
     // Color Scheme
     [Header("Colors")]

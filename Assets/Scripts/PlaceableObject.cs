@@ -56,7 +56,7 @@ public abstract class PlaceableObject : MonoBehaviour, IPointerClickHandler, IBe
         PostBuild();
     }
 
-    private void Start()
+    internal virtual void Start()
     {
         objectManager = ObjectManager.instance;
         validMat = ObjectManager.instance.validMat;

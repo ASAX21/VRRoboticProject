@@ -24,6 +24,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     public GameObject soccerBallPrefab;
     public GameObject cratePrefab;
     public GameObject markerPrefab;
+    public GameObject golfBallPrefab;
 
     // Robot Prefabs
     [Header("Prefab Robots")]
@@ -184,6 +185,10 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
                 newObj = Instantiate(cratePrefab).GetComponent<PlaceableObject>();
                 newObj.name = "Crate";
                 break;
+            case "golf":
+                newObj = Instantiate(golfBallPrefab).GetComponent<PlaceableObject>();
+                newObj.name = "Golf Ball";
+                break;
             case "labbot":
                 newObj = Instantiate(labBotPrefab).GetComponent<PlaceableObject>();
                 newObj.name = "LabBot";
@@ -220,6 +225,11 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     public void AddCrateToScene(string args)
     {
         AddPredefinedObjectToScene("Crate", args);
+    }
+
+    public void AddGolfBallToScene(string args)
+    {
+        AddPredefinedObjectToScene("Golf", args);
     }
 
     public void AddMarkerToScene(string args)
