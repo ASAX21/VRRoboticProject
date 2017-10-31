@@ -33,6 +33,7 @@ public interface IVWDrive
     int VWDriveStalled();
     void VWDriveWait(Action<RobotConnection> doneCallback);
     void ClearVWWait();
+    bool VWAccurate { get; set; }
 }
 
 public interface IServos
@@ -156,8 +157,7 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
             {
                 myWindow = Instantiate(UIManager.instance.robotInspectorWindowPrefab, UIManager.instance.gameWindowContainer);
                 myWindow.robot = this;
-                myWindow.Initialize();
-
+                myWindow.gameObject.SetActive(true);
             }
             // Else activate the old one
             else

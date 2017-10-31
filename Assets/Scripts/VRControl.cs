@@ -44,7 +44,7 @@ public class VRControl : MonoBehaviour {
     {
         if (Input.GetKeyDown(KeyCode.B))
             ChangeCamera0();
-        else if (Input.GetKeyDown(KeyCode.N) && VRDevice.isPresent)
+        else if (Input.GetKeyDown(KeyCode.N) && UnityEngine.XR.XRDevice.isPresent)
         {
             if (VREnabled)
                 ResetVRCharacter();
@@ -75,7 +75,7 @@ public class VRControl : MonoBehaviour {
     // Change to normal camera
 	public void ChangeCamera0()
 	{
-		VRSettings.enabled=false;
+		UnityEngine.XR.XRSettings.enabled=false;
 		VRCamera.SetActive(false);
 		NormalCamera.SetActive(true);
         VREnabled = false;
@@ -87,7 +87,7 @@ public class VRControl : MonoBehaviour {
 	public void ChangeCamera1()
 	{
         // Enable VR
-		VRSettings.enabled=true;
+		UnityEngine.XR.XRSettings.enabled=true;
 
         // Set parent back to VR Camera Position (incase moved to robot)
 		VRCamera.transform.SetParent(VrCameraParent);
@@ -100,28 +100,28 @@ public class VRControl : MonoBehaviour {
         VRCharacter.enabled = true;
 	}
 
-    // Change to VR camera attached to robot
-	public void ChangeCamera2()
-	{
-		VRSettings.enabled=true;
-		LabBot lab=GameObject.FindObjectOfType<LabBot>();
-		if(lab)
-		{
-			EyeCamera eye=lab.GetComponentInChildren<EyeCamera>();
-			if(eye)
-			{
-				VrCameraParent.SetParent(eye.transform.parent);
-				VrCameraParent.localPosition=Vector3.zero;
-				VrCameraParent.localRotation=Quaternion.identity;
+    ////Change to VR camera attached to robot
+    //public void ChangeCamera2()
+    //{
+    //    UnityEngine.XR.XRSettings.enabled = true;
+    //    LabBot lab = GameObject.FindObjectOfType<LabBot>();
+    //    if (lab)
+    //    {
+    //        EyeCamera eye = lab.GetComponentInChildren<EyeCamera>();
+    //        if (eye)
+    //        {
+    //            VrCameraParent.SetParent(eye.transform.parent);
+    //            VrCameraParent.localPosition = Vector3.zero;
+    //            VrCameraParent.localRotation = Quaternion.identity;
 
-				VRCamera.transform.SetParent(VrCameraParent.transform.parent);
-				VRCamera.transform.localPosition = Vector3.zero;
-			}
-		}
+    //            VRCamera.transform.SetParent(VrCameraParent.transform.parent);
+    //            VRCamera.transform.localPosition = Vector3.zero;
+    //        }
+    //    }
 
-		VRCamera.SetActive(true);
-		NormalCamera.SetActive(false);
-	}
+    //    VRCamera.SetActive(true);
+    //    NormalCamera.SetActive(false);
+    //}
 
     public void ViewFromRobotPerspective(Robot robot)
     {
@@ -132,7 +132,7 @@ public class VRControl : MonoBehaviour {
         VRCamera.transform.SetParent(eyeCam.transform);
         VRCamera.transform.localPosition = Vector3.zero;
         VRCamera.transform.localRotation = Quaternion.identity;
-        VRSettings.enabled = true;
+        UnityEngine.XR.XRSettings.enabled = true;
         VRCamera.SetActive(true);
         NormalCamera.SetActive(false);
     }

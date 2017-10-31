@@ -1,5 +1,8 @@
-﻿using System.Linq;
+﻿using System;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+
 using System.Collections;
 using System.Collections.Generic;
 
@@ -14,6 +17,8 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 
     public GameObject world;
 	public string filepath;
+    private Texture2D floorTex;
+
 	IO io;
 
     // Hacky workaround to fix fact that mazes build backwards
@@ -31,10 +36,11 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
     {
         SimManager.instance.DestroyWorld();
 		this.filepath = filepath;
+        floorTex = null;
         EyesimLogger.instance.Log("Loading world: " + filepath);
         world = new GameObject();
 		world.name = "World";
-		io = new IO();
+        io = new IO("#;");
 
         if (!io.Load (filepath))
 			return null;
@@ -53,10 +59,33 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
                 world.transform.position = new Vector3(0, 0, floorMazeOffset);
 			    break;
 		}
+        if (floorTex != null)
+        {
+            Transform floor = world.transform.Find("floor");
+            if (floor != null)
+            {
+                floor.GetComponent<Renderer>().material.mainTexture = floorTex;
+                floor.GetComponent<Renderer>().material.mainTextureScale = Vector2.one;
+            }
+        }
         SimManager.instance.world = world;
         SimManager.instance.worldChanged = true;
         return world;
 	}
+
+    private void LoadPNG(string filename)
+    {
+        Texture2D tex = null;
+        byte[] imageData;
+
+        if(File.Exists(filename))
+        {
+            imageData = File.ReadAllBytes(filename);
+            tex = new Texture2D(2, 2);
+            tex.LoadImage(imageData);
+        }
+        floorTex = tex;
+    }
 
     public GameObject CreateBox(int width, int height)
     {
@@ -71,16 +100,20 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
         return world;
     }
 
-	public void processwld (){
-		string line;
+	public void processwld ()
+    {
+        //string line;
+        string[] args;
 		float width = -1.0f;
 		float height = -1.0f;
 		Stack<Vector3> relativepos = new Stack<Vector3> ();
 		relativepos.Push (new Vector3(0.0f, 0.0f, 0.0f));
-		while ((line = io.readLine()) != "ENDOFFILE") {
-			if (line.Length > 0) {
-				if (line [0] != '#' && line [0] != ';') {
-					string[] args = line.Split (new char [] {' ','\t'});
+		while ( (args = io.ReadNextArguments())[0] != "ENDOFFILE") {
+			if (args.Length > 0) {
+                foreach (string s in args)
+                    Debug.Log(s);
+                if (!(args[0][0] == '#' || args[0][0] == ';'))
+                {
 					//convert argument string to float list
 					List<float> parameters = new List<float> ();
 					foreach (string s in args) {
@@ -124,7 +157,19 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 							break;
 						relativepos.Pop ();
 						break;
-					default:
+                    case "floor_texture":
+                            string texPath = IO.SearchForFile(args[1], filepath);
+                            if (texPath == "")
+                            {
+                                EyesimLogger.instance.Log("Unable to find floor texture");
+                                Debug.Log("Couldnt find tex");
+                            }
+                            else
+                            {
+                                LoadPNG(texPath);
+                            }
+                            break;
+                    default:
 						if (parameters.Count < 4)
 							break;
 						Vector2 p1 = mapDomain (new Vector2 (parameters [0]/Eyesim.Scale, parameters [1]/Eyesim.Scale), relativepos);

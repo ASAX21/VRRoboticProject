@@ -70,8 +70,9 @@ public class RobotInspectorWindow : TabWindow {
     private PSDController psdController;
 
     // Use this for initialization
-    public void Initialize () {
-        if(robot is ICameras)
+    void Awake()
+    {
+        if (robot is ICameras)
         {
             cameraToDisplay = (robot as ICameras).GetCameraComponent(0);
             cameraTarget.texture = cameraToDisplay.rendTex;
@@ -80,19 +81,12 @@ public class RobotInspectorWindow : TabWindow {
         lockButtonImage.sprite = lockedImage;
         robotNumber.text = "ID # " + robot.objectID.ToString();
         robotName.text = robot.name;
-
         trailButtonImage.color = robot.trail.enabled ? Color.white : Color.grey;
 
-        robotXValue.interactable = SimManager.instance.isPaused;
-        robotZValue.interactable = SimManager.instance.isPaused;
-        robotPhiValue.interactable = SimManager.instance.isPaused;
+        if (robot is IVWDrive)
+            toggleVWAccurate.isOn = (robot as IVWDrive).VWAccurate;
 
-        if (robot is LabBot)
-            toggleVWAccurate.isOn = (robot as LabBot).wheelController.realCoords;
-        else if (robot is S4)
-            toggleVWAccurate.isOn = (robot as S4).wheelController.realCoords;
-
-        if(robot is IPSDSensors)
+        if (robot is IPSDSensors)
         {
             if ((psdController = robot.GetComponent<PSDController>()) == null)
                 Debug.Log("No PSD Controller");
@@ -109,21 +103,21 @@ public class RobotInspectorWindow : TabWindow {
             useGlobalError = (robot as IPSDSensors).UseGlobalError;
         }
 
-        if(robot is IVWDrive)
-        {
-            Int16[] pos = (robot as IVWDrive).GetPose();
-            vwXtext.text = pos[0].ToString("N2");
-            vwYtext.text = pos[1].ToString("N2");
-            vwPhiText.text = pos[2].ToString("N2");
-        }
-
-        controlName.text = robot.controlBinaryName;
-        
         SaltPepperNoiseToggle(false);
         GaussianNoiseToggle(false);
         PSDErrorEnabled(false);
+
         SimManager.instance.OnPause += OnSimPaused;
         SimManager.instance.OnResume += OnSimResumed;
+    }
+
+    void OnEnable()
+    {
+        robotXValue.interactable = SimManager.instance.isPaused;
+        robotZValue.interactable = SimManager.instance.isPaused;
+        robotPhiValue.interactable = SimManager.instance.isPaused;
+
+        controlName.text = robot.controlBinaryName;
     }
 
     // Remove pause callbacks from delegate
@@ -134,7 +128,8 @@ public class RobotInspectorWindow : TabWindow {
     }
 
     // Update is called once per frame
-    void Update () {
+    void Update()
+    {
         if (robot is IPSDSensors)
         {
             psdLeftValue.text = psdController.GetPSDValue(0).ToString();
@@ -147,10 +142,6 @@ public class RobotInspectorWindow : TabWindow {
             robotZValue.text = (Eyesim.Scale * robot.transform.position.z).ToString("N2");
             robotPhiValue.text = robot.transform.rotation.eulerAngles.y.ToString("N2");
         }
-        if(robot is ICameras)
-        {
-            cameraResolution.text = (robot as ICameras).GetCameraResolution(0);
-        }
         if (robot is IVWDrive)
         {
             Int16[] pos = (robot as IVWDrive).GetPose();
@@ -158,8 +149,8 @@ public class RobotInspectorWindow : TabWindow {
             vwYtext.text = pos[1].ToString("N2");
             vwPhiText.text = pos[2].ToString("N2");
         }
-	}
-    
+    }
+
     // ----- CAMERA CONTENT -----
 
     // Refresh render target
@@ -337,10 +328,8 @@ public class RobotInspectorWindow : TabWindow {
 
     public void ToggleAccurate(bool toggle)
     {
-        if(robot is LabBot)
-            (robot as LabBot).wheelController.realCoords = toggle;
-        if (robot is S4)
-            (robot as S4).wheelController.realCoords = toggle;
+        if(robot is IVWDrive)
+            (robot as IVWDrive).VWAccurate = toggle;
     }
 
     // Control content

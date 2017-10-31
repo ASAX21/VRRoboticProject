@@ -9,6 +9,8 @@ public class SimReader: MonoBehaviour, IFileReceiver {
 
 	public static SimReader instance;
 
+    private string simPath;
+
     // Store each executable in sim file, begin executing after the world is completely loaded
     private List<string> executables;
     private int lineNum = 0;
@@ -26,40 +28,35 @@ public class SimReader: MonoBehaviour, IFileReceiver {
         SimManager.instance.ResetWorld();
         SimManager.instance.PauseSimulation();
         EyesimLogger.instance.Log("Loading sim file: " + path);
+        simPath = path;
         executables = new List<string>();
         lineNum = 0;
-        IO io = new IO ();
+        IO io = new IO (";#");
 		if (!io.Load (path))
 			return null;
-		while (true)
+
+        string[] args;
+        while ((args = io.ReadNextArguments())[0] != "ENDOFFILE")
         {
-            lineNum++;
-            string line = io.readLine ();
-			if (line == "ENDOFFILE")
-				break;
-			//make sure line isnt blank
-			if (line.Length > 0) {
-				//check for hashtag
-				if (line [0] != '#') {
-					if(!process(line))
-                    {
-                        Debug.Log("Error processing Sim file");
-                        SimManager.instance.CreateNewBox(2000, 2000);
-                        SimManager.instance.ResumeSimulation();
-                        return null;
-                    }
-				}
-			}
+            lineNum = io.LineNum;
+			if(!process(args))
+            {
+                Debug.Log("Error processing Sim file");
+                SimManager.instance.CreateNewBox(2000, 2000);
+                SimManager.instance.ResumeSimulation();
+                return null;
+            }
 		}
         // Finished processing - Launch exectuables
         StartCoroutine(LaunchExecutables());
         return null;
 	}
 
-	public bool process(string line){
-		string[] args = line.Split (new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
-
-        switch (args[0].ToLower()) {
+	public bool process(string[] args)
+    {
+        Debug.Log(args[0]);
+        switch (args[0].ToLower())
+        {
             case "robi":
                 /*build robot
                 RobotBuilder rb = gameObject.AddComponent<RobotBuilder> ();
@@ -77,22 +74,16 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                 ObjectManager.instance.AddLabBotToScene(args[1] + ":" + args[2] + ":" + args[3]);
                 if (args.Length == 5)
                 {
-                    string execPath = args[4];
-                    if (!(String.IsNullOrEmpty(execPath) || execPath.Trim().Length == 0))
-                    {
-                        if (execPath[0] == '"')
-                        {
-                            execPath = Regex.Matches(line, "\"[^\"]*\"")[0].ToString();
-                            execPath = execPath.Trim('"');
-                        }
+                    string execPath = IO.SearchForFile(args[4], simPath);
+                    if (execPath != "")
                         executables.Add(execPath);
-                    }
-
+                    else
+                        EyesimLogger.instance.Log("Failed to find robot executable for " + args[5] + " on line " + lineNum);
                 }
                 break;
 
             case "s4":
-                if (args.Length != 4)
+                if (args.Length < 4)
                 {
                     Debug.Log("Incorrect number of arguments");
                     EyesimLogger.instance.Log("Error parsing sim file line " + lineNum + ": Incorrect number of arguments for S4 - " + args.Length);
@@ -101,16 +92,11 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                 ObjectManager.instance.AddS4ToScene(args[1] + ":" + args[2] + ":" + args[3]);
                 if (args.Length == 5)
                 {
-                    string execPath = args[4];
-                    if (!(String.IsNullOrEmpty(execPath) || execPath.Trim().Length == 0))
-                    {
-                        if (execPath[0] == '"')
-                        {
-                            execPath = Regex.Matches(line, "\"[^\"]*\"")[0].ToString();
-                            execPath = execPath.Trim('"');
-                        }
+                    string execPath = IO.SearchForFile(args[4], simPath);
+                    if (execPath != "")
                         executables.Add(execPath);
-                    }
+                    else
+                        EyesimLogger.instance.Log("Failed to find robot executable for " + args[5] + " on line " + lineNum);
                 }
                 break;
 
@@ -144,43 +130,28 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                 break;
 
             case "world":
-                // Check for quoted expression
-                string wldPath;
-                // Get the path argument;
-                if (args[1][0] == '"')
+                string wldPath = IO.SearchForFile(args[1], Path.GetDirectoryName(simPath));
+                if (Path.GetExtension(args[1]) != ".maz" && Path.GetExtension(args[1]) != ".wld")
                 {
-                    wldPath = Regex.Matches(line, "\"[^\"]*\"")[0].ToString();
-                    wldPath = wldPath.Trim('"');
-                }
-                else
-                    wldPath = args[1];
-
-                if (Path.GetExtension(wldPath) != ".maz" && Path.GetExtension(wldPath) != ".wld")
-                {
-                    print(Path.GetExtension(wldPath));
+                    print(Path.GetExtension(args[1]));
                     Debug.Log("Invalid path to world");
                     EyesimLogger.instance.Log("Error parsing sim file line " + lineNum + ": Bad path to world file");
                     return false;
                 }
 
-                WorldBuilder.instance.ReceiveFile(Path.GetFullPath(wldPath));
+                WorldBuilder.instance.ReceiveFile(Path.GetFullPath(args[1]));
                 break;
+
             case "obj":
-                string objPath;
-                if (args[1][0] == '"')
-                {
-                    objPath = Regex.Matches(line, "\"[^\"]*\"")[0].ToString();
-                    objPath = objPath.Trim('"');
-                }
-                else
-                    objPath = args[1];
-                string objName = Path.GetFileNameWithoutExtension(objPath);
-                Debug.Log(objName);
-                // If object doesn't exist, load it
+                string objName = Path.GetFileNameWithoutExtension(args[1]);
                 if (ObjectManager.instance.customObjects.Find(x => x.name == objName) == null)
+                {
+                    string objPath = IO.SearchForFile(args[1], simPath);
                     if (ObjectManager.instance.ReceiveFile(objPath) == null)
                         return false;
+                }
                 break;
+
             case "marker":
                 string pos;
                 if (args.Length == 3)
@@ -197,8 +168,9 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                 ObjectManager.instance.AddMarkerToScene(pos);       
                 break;
 
-            // Check if string is an object name
+            // Check if string is a custom object or robot
             default:
+                // Check for object
                 int index = ObjectManager.instance.customObjects.FindIndex(x => x.name == args[0]);
                 if(index != -1)
                 {
@@ -206,14 +178,36 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                     {
                         string objPos = args[1] + ":" + args[2] + ":" + args[3];
                         ObjectManager.instance.AddCustomObjectToScene(index, objPos);
+                        break;
                     }
                     else
                     {
-                        Debug.Log("Load Sim: Object argument <" + args[0] + "> requires 3 arguments for position, found " + (args.Length - 1).ToString());
                         EyesimLogger.instance.Log("Error parsing sim file line " + lineNum + ": Incorrect number of arguments for " + args[0] + " - " + args.Length);
                         break;
                     }
                 }
+                // check for robot
+                index = ObjectManager.instance.customRobots.FindIndex(x => x.name == args[0]);
+                if(index != -1)
+                {
+                    if (args.Length == 5)
+                    {
+                        string robPos = args[1] + ":" + args[2] + ":" + args[3];
+                        ObjectManager.instance.AddCustomRobotToScene(index, robPos);
+                        string execPath = IO.SearchForFile(args[4], simPath);
+                        if (execPath != "")
+                            executables.Add(execPath);
+                        else
+                            EyesimLogger.instance.Log("Failed to find robot executable for " + args[5] + " on line " + lineNum);
+                        break;
+                    }
+                    else
+                    {
+                        EyesimLogger.instance.Log("Error parsing sim file line " + lineNum + ": Incorrect number of arguments for " + args[0] + " - " + args.Length);
+                        break;
+                    }
+                }
+
 			    break;
 		}
         return true;

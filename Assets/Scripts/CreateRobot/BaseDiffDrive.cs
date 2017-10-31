@@ -325,6 +325,18 @@ public class BaseDiffDrive : Robot, IMotors,
         throw new NotImplementedException();
     }
 
+    public bool VWAccurate
+    {
+        get
+        {
+            return wheelController.realCoords;
+        }
+        set
+        {
+            wheelController.realCoords = value;
+        }
+    }
+
     public byte[] GetCameraOutput(int camera)
     {
         if (camEnabled)

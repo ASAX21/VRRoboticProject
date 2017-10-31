@@ -41,7 +41,7 @@ public class WheelMotorController : MonoBehaviour
     private void Awake()
     {
         Pos = new Vector3(0,0,0);
-        VWOrigin = new GameObject("VWOrigin").transform;
+        VWOrigin = new GameObject(mainBot.objectID + " VWOrigin").transform;
         VWOrigin.position = mainBot.transform.position;
     }
 

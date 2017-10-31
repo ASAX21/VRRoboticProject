@@ -1,5 +1,8 @@
-﻿using System.Collections;
+﻿using System.IO;
+using System.Collections;
 using System.Collections.Generic;
+
+using UnityEngine;
 
 public static class PacketType  {
 
@@ -29,6 +32,7 @@ public static class Layers
 public static class Eyesim
 {
     public const float Scale = 1000f;
+
     public static int ClampInt(int value, int min, int max)
     {
         return value < min ? min : (value > max ? max : value);
