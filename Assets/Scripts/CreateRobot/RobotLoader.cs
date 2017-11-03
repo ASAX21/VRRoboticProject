@@ -11,7 +11,9 @@ public class RobotLoader: MonoBehaviour, IFileReceiver {
     public Robot robot;
     public GameObject robotObject;
     private ConfigureableRobot robotConfig;
+
     public string filepath;
+    private IO io;
 
     private bool robotDrive;
     public GameObject diffDriveBase;
@@ -35,28 +37,26 @@ public class RobotLoader: MonoBehaviour, IFileReceiver {
     public GameObject ReceiveFile(string filepath)
     {
         this.filepath = filepath;
-        IO io = new IO();
+        io = new IO("#;");
+
         if (!io.Load(filepath))
             return null;
-        string line;
-
-        while ((line = io.readLine()) != "ENDOFFILE")
+        string[] args;
+        while ((args = io.ReadNextArguments())[0] != "ENDOFFILE")
         {
-            if (line.Length > 0 && line[0] != '#')
+            if (!process(args))
             {
-                if (!process(line))
-                {
-                    Debug.Log("Error processing.");
-                    Debug.Log(line);
-                    robotConfig = null;
-                    Destroy(robotObject);
-                    robotObject = null;
-                    return null;
-                }
+                Debug.Log("Error processing.");
+                robotConfig = null;
+                Destroy(robotObject);
+                robotObject = null;
+                io = null;
+                return null;
             }
         }
         robotObject.GetComponent<PlaceableObject>().PostBuild();
         ObjectManager.instance.StoreCustomRobot(robotObject);
+        io = null;
         return robotObject;
     }
 
@@ -86,10 +86,8 @@ public class RobotLoader: MonoBehaviour, IFileReceiver {
     }
 
     // Run each line - return true if worked, false on failure
-    public bool process(string line)
+    public bool process(string[] args)
     {
-
-        string[] args = line.Split(new char[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
         // Line processing in try block: Catch only FormatException from bad float parsing
         try
         {
@@ -149,16 +147,13 @@ public class RobotLoader: MonoBehaviour, IFileReceiver {
                         if (! (CheckArguments(args, 2, "model") || CheckArguments(args, 8, "model")))
                             return false;
                         // Load object model
-                        string modelPath = null;
-                        int argOffset = 0;
-                        if (args[1][0] == '"')
+                        string modelPath = io.SearchForFile(args[1], "");
+                        if (modelPath == "")
                         {
-                            modelPath = Regex.Matches(line, "\"[^\"]*\"")[0].ToString();
-                            modelPath = modelPath.Trim('"');
-                            argOffset = 1;
+                            EyesimLogger.instance.Log("Failed to find model for robot in " + filepath);
+                            return false;
                         }
-                        else
-                            modelPath = args[1];
+                        
                         GameObject modelObj = OBJLoader.LoadOBJFile(modelPath);
                         if (modelObj == null)
                             return false;
@@ -167,8 +162,8 @@ public class RobotLoader: MonoBehaviour, IFileReceiver {
                             robotConfig.ConfigureModel(modelObj, Vector3.zero, Vector3.zero);
                         else
                         {
-                            Vector3 modelPos = new Vector3(float.Parse(args[2 + argOffset]) / Eyesim.Scale, float.Parse(args[3 + argOffset]) / Eyesim.Scale, float.Parse(args[4 + argOffset]) / Eyesim.Scale);
-                            Vector3 modelRot = new Vector3(float.Parse(args[5 + argOffset]), float.Parse(args[6 + argOffset]), float.Parse(args[7 + argOffset]));
+                            Vector3 modelPos = new Vector3(float.Parse(args[2]) / Eyesim.Scale, float.Parse(args[3]) / Eyesim.Scale, float.Parse(args[4]) / Eyesim.Scale);
+                            Vector3 modelRot = new Vector3(float.Parse(args[5]), float.Parse(args[6]), float.Parse(args[7]));
                             robotConfig.ConfigureModel(modelObj, modelPos, modelRot);
                         }
                         return true;

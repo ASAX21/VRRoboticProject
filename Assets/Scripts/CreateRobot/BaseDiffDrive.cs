@@ -92,6 +92,7 @@ public class BaseDiffDrive : Robot, IMotors,
     {
         robotRigidbody.mass = mass;
         robotRigidbody.centerOfMass = com;
+        centreOfMass = com;
     }
 
     // Configure axel height (vertical into robot) and position along z-axis (forward)

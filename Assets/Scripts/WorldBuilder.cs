@@ -110,7 +110,8 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
 		float height = -1.0f;
 		Stack<Vector3> relativepos = new Stack<Vector3> ();
 		relativepos.Push (new Vector3(0.0f, 0.0f, 0.0f));
-		while ( (args = io.ReadNextArguments())[0] != "ENDOFFILE") {
+		while ( (args = io.ReadNextArguments())[0] != "ENDOFFILE")
+        {
 			if (args.Length > 0) {
                 if (!(args[0][0] == '#' || args[0][0] == ';'))
                 {

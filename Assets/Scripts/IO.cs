@@ -33,6 +33,12 @@ public class IO{
         commentChars = commentCharacters;
     }
 
+    // Destructor
+    ~IO()
+    {
+        theReader.Dispose();
+    }
+
     /* ----- Main functions ----- */
 
     // Get files in a directory
@@ -88,6 +94,7 @@ public class IO{
                 return new string[] { "ENDOFFILE" };
             }
             input = theReader.ReadLine();
+            input = input.Trim(new char[] { '\t', ' ' });
             lineNum++;
         }
         // Extract arguments from quotations
