@@ -100,7 +100,7 @@ public class OBJLoader
                 {
                     matlList.Add(currentMaterial);
                 }
-                currentMaterial = new Material(Shader.Find("Standard (Specular setup)"));
+                currentMaterial = new Material(Shader.Find("Standard"));
                 currentMaterial.name = data;
             }
             else if (cmps[0] == "Kd")
