@@ -6,41 +6,60 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using RobotComponents;
 
+// Control invidiual motors at low level
 public interface IMotors
 {
     void DriveMotor(int motor, int speed);
     int GetEncoder(int quad);
 }
 
+// Set PID Controller values for a motor, and drive using 
 public interface IPIDUsable
 {
     void DriveMotorControlled(int motor, int ticks);
     void SetPID(int motor, int p, int i, int d);
 }
     
+// VW Drive interface for RoBIOS commands
 public interface IVWDrive
 {
+    // Initalize VW Parameters (mostly unused)
     void InitalizeVW(int[] args);
+    // Get robots internal position
     Int16[] GetPose();
+    // Set robots internal position
     void SetPose(int x, int y, int phi);
+    // Set vehicle speed manually
     void VWSetVehicleSpeed(int linear, int angular);
+    // Get current speed
     Speed VWGetVehicleSpeed();
+    // Drive a straight line
     void VWDriveStraight(int distance, int speed);
+    // Turn on the spot
     void VWDriveTurn(int rotation, int velocity);
+    // Drive an arc of a circle
     void VWDriveCurve(int distance, int rotation , int velocity);
+    // Return remaining distance to drive
     int VWDriveRemaining();
+    // Return whether or not a controlled drive is being executed
     bool VWDriveDone();
+    // Return whether or not a motor has stalled
     int VWDriveStalled();
+    // Send a reply when the current drive has finished
     void VWDriveWait(Action<RobotConnection> doneCallback);
+    // Clear any current VWWait command (used when control is terminated whilst a VWWait is pending)
     void ClearVWWait();
+    // Use accurate positioning
     bool VWAccurate { get; set; }
 }
 
+// Controling mechanical servos
 public interface IServos
 {
     void SetServo(int servo, int angle);
 }
 
+// Using position sensitive devices
 public interface IPSDSensors
 {
     UInt16 GetPSD(int psd);
@@ -51,29 +70,33 @@ public interface IPSDSensors
     void SetVisualize(bool val);
 }
 
+// Using cameras
 public interface ICameras
 {
     byte[] GetCameraOutput(int camera);
     void SetCameraResolution(int camera, int width, int height);
     string GetCameraResolution(int camera);
     EyeCamera GetCameraComponent(int camera);
+    // Salt and Pepper noise parameters
     bool SaltPepperNoise { get; set; }
     // Salt and Pepper noise % of pixels to modify (average)
     float SPPixelPercent { get; set; }
     // Salt and Pepper ratio of black to white pixels (average)
     float SPBWRatio { get; set; }
-
+    // Gaussian noise parameters
     bool GaussianNoise { get; set; }
     float GaussMean { get; set; }
     float GaussStdDev { get; set; }
 
 }
 
+// Playing audio (note AUClip is handled entirely in the executing control program)
 public interface IAudio
 {
     void PlayBeep();
 }
 
+// Sending/Receiving radio messages
 public interface IRadio
 {
     void AddMessageToBuffer(byte[] msg);
@@ -82,6 +105,7 @@ public interface IRadio
     int GetNumberOfMessages();
 }
 
+// using LIDAR Scanner
 public interface ILaser
 {
     int[] LaserScan();
@@ -210,7 +234,6 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
     {
         if(this is IVWDrive)
         {
-            UnityEngine.Debug.Log("VWDriveable! clearing wait");
             (this as IVWDrive).ClearVWWait();
         }
         if(controlBinary != null)

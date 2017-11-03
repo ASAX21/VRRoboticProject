@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VR;
 using RobotComponents;
 
-public class VRControl : MonoBehaviour {
+public class VRControl : MonoBehaviour
+{
 
     public static VRControl instance;
 
@@ -51,12 +50,6 @@ public class VRControl : MonoBehaviour {
             else
                 ChangeCamera1();
         }
-        /*
-		else if(Input.GetKeyDown(KeyCode.M))
-		{
-			ChangeCamera2();
-		}
-        */
 
         if (VREnabled)
         {
@@ -88,7 +81,6 @@ public class VRControl : MonoBehaviour {
 	{
         // Enable VR
 		UnityEngine.XR.XRSettings.enabled=true;
-
         // Set parent back to VR Camera Position (incase moved to robot)
 		VRCamera.transform.SetParent(VrCameraParent);
 		VRCamera.transform.localPosition = Vector3.zero;
@@ -99,29 +91,6 @@ public class VRControl : MonoBehaviour {
         VRCharacter.gameObject.SetActive(true);
         VRCharacter.enabled = true;
 	}
-
-    ////Change to VR camera attached to robot
-    //public void ChangeCamera2()
-    //{
-    //    UnityEngine.XR.XRSettings.enabled = true;
-    //    LabBot lab = GameObject.FindObjectOfType<LabBot>();
-    //    if (lab)
-    //    {
-    //        EyeCamera eye = lab.GetComponentInChildren<EyeCamera>();
-    //        if (eye)
-    //        {
-    //            VrCameraParent.SetParent(eye.transform.parent);
-    //            VrCameraParent.localPosition = Vector3.zero;
-    //            VrCameraParent.localRotation = Quaternion.identity;
-
-    //            VRCamera.transform.SetParent(VrCameraParent.transform.parent);
-    //            VRCamera.transform.localPosition = Vector3.zero;
-    //        }
-    //    }
-
-    //    VRCamera.SetActive(true);
-    //    NormalCamera.SetActive(false);
-    //}
 
     public void ViewFromRobotPerspective(Robot robot)
     {

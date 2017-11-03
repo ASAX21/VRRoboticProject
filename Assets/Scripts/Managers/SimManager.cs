@@ -169,11 +169,21 @@ public class SimManager : MonoBehaviour {
         }
     }
 
+    public void RemoveAllMarkers()
+    {
+        foreach (GameObject mark in GameObject.FindGameObjectsWithTag("Marker"))
+        {
+            Debug.Log("marker!");
+            Destroy(mark);
+        }
+    }
+
     public void DestroyWorld()
     {
         worldChanged = true;
         RemoveAllWorldObjects();
         RemoveAllRobots();
+        RemoveAllMarkers();
         Destroy(world.gameObject);
     }
 

@@ -8,7 +8,8 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-public class WorldBuilder : MonoBehaviour, IFileReceiver {
+public class WorldBuilder : MonoBehaviour, IFileReceiver
+{
 
     public static WorldBuilder instance = null;
 
@@ -70,6 +71,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
         }
         SimManager.instance.world = world;
         SimManager.instance.worldChanged = true;
+        io = null;
         return world;
 	}
 
@@ -110,8 +112,6 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 		relativepos.Push (new Vector3(0.0f, 0.0f, 0.0f));
 		while ( (args = io.ReadNextArguments())[0] != "ENDOFFILE") {
 			if (args.Length > 0) {
-                foreach (string s in args)
-                    Debug.Log(s);
                 if (!(args[0][0] == '#' || args[0][0] == ';'))
                 {
 					//convert argument string to float list
@@ -158,7 +158,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver {
 						relativepos.Pop ();
 						break;
                     case "floor_texture":
-                            string texPath = IO.SearchForFile(args[1], filepath);
+                            string texPath = io.SearchForFile(args[1], SettingsManager.instance.GetSetting("worlddir", ""));
                             if (texPath == "")
                             {
                                 EyesimLogger.instance.Log("Unable to find floor texture");

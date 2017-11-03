@@ -10,10 +10,10 @@ public class SimReader: MonoBehaviour, IFileReceiver {
 	public static SimReader instance;
 
     private string simPath;
+    private IO io = null;
 
     // Store each executable in sim file, begin executing after the world is completely loaded
     private List<string> executables;
-    private int lineNum = 0;
 
     private void Awake()
     {
@@ -30,15 +30,14 @@ public class SimReader: MonoBehaviour, IFileReceiver {
         EyesimLogger.instance.Log("Loading sim file: " + path);
         simPath = path;
         executables = new List<string>();
-        lineNum = 0;
-        IO io = new IO (";#");
+
+        io = new IO (";#");
 		if (!io.Load (path))
 			return null;
 
         string[] args;
         while ((args = io.ReadNextArguments())[0] != "ENDOFFILE")
         {
-            lineNum = io.LineNum;
 			if(!process(args))
             {
                 Debug.Log("Error processing Sim file");
@@ -49,36 +48,33 @@ public class SimReader: MonoBehaviour, IFileReceiver {
 		}
         // Finished processing - Launch exectuables
         StartCoroutine(LaunchExecutables());
+        io = null;
         return null;
 	}
 
 	public bool process(string[] args)
     {
-        Debug.Log(args[0]);
         switch (args[0].ToLower())
         {
             case "robi":
-                /*build robot
-                RobotBuilder rb = gameObject.AddComponent<RobotBuilder> ();
-                GameObject robot = rb.ReceiveFile (ApplicationHelper.localDataPath() + args [1]);
-                robot.transform.position = new Vector3 (float.Parse(args[3])/Eyesim.Scale,0,float.Parse(args[4])/Eyesim.Scale);
-                /*run client*/
+                string robiPath = io.SearchForFile(args[1], "");
+                RobotLoader.instance.ReceiveFile(robiPath);
                 break;
             case "labbot":
                 if (args.Length < 4)
                 {
                     Debug.Log("Incorrect number of arguments");
-                    EyesimLogger.instance.Log("Error parsing sim file line " + lineNum + ": Incorrect number of arguments for LabBot - " + args.Length);
+                    EyesimLogger.instance.Log("Error parsing sim file line " + io.LineNum + ": Incorrect number of arguments for LabBot - " + args.Length);
                     return false;
                 }
                 ObjectManager.instance.AddLabBotToScene(args[1] + ":" + args[2] + ":" + args[3]);
                 if (args.Length == 5)
                 {
-                    string execPath = IO.SearchForFile(args[4], simPath);
+                    string execPath = io.SearchForFile(args[4], "");
                     if (execPath != "")
                         executables.Add(execPath);
                     else
-                        EyesimLogger.instance.Log("Failed to find robot executable for " + args[5] + " on line " + lineNum);
+                        EyesimLogger.instance.Log("Failed to find robot executable for " + args[4] + " on line " + io.LineNum);
                 }
                 break;
 
@@ -86,24 +82,24 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                 if (args.Length < 4)
                 {
                     Debug.Log("Incorrect number of arguments");
-                    EyesimLogger.instance.Log("Error parsing sim file line " + lineNum + ": Incorrect number of arguments for S4 - " + args.Length);
+                    EyesimLogger.instance.Log("Error parsing sim file line " + io.LineNum + ": Incorrect number of arguments for S4 - " + args.Length);
                     return false;
                 }
                 ObjectManager.instance.AddS4ToScene(args[1] + ":" + args[2] + ":" + args[3]);
                 if (args.Length == 5)
                 {
-                    string execPath = IO.SearchForFile(args[4], simPath);
+                    string execPath = io.SearchForFile(args[4], "");
                     if (execPath != "")
                         executables.Add(execPath);
                     else
-                        EyesimLogger.instance.Log("Failed to find robot executable for " + args[5] + " on line " + lineNum);
+                        EyesimLogger.instance.Log("Failed to find robot executable for " + args[5] + " on line " + io.LineNum);
                 }
                 break;
 
             case "can":
                 if (args.Length != 4)
                 {
-                    EyesimLogger.instance.Log("Error parsing sim file line " + lineNum + ": Incorrect number of arguments for Can - " + args.Length);
+                    EyesimLogger.instance.Log("Error parsing sim file line " + io.LineNum + ": Incorrect number of arguments for Can - " + args.Length);
                     return false;
                 }
                 ObjectManager.instance.AddCokeCanToScene(args[1] + ":" + args[2] + ":" + args[3]);
@@ -113,7 +109,7 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                 if (args.Length != 4)
                 {
                     Debug.Log("Incorrect number of arguments");
-                    EyesimLogger.instance.Log("Error parsing sim file line " + lineNum + ": Incorrect number of arguments for Soccer - " + args.Length);
+                    EyesimLogger.instance.Log("Error parsing sim file line " + io.LineNum + ": Incorrect number of arguments for Soccer - " + args.Length);
                     return false;
                 }
                 ObjectManager.instance.AddSoccerBallToScene(args[1] + ":" + args[2] + ":" + args[3]);
@@ -123,30 +119,31 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                 if (args.Length != 4)
                 {
                     Debug.Log("Incorrect number of arguments");
-                    EyesimLogger.instance.Log("Error parsing sim file line " + lineNum + ": Incorrect number of arguments for Crate - " + args.Length);
+                    EyesimLogger.instance.Log("Error parsing sim file line " + io.LineNum + ": Incorrect number of arguments for Crate - " + args.Length);
                     return false;
                 }
                 ObjectManager.instance.AddCrateToScene(args[1] + ":" + args[2] + ":" + args[3]);
                 break;
 
             case "world":
-                string wldPath = IO.SearchForFile(args[1], Path.GetDirectoryName(simPath));
+                string wldPath = io.SearchForFile(args[1], SettingsManager.instance.GetSetting("worlddir", ""));
+                if (wldPath == "")
+                    return false;
                 if (Path.GetExtension(args[1]) != ".maz" && Path.GetExtension(args[1]) != ".wld")
                 {
                     print(Path.GetExtension(args[1]));
                     Debug.Log("Invalid path to world");
-                    EyesimLogger.instance.Log("Error parsing sim file line " + lineNum + ": Bad path to world file");
+                    EyesimLogger.instance.Log("Error parsing sim file line " + io.LineNum + ": Bad path to world file");
                     return false;
                 }
-
-                WorldBuilder.instance.ReceiveFile(Path.GetFullPath(args[1]));
+                WorldBuilder.instance.ReceiveFile(wldPath);
                 break;
 
             case "obj":
                 string objName = Path.GetFileNameWithoutExtension(args[1]);
                 if (ObjectManager.instance.customObjects.Find(x => x.name == objName) == null)
                 {
-                    string objPath = IO.SearchForFile(args[1], simPath);
+                    string objPath = io.SearchForFile(args[1], "");
                     if (ObjectManager.instance.ReceiveFile(objPath) == null)
                         return false;
                 }
@@ -161,10 +158,9 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                 else
                 {
                     Debug.Log("Load Sim: Invalid number of arguments for marker: " + args.Length);
-                    EyesimLogger.instance.Log("Error parsing sim file line " + lineNum + ": Incorrect number of arguments for Marker - " + args.Length);
+                    EyesimLogger.instance.Log("Error parsing sim file line " + io.LineNum + ": Incorrect number of arguments for Marker - " + args.Length);
                     return false;
                 }
-
                 ObjectManager.instance.AddMarkerToScene(pos);       
                 break;
 
@@ -182,7 +178,7 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                     }
                     else
                     {
-                        EyesimLogger.instance.Log("Error parsing sim file line " + lineNum + ": Incorrect number of arguments for " + args[0] + " - " + args.Length);
+                        EyesimLogger.instance.Log("Error parsing sim file line " + io.LineNum + ": Incorrect number of arguments for " + args[0] + " - " + args.Length);
                         break;
                     }
                 }
@@ -194,20 +190,19 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                     {
                         string robPos = args[1] + ":" + args[2] + ":" + args[3];
                         ObjectManager.instance.AddCustomRobotToScene(index, robPos);
-                        string execPath = IO.SearchForFile(args[4], simPath);
+                        string execPath = io.SearchForFile(args[4], "");
                         if (execPath != "")
                             executables.Add(execPath);
                         else
-                            EyesimLogger.instance.Log("Failed to find robot executable for " + args[5] + " on line " + lineNum);
+                            EyesimLogger.instance.Log("Failed to find robot executable for " + args[5] + " on line " + io.LineNum);
                         break;
                     }
                     else
                     {
-                        EyesimLogger.instance.Log("Error parsing sim file line " + lineNum + ": Incorrect number of arguments for " + args[0] + " - " + args.Length);
+                        EyesimLogger.instance.Log("Error parsing sim file line " + io.LineNum + ": Incorrect number of arguments for " + args[0] + " - " + args.Length);
                         break;
                     }
                 }
-
 			    break;
 		}
         return true;

@@ -3,6 +3,10 @@
 
 world "C:\UNIVERSITY\EyeSim\RobotVR\Test Assets\4k.wld"
 
+labbot 1000 1000 0 "C:\University\EyeSim\RobotVR\Test Assets\examples\radio\list.x"
+labbot 2000 2000 0 "C:\University\EyeSim\RobotVR\Test Assets\examples\radio\list.x"
+labbot 3000 3000 0 "C:\University\EyeSim\RobotVR\Test Assets\examples\radio\list.x"
+
 marker 1000 1000 255 0 0
 marker 3000 3000 0 255 0
 marker 2000 2000 0 0 255
