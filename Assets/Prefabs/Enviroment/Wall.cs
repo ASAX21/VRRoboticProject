@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Wall : MonoBehaviour {
 
@@ -32,6 +33,14 @@ public class Wall : MonoBehaviour {
         { 
             ObjectManager.instance.cancelRemoveEvent = null;
             Destroy(gameObject);  
+        }
+    }
+
+    private void OnMouseOver()
+    { 
+        if(ObjectManager.instance.paintingWalls && !EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButton(0))
+        {
+            rend.material.color = ObjectManager.instance.paintColor;
         }
     }
 

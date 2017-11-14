@@ -27,6 +27,7 @@ public class Marker : PlaceableObject, IPointerClickHandler
 
     override public void OnPointerClick(PointerEventData eventData)
     {
+        Debug.Log("hello");
         if (eventData.clickCount > 1 && !isWindowOpen)
             OpenInfoWindow();
         base.OnPointerClick(eventData);

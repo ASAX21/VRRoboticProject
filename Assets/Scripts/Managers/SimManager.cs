@@ -173,7 +173,6 @@ public class SimManager : MonoBehaviour {
     {
         foreach (GameObject mark in GameObject.FindGameObjectsWithTag("Marker"))
         {
-            Debug.Log("marker!");
             Destroy(mark);
         }
     }
@@ -252,9 +251,9 @@ public class SimManager : MonoBehaviour {
     }
 
     // Write the World object to a wld file
-    public void SaveWorld()
+    public void SaveWorld(string filepath)
     {
-        FileStream fs = File.Open("SavedWorld.wld", FileMode.Create);
+        FileStream fs = File.Open(filepath, FileMode.Create);
         using (StreamWriter writer = new StreamWriter(fs, System.Text.Encoding.ASCII))
         {
             
@@ -280,19 +279,22 @@ public class SimManager : MonoBehaviour {
                 }           
             }
         }
+        EyesimLogger.instance.Log("Saved world to file " + filepath);
     }
 
     // Write scene to a Sim file
-    public void SaveSim()
+    public void SaveSim(string filepath)
     {
         PauseSimulation();
-        SaveWorld();
-        FileStream fs = File.Open("SavedSim.sim", FileMode.Create);
+        string worldPath = Path.Combine(Path.GetDirectoryName(filepath), Path.GetFileNameWithoutExtension(filepath) + "_world.wld");
+        Debug.Log(worldPath);
+        SaveWorld(worldPath);
+        FileStream fs = File.Open(filepath, FileMode.Create);
         using (StreamWriter writer = new StreamWriter(fs, System.Text.Encoding.ASCII))
         {
             // Save world, and link to default save location
             writer.WriteLine("# Sim file created " + DateTime.Now.ToString(@"MM\/dd\/yyyy h\:mm tt") + Environment.NewLine);
-            writer.WriteLine("# World File " + Environment.NewLine + "world SavedWorld.wld");
+            writer.WriteLine("# World File " + Environment.NewLine + "world " + worldPath);
             writer.Write(Environment.NewLine + Environment.NewLine);
 
             // Save robot locations
@@ -307,6 +309,7 @@ public class SimManager : MonoBehaviour {
                 writer.WriteLine(wObj.type + " " + (int)Math.Floor(wObj.transform.position.x * Eyesim.Scale) + " " + (int)Math.Floor(wObj.transform.position.z * Eyesim.Scale) + " " + (int)Math.Floor(wObj.transform.eulerAngles.y));
             ResumeSimulation();
         }
+        EyesimLogger.instance.Log("Saved sim to file " + filepath);
     }
     
     // Pause and Resume by setting bodies to kinematic - will not move from applied forces

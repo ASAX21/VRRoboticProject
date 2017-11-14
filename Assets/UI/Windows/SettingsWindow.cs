@@ -47,8 +47,6 @@ public class SettingsWindow : TabWindow, IFileReceiver
     {
         windowTitle.color = UIManager.instance.windowHeaderTextColor;
         windowHeader.color = UIManager.instance.windowHeaderColor;
-        dirFinder.Initialise("*", FileBrowserType.Directory, this);
-        defSimFinder.Initialise("*.sim", FileBrowserType.File, this);
         UpdateAllValues();
     }
 
@@ -193,7 +191,8 @@ public class SettingsWindow : TabWindow, IFileReceiver
     public void OpenHomeDirSelect()
     {
         dirSet = SetDirectory.Home;
-        dirFinder.OpenFileSelection(SettingsManager.instance.GetSetting("homedir", ""));
+        UIManager.instance.directoryFinder.Initialise("*", "Select Home Directory", FileBrowserType.Directory, this);
+        UIManager.instance.directoryFinder.OpenFileSelection(SettingsManager.instance.GetSetting("homedir", ""));
     }
 
     public void InputHomeDir(string dirpath)
@@ -213,7 +212,8 @@ public class SettingsWindow : TabWindow, IFileReceiver
     public void OpenWorldDirSelect()
     {
         dirSet = SetDirectory.World;
-        dirFinder.OpenFileSelection(SettingsManager.instance.GetSetting("worlddir", ""));
+        UIManager.instance.directoryFinder.Initialise("*", "Select World Directory", FileBrowserType.Directory, this);
+        UIManager.instance.directoryFinder.OpenFileSelection(SettingsManager.instance.GetSetting("worlddir", ""));
     }
 
     public void InputWorldDir(string dirpath)
@@ -233,7 +233,8 @@ public class SettingsWindow : TabWindow, IFileReceiver
     public void OpenSimDirSelect()
     {
         dirSet = SetDirectory.Sim;
-        dirFinder.OpenFileSelection(SettingsManager.instance.GetSetting("simdir", ""));
+        UIManager.instance.directoryFinder.Initialise("*", "Select Sim Directory", FileBrowserType.Directory, this);
+        UIManager.instance.directoryFinder.OpenFileSelection(SettingsManager.instance.GetSetting("simdir", ""));
     }
 
     public void InputSimDir(string dirpath)
@@ -254,7 +255,8 @@ public class SettingsWindow : TabWindow, IFileReceiver
     public void OpenDefaultSimDirSelect()
     {
         dirSet = SetDirectory.DefaultSim;
-        defSimFinder.OpenFileSelection(SettingsManager.instance.GetSetting("simdir", ""));
+        UIManager.instance.fileFinder.Initialise("*", "Select Default Sim File", FileBrowserType.File, this);
+        UIManager.instance.fileFinder.OpenFileSelection(SettingsManager.instance.GetSetting("simdir", ""));
     }
 
     public void InputDefaultSimDir(string dirpath)

@@ -54,7 +54,8 @@ public class Interpreter {
         if (conn.robot is IMotors)
         {
             int motor = recv[1] - 1;
-            int speed = recv[2];
+            int speed = (SByte) recv[2];
+            speed = (int) Mathf.Clamp(speed, -100, 100);
             (conn.robot as IMotors).DriveMotor(motor, speed);
         }
         else

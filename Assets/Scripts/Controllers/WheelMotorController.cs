@@ -30,7 +30,7 @@ public class WheelMotorController : MonoBehaviour
     public bool checkActive;
 
     // [Header("Max Speeds")]
-    private float maxStraightSpeed = 0.5f;
+    private float maxStraightSpeed = 0.4f;
     private float maxTurnSpeed = 90f;
     private float vSpeed = 0f;
     private float wSpeed = 0f;
@@ -81,7 +81,7 @@ public class WheelMotorController : MonoBehaviour
     // Set the speed of a single motor (ratio -100 to 100)
     public void SetMotorSpeed(int motor, float speed)
     {
-        
+        Debug.Log("SET MOTOR SPEED: " + speed);
         wheels[motor].SetSpeed( (speed/100f) * maxStraightSpeed);
     }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using UnityEngine.UI.Extensions.ColorPicker;
 
 // Object manager handles objects in the scene
 // Allows placement of objects at run-time
@@ -70,6 +71,10 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     public bool removingWalls = false;
     public delegate void CancelRemoveWallsDelegate();
     public CancelRemoveWallsDelegate cancelRemoveEvent;
+
+    public bool paintingWalls = false;
+    public Color paintColor = Color.white;
+    private ColorPickerControl wallColorPicker;
 
     private Plane ground;
 
@@ -198,8 +203,24 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
                 newObj.name = "S4";
                 break;
             default:
-                Debug.Log("Unknown object type");
-                return;
+                // Check if it is a custom type
+                GameObject newGO = customObjects.Find(x => x.name == type);
+                if(newGO == null)
+                    newGO = customRobots.Find(x => x.name == type);
+
+                // If found
+                if(newGO != null)
+                {
+                    newObj = Instantiate(newGO).GetComponent<PlaceableObject>();
+                    newObj.name = newGO.name;
+                    newObj.gameObject.SetActive(true);
+                }
+                else
+                {
+                    Debug.Log("Unknown object type");
+                    return;
+                }
+                break;
         }
         
         if (args.Length == 0)
@@ -400,6 +421,28 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         if (cancelRemoveEvent != null)
             cancelRemoveEvent.Invoke();
     }
+
+    // Colouring Walls
+
+    public void BeginPaintingWalls()
+    {
+        if(isMouseOccupied)
+            FreeMouse();
+
+        paintingWalls = true;
+        wallColorPicker = Instantiate(UIManager.instance.colorPickerPrefab, UIManager.instance.gameWindowContainer);
+        wallColorPicker.Open(paintColor, SetPaintColor, CancelPaintingWalls);
+    }
+
+    public void SetPaintColor(Color col)
+    {
+        paintColor = col;
+    }
+
+    public void CancelPaintingWalls()
+    {
+        paintingWalls = false;
+    }
         
     // ----- Handle placement of object via mouse -----
 
@@ -444,12 +487,14 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
 
     public void FreeMouse()
     {
-        if (objectOnMouse != null)
+        if(objectOnMouse != null)
             DeleteObjectOnMouse();
-        else if (isWallBeingPlaced)
+        else if(isWallBeingPlaced)
             CancelWallPlacement();
-        else if (removingWalls)
+        else if(removingWalls)
             CancelRemoveWall();
+        else if(paintingWalls)
+            CancelPaintingWalls();
     }
 
     private void Update()
@@ -520,6 +565,11 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         {
             if (Input.GetKeyDown(KeyCode.Escape))
                 CancelRemoveWall();
+        }
+        else if (paintingWalls)
+        {
+            if(Input.GetKeyDown(KeyCode.Escape))
+                CancelPaintingWalls();
         }
     }
 }

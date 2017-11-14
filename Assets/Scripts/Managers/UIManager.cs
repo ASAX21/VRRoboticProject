@@ -30,6 +30,10 @@ public class UIManager : MonoBehaviour {
     [SerializeField]
     ViewWorldObjectsWindow viewWorldObjectsWindow;
     [SerializeField]
+    SaveSimWindow saveSimWindow;
+    [SerializeField]
+    SaveWorldWindow saveWorldWindow;
+    [SerializeField]
     Window aboutWindow;
     [SerializeField]
     SettingsWindow settingsWindow;
@@ -51,12 +55,8 @@ public class UIManager : MonoBehaviour {
 
     // FileFinder
     [Header("File Finders")]
-    public FileFinder worldFileFinder;
-    public FileFinder robotFileFinder;
-    public FileFinder controlFileFinder;
-    public FileFinder simFileFinder;
-    public FileFinder scriptFileFinder;
-    public FileFinder customObjFileFinder;
+    public FileFinder fileFinder;
+    public FileFinder directoryFinder;
 
     // Images of control buttons
     [Header("Sim Control Buttons")]
@@ -81,11 +81,6 @@ public class UIManager : MonoBehaviour {
     void Start()
     {
         EyesimLogger.instance.logUpdatedEvent += logWindow.UpdateLogDisplay;
-		worldFileFinder.Initialise("*.*", FileBrowserType.File, WorldBuilder.instance);
-        robotFileFinder.Initialise("*.robi", FileBrowserType.File, RobotLoader.instance);
-        simFileFinder.Initialise("*.sim", FileBrowserType.File, SimReader.instance);
-        //scriptFileFinder.Initialise("*.c", FileBrowserType.File, SimManager.instance.osManager);
-        customObjFileFinder.Initialise("*.esObj", FileBrowserType.File, ObjectManager.instance);
     }
 
 	public void openWindow(BlockingType type){
@@ -106,12 +101,14 @@ public class UIManager : MonoBehaviour {
 
     public void LoadSimFile()
     {
-        simFileFinder.OpenFileSelection(SettingsManager.instance.simDirectory);
+        fileFinder.Initialise("*", "Select Sim File", FileBrowserType.File, SimReader.instance);
+        fileFinder.OpenFileSelection(SettingsManager.instance.simDirectory);
     }
 
     public void LoadWorldFile()
     {
-        worldFileFinder.OpenFileSelection(SettingsManager.instance.worldDirectory);
+        fileFinder.Initialise("*", "Select Control Program", FileBrowserType.File, WorldBuilder.instance);
+        fileFinder.OpenFileSelection(SettingsManager.instance.worldDirectory);
     }
 
     public void CreateWorld()
@@ -122,26 +119,37 @@ public class UIManager : MonoBehaviour {
 
     public void LoadRobotFile()
     {
-        robotFileFinder.OpenFileSelection(SettingsManager.instance.homeDirectory);
+        fileFinder.Initialise("*", "Select Sim File", FileBrowserType.File, RobotLoader.instance);
+        fileFinder.OpenFileSelection(SettingsManager.instance.homeDirectory);
     }
 
     public void LoadControlProgram(Robot robot)
     {
-        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
-            controlFileFinder.Initialise("*.exe", FileBrowserType.File, robot);
-        else if (Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXEditor)
-            controlFileFinder.Initialise("*", FileBrowserType.File, robot);
-        controlFileFinder.OpenFileSelection(SettingsManager.instance.homeDirectory);
-    }
-
-    public void LoadScriptFile()
-    {
-        scriptFileFinder.OpenFileSelection(SettingsManager.instance.homeDirectory);
+        if(Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+            fileFinder.Initialise("*", "Select Control Program", FileBrowserType.File, robot);
+        else if(Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXEditor)
+            fileFinder.Initialise("*", "Select Control Program", FileBrowserType.File, robot);
+        else
+            return;
+        fileFinder.OpenFileSelection(SettingsManager.instance.homeDirectory);
     }
 
     public void LoadCustomObject()
     {
-        customObjFileFinder.OpenFileSelection(SettingsManager.instance.homeDirectory);
+        fileFinder.Initialise("*.esObj", "Select Custom Object", FileBrowserType.File, ObjectManager.instance);
+        fileFinder.OpenFileSelection(SettingsManager.instance.homeDirectory);
+    }
+
+    public void SaveSimFile()
+    {
+        saveSimWindow.Open();
+        saveSimWindow.transform.SetAsLastSibling();
+    }
+    
+    public void SaveWorldFile()
+    {
+        saveWorldWindow.Open();
+        saveWorldWindow.transform.SetAsLastSibling();
     }
 
     public void OpenSettings()

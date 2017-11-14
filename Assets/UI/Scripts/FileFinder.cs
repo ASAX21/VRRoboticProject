@@ -26,13 +26,13 @@ public class FileFinder : MonoBehaviour
     protected Texture2D m_directoryImage,
                         m_fileImage;
 
-    public FileFinder Initialise(string selectPattern, FileBrowserType type, IFileReceiver fileReceiver)
+    public void Initialise(string selectPattern, string title, FileBrowserType type, IFileReceiver fileReceiver)
     {
         m_selectPattern = selectPattern;
         m_fileReceiver = fileReceiver;
         m_type = type;
+        windowTitle = title;
         uiManager = UIManager.instance;
-        return this;
     }
 
     protected void OnGUI()

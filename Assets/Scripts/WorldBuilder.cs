@@ -20,10 +20,13 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
 	public string filepath;
     private Texture2D floorTex;
 
-	IO io;
+	private IO io;
 
     // Hacky workaround to fix fact that mazes build backwards
     float floorMazeOffset = 0;
+
+    bool isStartSpecified = false;
+    float robotStartX = 0, robotStartY = 0;
 
     private void Awake()
     {
@@ -50,6 +53,9 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
 			    processwld ();
 			    break;
 		    case ".maz":
+                isStartSpecified = false;
+                robotStartX = 0;
+                robotStartY = 0;
                 float size;
                 string last = File.ReadAllLines(filepath).Last();
                 if (float.TryParse(last, out size))
@@ -58,7 +64,9 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
                     size = 0.36f;
 			    processmaz (size);
                 world.transform.position = new Vector3(0, 0, floorMazeOffset);
-			    break;
+                if(isStartSpecified)
+                    AddRobotToMaze();
+                break;
 		}
         if (floorTex != null)
         {
@@ -93,10 +101,10 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
     {
         world = new GameObject("World");
         addFloor(0f, 0f, height / Eyesim.Scale, width / Eyesim.Scale);
-		addWall(new Vector2(0, 0), new Vector2(0, width / Eyesim.Scale));
-		addWall(new Vector2(0, width / Eyesim.Scale), new Vector2(height / Eyesim.Scale, width / Eyesim.Scale));
-		addWall(new Vector2(height / Eyesim.Scale, 0), new Vector2(height / Eyesim.Scale, width / Eyesim.Scale));
-		addWall(new Vector2(0, 0), new Vector2(height / Eyesim.Scale, 0));
+        AddWall(new Vector2(0, 0), new Vector2(0, width / Eyesim.Scale));
+        AddWall(new Vector2(0, width / Eyesim.Scale), new Vector2(height / Eyesim.Scale, width / Eyesim.Scale));
+        AddWall(new Vector2(height / Eyesim.Scale, 0), new Vector2(height / Eyesim.Scale, width / Eyesim.Scale));
+        AddWall(new Vector2(0, 0), new Vector2(height / Eyesim.Scale, 0));
         SimManager.instance.world = world;
         SimManager.instance.worldChanged = true;
         return world;
@@ -124,59 +132,68 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
 							//nothing, just too many spaces
 						}
 					}
-					switch (args[0]) {
-					case "floor":
-						if (parameters.Count < 2)
-							break;
-						addFloor(0,0,parameters[0]/Eyesim.Scale, parameters[1]/Eyesim.Scale);
-						break;
-					case "width":
-						if (parameters.Count < 1)
-							break;
-						width = parameters [0]/Eyesim.Scale;
-						if(width >= 0 && height >= 0){
-							addFloor(0,0,width, height);
-						}
-						break;
-					case "height":
-						if (parameters.Count < 1)
-							break;
-						height = parameters [0]/Eyesim.Scale;
-						if(width >= 0 && height >= 0){
-							addFloor(0,0,width, height);
-						}
-						break;
-					case "position":
-						break;
-					case "push":
-						if (parameters.Count < 3)
-							break;
-						relativepos.Push (new Vector3 (parameters [0]/Eyesim.Scale, parameters [1]/Eyesim.Scale, -parameters[2]));
-						break;
-					case "pop":
-						if (relativepos.Count <= 1)
-							break;
-						relativepos.Pop ();
-						break;
-                    case "floor_texture":
-                            string texPath = io.SearchForFile(args[1], SettingsManager.instance.GetSetting("worlddir", ""));
-                            if (texPath == "")
-                            {
-                                EyesimLogger.instance.Log("Unable to find floor texture");
-                                Debug.Log("Couldnt find tex");
-                            }
+					switch (args[0])
+                    {
+					    case "floor":
+						    if (parameters.Count < 2)
+							    break;
+						    addFloor(0,0,parameters[0]/Eyesim.Scale, parameters[1]/Eyesim.Scale);
+						    break;
+					    case "width":
+						    if (parameters.Count < 1)
+							    break;
+						    width = parameters [0]/Eyesim.Scale;
+						    if(width >= 0 && height >= 0){
+							    addFloor(0,0,width, height);
+						    }
+						    break;
+					    case "height":
+						    if (parameters.Count < 1)
+							    break;
+						    height = parameters [0]/Eyesim.Scale;
+						    if(width >= 0 && height >= 0){
+							    addFloor(0,0,width, height);
+						    }
+						    break;
+					    case "position":
+						    break;
+					    case "push":
+						    if (parameters.Count < 3)
+							    break;
+						    relativepos.Push (new Vector3 (parameters [0]/Eyesim.Scale, parameters [1]/Eyesim.Scale, -parameters[2]));
+						    break;
+					    case "pop":
+						    if (relativepos.Count <= 1)
+							    break;
+						    relativepos.Pop ();
+						    break;
+                        case "floor_texture":
+                                string texPath = io.SearchForFile(args[1], SettingsManager.instance.GetSetting("worlddir", ""));
+                                if (texPath == "")
+                                {
+                                    EyesimLogger.instance.Log("Unable to find floor texture");
+                                    Debug.Log("Couldnt find tex");
+                                }
+                                else
+                                {
+                                    LoadPNG(texPath);
+                                }
+                                break;
+                        default:
+						    if (parameters.Count < 4)
+							    break;
+                            Debug.Log("Wall params: " + parameters.Count);
+						    Vector2 p1 = mapDomain (new Vector2 (parameters [0]/Eyesim.Scale, parameters [1]/Eyesim.Scale), relativepos);
+						    Vector2 p2 = mapDomain (new Vector2 (parameters [2]/Eyesim.Scale, parameters [3]/Eyesim.Scale), relativepos);
+                            // Thickness + Height specified
+                            if(parameters.Count == 6)
+                                AddWall(p1, p2, parameters[4], parameters[5]);
+                            // RGB specificed
+                            else if(parameters.Count == 9)
+                                AddWall(p1, p2, parameters[4], parameters[5], (int) parameters[6], (int) parameters[7], (int) parameters[8]);
                             else
-                            {
-                                LoadPNG(texPath);
-                            }
-                            break;
-                    default:
-						if (parameters.Count < 4)
-							break;
-						Vector2 p1 = mapDomain (new Vector2 (parameters [0]/Eyesim.Scale, parameters [1]/Eyesim.Scale), relativepos);
-						Vector2 p2 = mapDomain (new Vector2 (parameters [2]/Eyesim.Scale, parameters [3]/Eyesim.Scale), relativepos);
-						addWall (p1, p2);
-						break;
+                                AddWall(p1, p2);
+						    break;
 					}
 				}
 			}
@@ -199,42 +216,64 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
 		float ypos = 0;
 		float xmax = 0;
 		float ymax = 0;
-		while ((line = io.readLine()) != "ENDOFFILE") {
-			if (line.Length > 0) {
-				try{
-					size = float.Parse(line)/Eyesim.Scale;
-				} catch {
-					for(int i = 0; i<line.Length; i++){
-						float xpos = ((i+1) / 2) * size;
-						if (i % 2 == 0) {
-							if (line [i] == '|') {
-								addWall (new Vector2(xpos, ypos), new Vector2(xpos, ypos + size));
-								ymax = Mathf.Max (ymax, ypos + size);
-							}
-						} else {
-							if("_SUDLR".Contains(line[i].ToString())){
-								addWall (new Vector2(xpos - size, ypos), new Vector2(xpos, ypos)); 
-							}
-						}
-						xmax = Mathf.Max (xmax, xpos);
-					}
-					ypos -= size;
+		while ((line = io.readLine()) != "ENDOFFILE")
+        {
+			if (line.Length > 0)
+            {
+				for(int i = 0; i<line.Length; i++)
+                {
+					float xpos = ((i+1) / 2) * size;
+                    if(line[i] == '|')
+                    {
+                        AddWall(new Vector2(xpos, ypos), new Vector2(xpos, ypos + size));
+                        ymax = Mathf.Max(ymax, ypos + size);
+                    }
+                    else if(line[i] == '_')
+                    {
+                        AddWall(new Vector2(xpos - size, ypos), new Vector2(xpos, ypos));
+                    }
+                    // Start position of robot
+                    else if(line[i] == 'S' || line[i] == 's')
+                    {
+                        isStartSpecified = true;
+                        robotStartX = (xpos - size/2f);
+                        robotStartY = (ypos + size/2f);
+                    }
+                    xmax = Mathf.Max(xmax, xpos);
 				}
+				ypos -= size;
 			}
 		}
-		print (ymax);
 		addFloor (0,ypos + size - ymax,xmax, ymax - ypos - size);
 	}
 
-	void addWall (Vector2 start, Vector2 end) {
+	GameObject AddWall (Vector2 start, Vector2 end) {
 		GameObject wall = Instantiate(wallPrefab);
 		wall.name = "wall";
-        wall.layer = 0;
+        //wall.layer = 0;
 		wall.transform.localScale = new Vector3 (Vector2.Distance(start, end),0.3f,0.01f);
 		wall.transform.position = new Vector3 ((end.x+start.x)/2,0.05f,(end.y+start.y)/2);
 		wall.transform.rotation = Quaternion.Euler (0,-Mathf.Atan2(end.y-start.y,end.x-start.x)/Mathf.PI*180,0);
-		wall.transform.SetParent (world.transform);
+		wall.transform.SetParent(world.transform);
+        return wall;
 	}
+
+    GameObject AddWall(Vector2 start, Vector2 end, float thickness, float height)
+    {
+        GameObject wall = AddWall(start, end);
+        Vector3 lScale = wall.transform.localScale;
+        lScale.y = height / Eyesim.Scale;
+        lScale.z = thickness / Eyesim.Scale;
+        wall.transform.localScale = lScale;
+        return wall;
+    }
+
+    void AddWall(Vector2 start, Vector2 end, float thickness, float height, int r, int g, int b)
+    {
+        GameObject wall = AddWall(start, end, thickness, height);
+        Renderer rend = wall.GetComponent<Renderer>();
+        rend.material.color = new Color(Mathf.Clamp01(r / 255f),  Mathf.Clamp01(g / 255f), Mathf.Clamp01(b / 255f));
+    }
 
 	void addFloor (float xpos, float ypos, float width, float height) {
 		GameObject floor = Instantiate(floorPrefab);
@@ -244,6 +283,11 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
 		floor.transform.position = new Vector3 (xpos + width/2,-0.05f,ypos + height/2);
 		floor.transform.SetParent (world.transform);
         floorMazeOffset = -2f * floor.transform.position.z;
+    }
 
+    // Add the robot to the maze if specified starting position given
+    void AddRobotToMaze()
+    {
+        ObjectManager.instance.AddS4ToScene((robotStartX*Eyesim.Scale).ToString() + ":" + ((robotStartY + floorMazeOffset)*Eyesim.Scale).ToString() + ":0");
     }
 }

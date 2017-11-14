@@ -181,7 +181,9 @@ public class ObjectBuilder : MonoBehaviour
             }
         }
         // Add the WorldObject component, and calculate vertical offset
-        customObj.AddComponent<WorldObject>().defaultVerticalOffset = -customObj.GetComponent<Collider>().bounds.min.y - 20f;
+        WorldObject wObj = customObj.AddComponent<WorldObject>();
+        wObj.defaultVerticalOffset = -customObj.GetComponent<Collider>().bounds.min.y - 20f;
+        wObj.type = customObj.name;
         customObj.SetActive(false);
         return customObj;
     }
