@@ -68,6 +68,7 @@ public class SaveWorldWindow : Window, IFileReceiver
         if(Path.GetExtension(filename) != ".wld")
             filename += ".wld";
         SimManager.instance.SaveWorld(Path.Combine(directoryInput.text, filename));
+        Close();
     }
 
     // Callback for select directory

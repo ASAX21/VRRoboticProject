@@ -33,6 +33,7 @@ public class MarkerWindow : Window {
             colorPicker.transform.SetAsLastSibling();
         else
         {
+            colPickerOpen = true;
             colorPicker = Instantiate(UIManager.instance.colorPickerPrefab, UIManager.instance.gameWindowContainer);
             colorPicker.Open(myColor, SetMarkerColor, CloseColorPicker);
         }
@@ -47,6 +48,7 @@ public class MarkerWindow : Window {
 
     override public void Close()
     {
+        colPickerOpen = false;
         marker.isWindowOpen = false;
         base.Close();
     }

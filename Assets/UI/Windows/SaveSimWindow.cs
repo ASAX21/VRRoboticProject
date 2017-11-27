@@ -68,6 +68,7 @@ public class SaveSimWindow : Window, IFileReceiver
         if(Path.GetExtension(filename) != ".sim")
             filename += ".sim";
         SimManager.instance.SaveSim(Path.Combine(directoryInput.text, filename));
+        Close();
     }
 
     // Callback for select directory

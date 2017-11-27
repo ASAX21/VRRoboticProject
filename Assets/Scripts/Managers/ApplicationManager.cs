@@ -30,20 +30,27 @@ public class ApplicationManager : MonoBehaviour {
     {
         string[] args = Environment.GetCommandLineArgs();
 
-        // Check if exactly one extra argument is given (simFile)
-        if (args.Length != 2)
+        // Check if exactly two extra arguments are given (simFile and directory)
+        if (args.Length != 3)
             return false;
 
         string simPath = args[1];
 
-        if (Path.GetExtension(simPath) != ".sim" || !File.Exists(simPath))
+        if (Path.GetExtension(simPath) != ".sim")
+            simPath += ".sim";
+
+        simPath = IO.FindFileFromDirectory(args[1], new string[]{ args[2], SettingsManager.instance.GetSetting("simdir", "")});
+        if (simPath == "")
+        {
+            EyesimLogger.instance.Log("Unable to find sim file " + args[1]);
             return false;
+        }
         else
         {
             EyesimLogger.instance.Log("Sim file provided from command line " + simPath);
             SimReader.instance.ReceiveFile(simPath);
+            return true;
         }
-        return true;
     }
 
     public void Quit () 

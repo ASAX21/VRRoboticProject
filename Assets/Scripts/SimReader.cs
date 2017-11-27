@@ -125,6 +125,15 @@ public class SimReader: MonoBehaviour, IFileReceiver {
                 ObjectManager.instance.AddCrateToScene(args[1] + ":" + args[2] + ":" + args[3]);
                 break;
 
+			case "golf":
+				if (args.Length != 4)
+				{
+					EyesimLogger.instance.Log("Error parsing sim file line " + io.LineNum + ": Incorrect number of arguments for Golf - " + args.Length);
+					return false;
+				}
+				ObjectManager.instance.AddGolfBallToScene(args[1] + ":" + args[2] + ":" + args[3]);
+				break;
+
             case "world":
                 string wldPath = io.SearchForFile(args[1], SettingsManager.instance.GetSetting("worlddir", ""));
                 if (wldPath == "")

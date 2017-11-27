@@ -343,9 +343,4 @@ public class RobotInspectorWindow : TabWindow {
     {
         robot.DisconnectRobot();
     }
-
-    public void EnterVRMode()
-    {
-        VRControl.instance.ViewFromRobotPerspective(robot);
-    }
 }

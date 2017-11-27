@@ -143,4 +143,33 @@ public class IO{
         else
             return "";
     }
+
+    // Search for a file using default directories
+	public static string FindFileFromDirectory(string filename, string[] searchDirs)
+	{
+        // Check if a full path was given
+		if (File.Exists(Path.GetFullPath(filename)))
+		{
+			return Path.GetFullPath(filename);
+		}
+        // Else check each search directory
+		else 
+		{
+            foreach(string dir in searchDirs)
+            {
+                if (File.Exists(Path.Combine(dir, filename)))
+                {
+                    return Path.Combine(dir, filename);
+                }
+            }
+            // Final check if it is in the home directory
+            if (File.Exists(Path.Combine(SettingsManager.instance.GetSetting("homedir", ""), filename)))
+            {
+                return Path.Combine(SettingsManager.instance.GetSetting("homedir", ""), filename);
+            }
+		}
+
+        // No file found, return empty string
+        return "";
+	}
 }
