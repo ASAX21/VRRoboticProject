@@ -37,6 +37,13 @@ public static class Eyesim
     {
         return value < min ? min : (value > max ? max : value);
     }
+
+    // Convert from Unity's angle to Eyesim angle (positive rotation is anti-clockwise)
+    // 0 degrees lies along the x axis
+    public static float UnityToEyeSimAngle(float angle)
+    {
+        return ((-angle + 90f) + 360f) % 360f;
+    }
 }
 
 public static class EyesimDebug

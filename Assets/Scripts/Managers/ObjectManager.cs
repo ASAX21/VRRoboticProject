@@ -128,7 +128,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     {
         newObj.objectID = totalObjects++;
         newObj.transform.position = new Vector3(x/Eyesim.Scale, newObj.defaultVerticalOffset, y/Eyesim.Scale);
-        newObj.transform.rotation = Quaternion.Euler(new Vector3(0f, phi, 0f));
+        newObj.transform.rotation = Quaternion.Euler(new Vector3(0f, Eyesim.UnityToEyeSimAngle(phi), 0f));
         newObj.isInit = true;
         if (newObj is Robot)
             SimManager.instance.AddRobotToScene(newObj as Robot);

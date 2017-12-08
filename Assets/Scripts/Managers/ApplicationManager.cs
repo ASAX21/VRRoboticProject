@@ -39,6 +39,9 @@ public class ApplicationManager : MonoBehaviour {
         if (Path.GetExtension(simPath) != ".sim")
             simPath += ".sim";
 
+        EyesimLogger.instance.Log(simPath);
+        EyesimLogger.instance.Log(args[2]);
+
         simPath = IO.FindFileFromDirectory(args[1], new string[]{ args[2], SettingsManager.instance.GetSetting("simdir", "")});
         if (simPath == "")
         {
