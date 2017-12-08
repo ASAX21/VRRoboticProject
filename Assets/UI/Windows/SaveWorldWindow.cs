@@ -71,6 +71,18 @@ public class SaveWorldWindow : Window, IFileReceiver
         Close();
     }
 
+    public override void Open()
+    {
+        UIManager.instance.openWindow(BlockingType.Scene);
+        base.Open();
+    }
+
+    public override void Close()
+    {
+        UIManager.instance.closeWindow();
+        base.Close();
+    }
+
     // Callback for select directory
     public GameObject ReceiveFile(string dirpath)
     {

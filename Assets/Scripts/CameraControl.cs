@@ -15,6 +15,7 @@ public class CameraControl: MonoBehaviour
     public float keyboardPanSens = 0.005f;
 
     public float zoomSens = 1.0f;
+    public float speedMod = 1f;
 
     Vector3 mousePos;
 	Plane backPlane;
@@ -23,13 +24,20 @@ public class CameraControl: MonoBehaviour
     {
         if (isOrtho)
             ToggleCameraOrtho();
+
         Transform floor = GameObject.Find("floor").transform;
         Vector3 cameraPos;
-        if (floor == null)
-            cameraPos = new Vector3(0f, 1.35f, -0.7f);
+        float cameraZoom = 6f;
+
+        if(floor == null)
+            cameraPos = new Vector3(0f, 1.35f, 0f);
         else
-            cameraPos = new Vector3(floor.position.x, 1.35f, -floor.position.z/2);
-        Camera.main.transform.rotation = Quaternion.Euler(new Vector3(40f, 0f, 0f));
+        {
+            for(int i = 0; i < 3; i++)
+                cameraZoom = floor.localScale[i] > cameraZoom ? floor.localScale[i] : cameraZoom;
+            cameraPos = new Vector3(floor.position.x, (floor.localScale.x + floor.localScale.z) / 2f, -floor.localScale.z / 5f);
+        }
+        Camera.main.transform.rotation = Quaternion.Euler(new Vector3(60f, 0f, 0f));
         Camera.main.transform.parent.position = cameraPos;
         Camera.main.transform.localPosition = Vector3.zero;
     }
@@ -46,8 +54,22 @@ public class CameraControl: MonoBehaviour
         {
             isOrtho = true;
             Camera.main.orthographic = true;
-            Camera.main.orthographicSize = 2;
+            Transform floor = GameObject.Find("floor").transform;
+            Vector3 cameraPos;
+            float cameraSize = 6f;
+
+            if(floor == null)
+                cameraPos = new Vector3(0f, 1f, 0f);
+            else
+            {
+                cameraPos = floor.position + Vector3.up;
+                for(int i = 0; i < 3; i++)
+                    cameraSize = floor.localScale[i] > cameraSize ? floor.localScale[i] : cameraSize;
+            }
+
+            Camera.main.orthographicSize = cameraSize / 3f;
             Camera.main.transform.rotation = Quaternion.Euler(new Vector3(90f, 0f, 0f));
+            Camera.main.transform.position = cameraPos;
         }
     }
 
@@ -55,6 +77,7 @@ public class CameraControl: MonoBehaviour
     {
         if (UIManager.instance.windowOpen == false)
         {
+            speedMod = Input.GetKey(SettingsManager.instance.cameraMod) ? 10f : 1f;
             if (isOrtho)
             {
                 // middle click : startPan 
@@ -67,20 +90,20 @@ public class CameraControl: MonoBehaviour
                     Vector3 newMousePos = Input.mousePosition;
                     if (mousePos == newMousePos)
                         return;
-                    Camera.main.transform.parent.Translate(new Vector3(mousePos.x - newMousePos.x, 0, mousePos.y - newMousePos.y) * (orthoPanSens * 0.002f));
+                    Camera.main.transform.parent.Translate(new Vector3(mousePos.x - newMousePos.x, 0, mousePos.y - newMousePos.y) * (orthoPanSens * 0.002f) * speedMod);
                     mousePos = newMousePos;
                 }
                 // Pan with Keyboard
                 else if (Input.GetAxis("Vertical") != 0 || Input.GetAxis("Horizontal") != 0)
                 {
-                    Camera.main.transform.parent.Translate(new Vector3(Input.GetAxis("Horizontal") * orthoPanSens / 10f, 0, Input.GetAxis("Vertical") * orthoPanSens / 10f));
+                    Camera.main.transform.parent.Translate(new Vector3(Input.GetAxis("Horizontal") * orthoPanSens / 10f, 0, Input.GetAxis("Vertical") * orthoPanSens / 10f) * speedMod);
                 }
                 // Zoom
                 if (UIManager.instance.preventMouseZoom == 0)
-                    Camera.main.orthographicSize -= Input.GetAxis("Mouse ScrollWheel") * orthoZoomSens;
+                    Camera.main.orthographicSize -= Input.GetAxis("Mouse ScrollWheel") * orthoZoomSens * speedMod;
                 if (Input.GetAxis("Keyboard Zoom") != 0)
                 {
-                    Camera.main.orthographicSize -= Input.GetAxis("Keyboard Zoom") * orthoZoomSens;
+                    Camera.main.orthographicSize -= Input.GetAxis("Keyboard Zoom") * orthoZoomSens * speedMod;
                 }
             }
             else
@@ -131,10 +154,10 @@ public class CameraControl: MonoBehaviour
 
                 // Zoom
                 if (UIManager.instance.preventMouseZoom == 0)
-                    transform.position += transform.forward * zoomSens * Input.GetAxis("Mouse ScrollWheel");
+                    transform.position += transform.forward * zoomSens * Input.GetAxis("Mouse ScrollWheel") * speedMod;
                 if (Input.GetAxis("Keyboard Zoom") != 0)
                 {
-                    transform.position += transform.forward * zoomSens * Input.GetAxis("Keyboard Zoom");
+                    transform.position += transform.forward * zoomSens * Input.GetAxis("Keyboard Zoom") * speedMod;
                 }
 
                 // Make sure camera doens't move below ground

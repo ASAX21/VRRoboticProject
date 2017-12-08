@@ -16,10 +16,14 @@ public class SettingsManager : MonoBehaviour {
     public Dictionary<string, Func<float, bool, float>> floatSettings;
     public Dictionary<string, Func<string, bool, string>> stringSettings;
 
+    // Directory Settings
     public string homeDirectory;
     public string worldDirectory;
     public string simDirectory;
     public string defaultSim;
+
+    //Keybinds
+    public KeyCode cameraMod = KeyCode.LeftControl;
 
     private void Awake()
     {

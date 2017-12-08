@@ -31,6 +31,8 @@ public static class Layers
 // Static helper functions
 public static class Eyesim
 {
+    public enum WorldType { None, World, Maze };
+
     public const float Scale = 1000f;
 
     public static int ClampInt(int value, int min, int max)

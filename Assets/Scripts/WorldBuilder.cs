@@ -10,7 +10,6 @@ using UnityEngine;
 
 public class WorldBuilder : MonoBehaviour, IFileReceiver
 {
-
     public static WorldBuilder instance = null;
 
     public GameObject floorPrefab;
@@ -23,10 +22,10 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
 	private IO io;
 
     // Hacky workaround to fix fact that mazes build backwards
-    float floorMazeOffset = 0;
+    public float floorMazeOffset = 0;
 
-    bool isStartSpecified = false;
-    float robotStartX = 0, robotStartY = 0;
+    public bool isStartSpecified = false;
+    public float robotStartX = 0, robotStartY = 0;
 
     private void Awake()
     {
@@ -48,7 +47,8 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
 
         if (!io.Load (filepath))
 			return null;
-		switch (io.extension (filepath)) {
+		switch (io.extension (filepath))
+        {
 		    case ".wld":
 			    processwld ();
 			    break;
@@ -182,7 +182,6 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
                         default:
 						    if (parameters.Count < 4)
 							    break;
-                            Debug.Log("Wall params: " + parameters.Count);
 						    Vector2 p1 = mapDomain (new Vector2 (parameters [0]/Eyesim.Scale, parameters [1]/Eyesim.Scale), relativepos);
 						    Vector2 p2 = mapDomain (new Vector2 (parameters [2]/Eyesim.Scale, parameters [3]/Eyesim.Scale), relativepos);
                             // Thickness + Height specified
@@ -200,8 +199,10 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
 		}
 	}
 
-	Vector2 mapDomain(Vector2 point, Stack<Vector3> relativepos){
-		foreach(Vector3 transform in relativepos){
+	Vector2 mapDomain(Vector2 point, Stack<Vector3> relativepos)
+    {
+		foreach(Vector3 transform in relativepos)
+        {
 			//rotate point
 			point = new Vector2(point.x * Mathf.Cos(Mathf.Deg2Rad * transform.z) - point.y * Mathf.Sin(Mathf.Deg2Rad * transform.z),
 				point.x * Mathf.Sin(Mathf.Deg2Rad * transform.z) + point.y * Mathf.Cos(Mathf.Deg2Rad * transform.z));
@@ -211,14 +212,15 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
 		return point;
 	}
 
-	public void processmaz (float size){
+	public void processmaz (float size)
+    {
 		string line;
 		float ypos = 0;
 		float xmax = 0;
 		float ymax = 0;
 		while ((line = io.readLine()) != "ENDOFFILE")
         {
-			if (line.Length > 0)
+			if (line.Length > 0 && (line[0] == '|' || line[0] == ' ' || line[0] == ' '))
             {
 				for(int i = 0; i<line.Length; i++)
                 {
@@ -238,6 +240,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
                         isStartSpecified = true;
                         robotStartX = (xpos - size/2f);
                         robotStartY = (ypos + size/2f);
+                        AddWall(new Vector2(xpos - size, ypos), new Vector2(xpos, ypos));
                     }
                     xmax = Mathf.Max(xmax, xpos);
 				}
@@ -247,7 +250,8 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
 		addFloor (0,ypos + size - ymax,xmax, ymax - ypos - size);
 	}
 
-	GameObject AddWall (Vector2 start, Vector2 end) {
+	GameObject AddWall (Vector2 start, Vector2 end)
+    {
 		GameObject wall = Instantiate(wallPrefab);
 		wall.name = "wall";
         //wall.layer = 0;
@@ -275,7 +279,8 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
         rend.material.color = new Color(Mathf.Clamp01(r / 255f),  Mathf.Clamp01(g / 255f), Mathf.Clamp01(b / 255f));
     }
 
-	void addFloor (float xpos, float ypos, float width, float height) {
+	void addFloor (float xpos, float ypos, float width, float height)
+    {
 		GameObject floor = Instantiate(floorPrefab);
 		floor.name = "floor";
         floor.layer = Layers.GroundLayer;
@@ -285,9 +290,10 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
         floorMazeOffset = -2f * floor.transform.position.z;
     }
 
-    // Add the robot to the maze if specified starting position given
+    // Add the robot to the maze if specified starting position given if not loaded from sim file
     void AddRobotToMaze()
     {
-        ObjectManager.instance.AddS4ToScene((robotStartX*Eyesim.Scale).ToString() + ":" + ((robotStartY + floorMazeOffset)*Eyesim.Scale).ToString() + ":0");
+        if(!SimReader.instance.readingSimFile)
+            ObjectManager.instance.AddS4ToScene((robotStartX*Eyesim.Scale).ToString() + ":" + ((robotStartY + floorMazeOffset)*Eyesim.Scale).ToString() + ":0");
     }
 }
