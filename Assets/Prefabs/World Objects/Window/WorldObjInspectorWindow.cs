@@ -2,8 +2,8 @@
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions.ColorPicker;
 
-public class WorldObjInspectorWindow : Window {
-
+public class WorldObjInspectorWindow : Window
+{
     public WorldObject worldObj;
 
     // Object identifiers
@@ -86,6 +86,11 @@ public class WorldObjInspectorWindow : Window {
     public void SetPhiPosition(string phi)
     {
         worldObj.transform.rotation = Quaternion.Euler(0, float.Parse(phi), 0);
+    }
+
+    public void SetScale(float scale)
+    {
+        worldObj.SetScale(scale);
     }
 
     public void CloseColorPicker()

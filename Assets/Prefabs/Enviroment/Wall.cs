@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Wall : MonoBehaviour {
-
+public class Wall : MonoBehaviour
+{
     public Material wallMat;
     public Renderer rend;
     public Collider col;
+    private Color color = Color.white;
 
     public bool isPlaced = true;
     int collisionCount = 0;
@@ -21,10 +22,8 @@ public class Wall : MonoBehaviour {
 
     private void OnMouseExit()
     {
-        if (ObjectManager.instance.removingWalls)
-        {
-            rend.material = wallMat;
-        }
+        if(ObjectManager.instance.removingWalls)
+            SetMaterialToNormal();
     }
 
     private void OnMouseDown()
@@ -40,7 +39,8 @@ public class Wall : MonoBehaviour {
     { 
         if(ObjectManager.instance.paintingWalls && !EventSystem.current.IsPointerOverGameObject() && Input.GetMouseButton(0))
         {
-            rend.material.color = ObjectManager.instance.paintColor;
+            color = ObjectManager.instance.paintColor;
+            rend.material.color = color;
         }
     }
 
@@ -48,6 +48,7 @@ public class Wall : MonoBehaviour {
     public void SetMaterialToNormal()
     {
         rend.material = wallMat;
+        rend.material.color = color;
     }
 
     // Check if placement is valid

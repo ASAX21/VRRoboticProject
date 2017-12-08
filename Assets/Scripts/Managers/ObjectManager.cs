@@ -23,7 +23,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     [Header("Prefab World Ojbects")]
     public GameObject cokeCanPrefab;
     public GameObject soccerBallPrefab;
-    public GameObject cratePrefab;
+    public GameObject boxPrefab;
     public GameObject markerPrefab;
     public GameObject golfBallPrefab;
 
@@ -186,9 +186,9 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
                 newObj = Instantiate(soccerBallPrefab).GetComponent<PlaceableObject>();
                 newObj.name = "Soccer Ball";
                 break;
-            case "crate":
-                newObj = Instantiate(cratePrefab).GetComponent<PlaceableObject>();
-                newObj.name = "Crate";
+            case "box":
+                newObj = Instantiate(boxPrefab).GetComponent<PlaceableObject>();
+                newObj.name = "Box";
                 break;
             case "golf":
                 newObj = Instantiate(golfBallPrefab).GetComponent<PlaceableObject>();
@@ -243,9 +243,9 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         AddPredefinedObjectToScene("Soccer", args);
     }
 
-    public void AddCrateToScene(string args)
+    public void AddBoxToScene(string args)
     {
-        AddPredefinedObjectToScene("Crate", args);
+        AddPredefinedObjectToScene("Box", args);
     }
 
     public void AddGolfBallToScene(string args)
@@ -423,13 +423,16 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     }
 
     // Colouring Walls
-
     public void BeginPaintingWalls()
     {
+        if(paintingWalls)
+            return;
+
         if(isMouseOccupied)
             FreeMouse();
 
         paintingWalls = true;
+        isMouseOccupied = true;
         wallColorPicker = Instantiate(UIManager.instance.colorPickerPrefab, UIManager.instance.gameWindowContainer);
         wallColorPicker.Open(paintColor, SetPaintColor, CancelPaintingWalls);
     }
@@ -442,6 +445,8 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     public void CancelPaintingWalls()
     {
         paintingWalls = false;
+        isMouseOccupied = false;
+        Destroy(wallColorPicker.gameObject);
     }
         
     // ----- Handle placement of object via mouse -----

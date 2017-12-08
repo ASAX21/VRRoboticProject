@@ -183,7 +183,7 @@ public class SimReader: MonoBehaviour, IFileReceiver
                     EyesimLogger.instance.Log("Error parsing sim file line " + io.LineNum + ": Incorrect number of arguments for Crate - " + args.Length);
                     return false;
                 }
-                ObjectManager.instance.AddCrateToScene(args[1] + ":" + args[2] + ":" + args[3]);
+                ObjectManager.instance.AddBoxToScene(args[1] + ":" + args[2] + ":" + args[3]);
                 break;
 
 			case "golf":

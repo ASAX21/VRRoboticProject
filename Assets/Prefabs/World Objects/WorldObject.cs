@@ -2,10 +2,19 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class WorldObject : PlaceableObject, IPointerClickHandler {
+public class WorldObject : PlaceableObject, IPointerClickHandler
+{
+
+    private Vector3 defaultScale;
 
     WorldObjInspectorWindow myWindow;
     public Color myColor;
+
+    override internal void Awake()
+    {
+        defaultScale = transform.localScale;
+        base.Awake();
+    }
 
     override internal void Start()
     {
@@ -55,5 +64,10 @@ public class WorldObject : PlaceableObject, IPointerClickHandler {
 
         myColor = newColor;
         myWindow.colorDisplay.color = myColor;
+    }
+
+    public void SetScale(float scale)
+    {
+        transform.localScale = defaultScale * scale;
     }
 }
