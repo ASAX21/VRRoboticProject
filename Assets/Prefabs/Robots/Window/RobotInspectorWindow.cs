@@ -140,7 +140,7 @@ public class RobotInspectorWindow : TabWindow {
         {
             robotXValue.text = (Eyesim.Scale * robot.transform.position.x).ToString("N2");
             robotZValue.text = (Eyesim.Scale * robot.transform.position.z).ToString("N2");
-            robotPhiValue.text = robot.transform.rotation.eulerAngles.y.ToString("N2");
+            robotPhiValue.text = Eyesim.UnityToEyeSimAngle(robot.transform.rotation.eulerAngles.y).ToString("N2");
         }
         if (robot is IVWDrive)
         {

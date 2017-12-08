@@ -271,7 +271,7 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
         if (isInit == false)
         {
             if (this is IVWDrive)
-                (this as IVWDrive).SetPose(0, 0, 0);
+                (this as IVWDrive).SetPose(0, 0, (int) transform.eulerAngles.y);
         }
         base.PlaceObject();
     }
