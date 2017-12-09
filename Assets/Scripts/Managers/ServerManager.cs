@@ -97,6 +97,7 @@ public class ServerManager : MonoBehaviour
     // Terminate a connection, and remove form the connection list
     public void CloseConnection(RobotConnection conn)
     {
+        Debug.Log("Closing conn to robot" + conn.robot.objectID);
         conn.robot.myConnection = null;
         conn.tcpClient.Close();
         conn.robot.TerminateControlBinary();
@@ -231,6 +232,7 @@ public class ServerManager : MonoBehaviour
                 interpreter.ReceiveCommand(recvBuf, conn);
                 break;
             case PacketType.CLIENT_DISCONNECT:
+                Debug.Log("Client requested disconnect");
                 CloseConnection(conn);
                 break;
             default:

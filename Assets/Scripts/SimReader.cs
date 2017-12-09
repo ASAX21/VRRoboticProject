@@ -102,7 +102,6 @@ public class SimReader: MonoBehaviour, IFileReceiver
             if(execPath == "")
             {
                 EyesimLogger.instance.Log("Failed to find robot executable for " + args[args.Length - 1] + " on line " + io.LineNum);
-                return false;
             }
             else
             {
@@ -145,14 +144,18 @@ public class SimReader: MonoBehaviour, IFileReceiver
                     // Start specified by maze
                     if(args.Length == 2 || args.Length == 3)
                     {
-                        if(WorldBuilder.instance.isStartSpecified)
+                        if (WorldBuilder.instance.isStartSpecified)
+                        {
                             ObjectManager.instance.AddS4ToScene((WorldBuilder.instance.robotStartX * Eyesim.Scale).ToString() + ":" + ((WorldBuilder.instance.robotStartY + WorldBuilder.instance.floorMazeOffset) * Eyesim.Scale).ToString() + ":0");
+                            Debug.Log("Added Robot at maze start");
+                        }
                         else
                             EyesimLogger.instance.Log("Error parsing sim file line " + io.LineNum + ": No starting position indicated in .maz file");
                     }
                     else if(args.Length >= 4)
                     {
                         ObjectManager.instance.AddS4ToScene(args[1] + ":" + args[2] + ":" + args[3]);
+                        Debug.Log("Add S4");
                     }
                 }
                 break;
@@ -300,6 +303,6 @@ public class SimReader: MonoBehaviour, IFileReceiver
         }
 
         SimManager.instance.ResumeSimulation();
-        EyesimLogger.instance.Log("Finsihed loading sim file");
+        EyesimLogger.instance.Log("Finished loading sim file");
     }
 }

@@ -73,7 +73,6 @@ public class WindowsOSManager: OSManager
 
     public override GameObject ReceiveFile(string filepath)
     {
-        UnityEngine.Debug.Log("HELLO!");
         UnityEngine.Debug.Log(Path.GetDirectoryName(filepath));
         UnityEngine.Debug.Log(Path.GetFileNameWithoutExtension(filepath));
 
@@ -86,6 +85,24 @@ public class WindowsOSManager: OSManager
 public class MacOSManager: OSManager
 {	
 
+    // Launch XQuarts when starting on Mac
+    public MacOSManager()
+    {
+        Process[] pname = Process.GetProcessesByName("XQuartz");
+        if(pname.Length == 0)
+        {
+            UnityEngine.Debug.Log("No XQuartz");
+            EyesimLogger.instance.Log("Launching XQuartz");
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.UseShellExecute = false;
+            startInfo.FileName = @"/Applications/Utilities/XQuartz.app/Contents/MacOS/X11";
+            Process.Start(startInfo);
+        }
+        else
+        {
+            UnityEngine.Debug.Log("Xquarts!");
+        }
+    }
 	public override void LaunchTerminal()
     {
         System.Diagnostics.Process.Start(@"/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal");
