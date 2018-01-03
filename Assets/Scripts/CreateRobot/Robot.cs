@@ -199,10 +199,18 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
         }
         controlBinary = new Process();
         ProcessStartInfo startInfo = new ProcessStartInfo();
-        startInfo.EnvironmentVariables["DISPLAY"] = ":0";
-        if(Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
-            startInfo.WorkingDirectory = @"cygwin\bin";
         startInfo.UseShellExecute = false;
+
+        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            startInfo.WorkingDirectory = @"cygwin\bin";
+            startInfo.EnvironmentVariables["DISPLAY"] = ":0";
+        }
+        else
+        {
+            startInfo.WorkingDirectory = Path.GetDirectoryName(filepath);
+        }
+
         startInfo.FileName = filepath;
         controlBinary.StartInfo = startInfo;
         ServerManager.instance.activeRobot = this;
