@@ -1,0 +1,1 @@
+g++ $* -Wall -I/opt/X11/include -I/usr/local/include -L/usr/local/lib -L/opt/X11/lib -leyesim -lX11

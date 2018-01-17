@@ -23,3 +23,5 @@ Files
                 types.h
             -lib
                 libeyesim.a
+
+A .pkg will be created and placed in the 'Compiled' directory. Change the version number in the 'build.sh' script with the 'VERSION' variable

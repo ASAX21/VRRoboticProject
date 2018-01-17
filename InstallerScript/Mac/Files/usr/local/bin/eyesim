@@ -1,0 +1,17 @@
+#!/bin/bash
+
+DIR=`pwd`
+
+if [ "$#" -ne 1 ]; then
+    echo "Incorrect number of parameters (expected 1)"
+    echo "usage: eyesim Path/To/SimFile.sim"
+else
+    result=`pgrep quartz`
+    if [ "$result" == "" ] ; then
+        echo "Starting XQuartz"
+        open /Applications/Utilities/XQuartz.app
+        sleep 4s
+    fi
+    kill `pgrep EyeSim`
+    open /Applications/EyeSim.app --args $1 $DIR
+fi

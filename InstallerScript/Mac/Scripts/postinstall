@@ -1,0 +1,7 @@
+#!/bin/bash
+
+NAME="eyesimInstall.sh"
+
+PATH="/tmp/eyesim"
+
+IDENTIFIER="UWA.CSSE.Eyesim.VR"
