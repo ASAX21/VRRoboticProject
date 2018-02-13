@@ -74,8 +74,10 @@ public class RobotInspectorWindow : TabWindow {
     {
         if (robot is ICameras)
         {
-            cameraToDisplay = (robot as ICameras).GetCameraComponent(0);
-            cameraTarget.texture = cameraToDisplay.rendTex;
+            if((cameraToDisplay = (robot as ICameras).GetCameraComponent(0)) != null)
+                cameraTarget.texture = cameraToDisplay.rendTex;
+            else
+                Debug.Log("Failed to get camera component");
         }
 
         lockButtonImage.sprite = lockedImage;

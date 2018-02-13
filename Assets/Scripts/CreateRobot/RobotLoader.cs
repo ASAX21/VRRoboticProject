@@ -5,19 +5,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RobotLoader: MonoBehaviour, IFileReceiver {
+public class RobotLoader: MonoBehaviour, IFileReceiver
+{
 
     public static RobotLoader instance = null;
+
+    // Type of robots
+    public enum RobotDriveType { None, Differential, Ackermann, Omni};
+
+    // Current robot being built
     public Robot robot;
     public GameObject robotObject;
     private ConfigureableRobot robotConfig;
+    private RobotDriveType driveType = RobotDriveType.None;
 
+    // Filereading 
     public string filepath;
     private IO io;
 
+    // Prefabs
     private bool robotDrive;
     public GameObject diffDriveBase;
     public GameObject ackDriveBase;
+    public GameObject baseOmniDrive;
+    public PhysicMaterial noFriction;
+    public PhysicMaterial highFriction;
 
     private void Awake()
     {
@@ -42,6 +54,7 @@ public class RobotLoader: MonoBehaviour, IFileReceiver {
         if (!io.Load(filepath))
             return null;
         string[] args;
+        driveType = RobotDriveType.None;
         while ((args = io.ReadNextArguments())[0] != "ENDOFFILE")
         {
             if (!process(args))
@@ -102,12 +115,17 @@ public class RobotLoader: MonoBehaviour, IFileReceiver {
                         switch (args[1])
                         {
                             case "DIFFERENTIAL_DRIVE":
+                                driveType = RobotDriveType.Differential;
                                 robotObject = Instantiate(diffDriveBase);
+                                Debug.Log("Diff Drive");
                                 break;
                             case "ACKERMANN_DRIVE":
+                                driveType = RobotDriveType.Ackermann;
                                 robotObject = Instantiate(ackDriveBase);
+                                Debug.Log("Ackermann Drive");
                                 break;
                             case "OMNI_DRIVE":
+                                driveType = RobotDriveType.Omni;
                                 Debug.Log("Omni drive not implemented");
                                 return false;
                             default:
@@ -168,6 +186,37 @@ public class RobotLoader: MonoBehaviour, IFileReceiver {
                         }
                         return true;
                     }
+                // Add a collider to the robot : box, sphere, or capsule
+                case "collider":
+                    {
+                        if(args[1] == "box")
+                        {
+                            if(!CheckArguments(args, 8, "collider box"))
+                                return false;
+                            robotConfig.AddBox(new Vector3(float.Parse(args[2]) / Eyesim.Scale, float.Parse(args[3]) / Eyesim.Scale , float.Parse(args[4]) / Eyesim.Scale), 
+                                new Vector3(float.Parse(args[5]) / Eyesim.Scale, float.Parse(args[6]) / Eyesim.Scale, float.Parse(args[7]) / Eyesim.Scale), noFriction);
+                        }
+                        else if(args[1] == "sphere")
+                        {
+                            if(!CheckArguments(args, 6, "collider sphere"))
+                                return false;
+                            robotConfig.AddSphere(float.Parse(args[2]) / Eyesim.Scale, 
+                                new Vector3(float.Parse(args[3]) / Eyesim.Scale, float.Parse(args[4]) / Eyesim.Scale, float.Parse(args[5]) / Eyesim.Scale), noFriction);
+                        }
+                        else if(args[1] == "capsule")
+                        {
+                            if(!CheckArguments(args, 7, "collider capsule"))
+                                return false;
+                            robotConfig.AddCapsule(float.Parse(args[2]) / Eyesim.Scale, float.Parse(args[3]) / Eyesim.Scale,
+                                new Vector3(float.Parse(args[4]) / Eyesim.Scale, float.Parse(args[5]) / Eyesim.Scale, float.Parse(args[6]) / Eyesim.Scale), noFriction);
+                        }
+                        else
+                        {
+                            EyesimLogger.instance.Log(filepath + "." + io.LineNum + "Bad arguments for collider in ");
+                            return false;
+                        }
+                        return true;
+                    }
                 // Centre of mass, and mass in kg
                 case "mass":
                     {
@@ -182,12 +231,12 @@ public class RobotLoader: MonoBehaviour, IFileReceiver {
                     {
                         if (!CheckArguments(args, 3, "axis"))
                             return false;
-                        else if(!(robotObject.GetComponent<Robot>() is BaseDiffDrive))
+                        else if(driveType != RobotDriveType.Differential)
                         {
                             Debug.Log("axis on non diff-drive robot");
                             return false;
                         }
-                        robotConfig.ConfigureAxel(float.Parse(args[1]), float.Parse(args[2]), AxelType.None);
+                        robotConfig.ConfigureAxel(float.Parse(args[1]) / Eyesim.Scale, float.Parse(args[2]) / Eyesim.Scale, AxelType.None);
                         return true;
                     }
                 // Location of an axel, and type (drive / turn)
@@ -195,15 +244,15 @@ public class RobotLoader: MonoBehaviour, IFileReceiver {
                     {
                         if (!CheckArguments(args, 4, "axel"))
                             return false;
-                        else if (!(robotObject.GetComponent<Robot>() is BaseAckDrive))
+                        else if (driveType != RobotDriveType.Ackermann)
                         {
                             Debug.Log("axel on non ackermann-drive robot");
                             return false;
                         }
                         if (args[1] == "turn")
-                            robotConfig.ConfigureAxel(float.Parse(args[2]), float.Parse(args[3]), AxelType.Turn);
+                            robotConfig.ConfigureAxel(float.Parse(args[2]) / Eyesim.Scale, float.Parse(args[3]) / Eyesim.Scale, AxelType.Turn);
                         else if (args[1] == "drive")
-                            robotConfig.ConfigureAxel(float.Parse(args[2]), float.Parse(args[3]), AxelType.Drive);
+                            robotConfig.ConfigureAxel(float.Parse(args[2]) / Eyesim.Scale, float.Parse(args[3]) / Eyesim.Scale, AxelType.Drive);
                         else
                         {
                             Debug.Log("Bad axel designation (" + args[1] + "). Must be turn or drive.");
@@ -223,9 +272,24 @@ public class RobotLoader: MonoBehaviour, IFileReceiver {
                 // Configure wheels
                 case "wheel":
                     {
-                        if (!CheckArguments(args, 5, "wheel"))
-                            return false;
-                        robotConfig.ConfigureWheels(float.Parse(args[1]), float.Parse(args[2]), int.Parse(args[3]), float.Parse(args[4]));
+                        if(driveType == RobotDriveType.Differential)
+                        {
+                            if(!CheckArguments(args, 5, "wheel"))
+                                return false;
+                            robotConfig.ConfigureWheels(float.Parse(args[1]) / Eyesim.Scale, float.Parse(args[2]), int.Parse(args[3]), float.Parse(args[4]) / Eyesim.Scale, AxelType.None);
+                        }
+                        else if (driveType == RobotDriveType.Ackermann)
+                        {
+                            if(!CheckArguments(args, 6, "wheel"))
+                                return false;
+                            if(args[1].ToLower() == "drive")
+                                robotConfig.ConfigureWheels(float.Parse(args[2]) / Eyesim.Scale, float.Parse(args[3]), int.Parse(args[4]), float.Parse(args[5]) / Eyesim.Scale, AxelType.Drive);
+                            else if(args[1].ToLower() == "turn")
+                                robotConfig.ConfigureWheels(float.Parse(args[2]) / Eyesim.Scale, float.Parse(args[3]), int.Parse(args[4]), float.Parse(args[5]) / Eyesim.Scale, AxelType.Turn);
+                            else
+                                EyesimLogger.instance.Log(filepath + "." + io.LineNum + ":" + "Bad arguments for wheel - must specify axel type (turn or drive)");
+                        }
+
                     }
                     return true;
                 // Add camera
@@ -235,6 +299,13 @@ public class RobotLoader: MonoBehaviour, IFileReceiver {
                             return false;
                         Vector3 pos = new Vector3(float.Parse(args[1]) / Eyesim.Scale, float.Parse(args[2]) / Eyesim.Scale, float.Parse(args[3]) / Eyesim.Scale);
                         robotConfig.ConfigureCamera(pos, float.Parse(args[4]), float.Parse(args[5]), float.Parse(args[6]), float.Parse(args[7]));
+                    }
+                    return true;
+                case "lidar":
+                    {
+                        if(!CheckArguments(args, 3, "lidar"))
+                            return false;
+                        robotConfig.ConfigureLidar(int.Parse(args[1]), int.Parse(args[2]));
                     }
                     return true;
                 default:

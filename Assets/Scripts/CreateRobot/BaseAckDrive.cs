@@ -15,8 +15,7 @@ public class BaseAckDrive : Robot, IMotors,
 {
     // Components of the robot
     [Header("Physical Components")]
-    public BoxCollider robotBody;
-    public CapsuleCollider robotBunt;
+    public List<Collider> robotColliders;
     public Rigidbody robotRigidbody;
     public Transform axelTurn;
     public Transform axelDrive;
@@ -58,17 +57,7 @@ public class BaseAckDrive : Robot, IMotors,
         base.Awake();
     }
 
-    public void TEST()
-    {
-        SetServo(0, 0);
-    }
-
-    // Configure size of robot - single box collider, and position of the slider located at the back
-    public void ConfigureSize(float length, float width, float height)
-    {
-        robotBody.size = new Vector3(width / Eyesim.Scale, height / Eyesim.Scale, length / Eyesim.Scale);
-        robotBunt.center = new Vector3(0f, 0.025f, 0.5f * length / Eyesim.Scale * 0.6f);
-    }
+    /* ----- Robot Configuration ----- */
 
     public void ConfigureMass(float mass, Vector3 com)
     {
@@ -76,30 +65,95 @@ public class BaseAckDrive : Robot, IMotors,
         robotRigidbody.centerOfMass = com;
     }
 
+    // Add a box collider
+    public void AddBox(Vector3 size, Vector3 centre, PhysicMaterial friction)
+    {
+        BoxCollider box = gameObject.AddComponent<BoxCollider>();
+        box.size = size;
+        box.center = centre;
+        box.material = friction;
+        robotColliders.Add(box);
+    }
+
+    // Add a sphere collider
+    public void AddSphere(float radius, Vector3 centre, PhysicMaterial friction)
+    {
+        SphereCollider sphere = gameObject.AddComponent<SphereCollider>();
+        sphere.radius = radius;
+        sphere.center = centre;
+        sphere.material = friction;
+        robotColliders.Add(sphere);
+    }
+
+    // Add a capsule collider
+    public void AddCapsule(float radius, float height, Vector3 centre, PhysicMaterial friction)
+    {
+        CapsuleCollider cap = gameObject.AddComponent<CapsuleCollider>();
+        cap.radius = radius;
+        cap.height = height;
+        cap.center = centre;
+        cap.material = friction;
+        robotColliders.Add(cap);
+    }
+
     public void ConfigureModel(GameObject newModel, Vector3 pos, Vector3 rot)
     {
         if (robotModel != null)
             Destroy(robotModel);
 
-        // Set container position to offset model if required
-        modelContainer.localPosition = pos;
-        modelContainer.localRotation = Quaternion.Euler(rot);
         // Put model into container
         robotModel = newModel;
         robotModel.transform.parent = modelContainer;
         robotModel.transform.localPosition = Vector3.zero;
         robotModel.transform.rotation = Quaternion.identity;
+
+        // Set container position to offset model if required
+        modelContainer.localPosition = pos;
+        modelContainer.localRotation = Quaternion.Euler(rot);
     }
 
     // Configure axel height (vertical into robot) and position along z-axis (forward)
     public void ConfigureAxel(float axelHeight, float axelPos, AxelType type)
     {
-
+        Vector3 axel = new Vector3(0f, axelHeight, axelPos);
+        if(type == AxelType.Drive)
+            axelDrive.localPosition = axel;
+        else if(type == AxelType.Turn)
+            axelTurn.localPosition = axel;
     }
 
-    public void ConfigureWheels(float diameter, float maxVel, int ticksPerRev, float track)
+    public void ConfigureWheels(float diameter, float maxVel, int ticksPerRev, float track, AxelType type)
     {
+        if(type == AxelType.Drive)
+        {
+            Wheel leftWheel = wheelController.driveWheels[0];
+            leftWheel.GetComponent<HingeJoint>().connectedAnchor = new Vector3(-track, axelDrive.localPosition.y, axelDrive.localPosition.z);
+            leftWheel.transform.localPosition = new Vector3(-track, 0f, 0f);
+            leftWheel.transform.localScale = new Vector3(diameter, diameter, diameter);
+            leftWheel.encoderRate = ticksPerRev;
+            leftWheel.maxSpeed = maxVel;
 
+            Wheel rightWheel = wheelController.driveWheels[1];
+            rightWheel.GetComponent<HingeJoint>().connectedAnchor = new Vector3(track, axelDrive.localPosition.y, axelDrive.localPosition.z);
+            rightWheel.transform.localPosition = new Vector3(track, 0f, 0f);
+            rightWheel.transform.localScale = new Vector3(diameter, diameter, diameter);
+            rightWheel.encoderRate = ticksPerRev;
+            rightWheel.maxSpeed = maxVel;
+        }
+        else if(type == AxelType.Turn)
+        {
+            Wheel leftWheel = wheelController.turnWheels[0];
+            leftWheel.transform.localScale = new Vector3(diameter, diameter, diameter);
+            leftWheel.SetTrack(-track, axelTurn.localPosition.y, axelTurn.localPosition.z);
+            leftWheel.encoderRate = ticksPerRev;
+            leftWheel.maxSpeed = maxVel;
+
+            Wheel rightWheel = wheelController.turnWheels[1];
+            rightWheel.SetTrack(track, axelTurn.localPosition.y, axelTurn.localPosition.z);
+            rightWheel.transform.localScale = new Vector3(diameter, diameter, diameter);
+            rightWheel.encoderRate = ticksPerRev;
+            rightWheel.maxSpeed = maxVel;
+        }
     }
 
     public bool AddPSDSensor(int id, string name, Vector3 pos, float rot)
@@ -131,6 +185,15 @@ public class BaseAckDrive : Robot, IMotors,
         camEnabled = true;
     }
 
+    public void ConfigureLidar(int numPoints, int tilt)
+    {
+        laserScanController.numPoints = numPoints;
+        laserScanController.rot = (float) -360.0 / numPoints;
+        laserScanController.laserScanner.localRotation = Quaternion.Euler(new Vector3(-tilt, 0, 0));
+    }
+
+    /* ----- Driving Functions ----- */
+
     public void DriveDoneCallback()
     {
         driveDoneDelegate(myConnection);
@@ -160,10 +223,10 @@ public class BaseAckDrive : Robot, IMotors,
     // Special Case: Servo of 1 (input, interpereter converts to 0) is wheel angle
     public void SetServo(int servo, int angle)
     {
-        if (servo == 0)
+        if(servo == 0)
             wheelController.SetTurnAngle(angle);
-        else
-            servoController.SetServoPosition(servo-1, angle);
+        else if(servoEnabled)
+            servoController.SetServoPosition(servo - 1, angle);
     }
 
 

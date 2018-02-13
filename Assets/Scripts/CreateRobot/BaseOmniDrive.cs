@@ -14,8 +14,12 @@ public class BaseOmniDrive : Robot, IMotors,
 {
     // Components of the robot
     [Header("Physical Components")]
-    public BoxCollider robotBody;
+    public List<Collider> robotColliders;
     public Rigidbody robotRigidbody;
+
+    public Transform frontAxel;
+    public Transform backAxel;
+    private int axelSet = 0;
 
     [Header("Model")]
     public Transform modelContainer;
@@ -59,16 +63,43 @@ public class BaseOmniDrive : Robot, IMotors,
         SetServo(0, 0);
     }
 
-    // Configure size of robot - single box collider, and position of the slider located at the back
-    public void ConfigureSize(float length, float width, float height)
-    {
-        robotBody.size = new Vector3(width / Eyesim.Scale, height / Eyesim.Scale, length / Eyesim.Scale);
-    }
+    /* ----- Robot Configuration ----- */
 
     public void ConfigureMass(float mass, Vector3 com)
     {
         robotRigidbody.mass = mass;
         robotRigidbody.centerOfMass = com;
+    }
+
+    // Add a box collider
+    public void AddBox(Vector3 size, Vector3 centre, PhysicMaterial friction)
+    {
+        BoxCollider box = gameObject.AddComponent<BoxCollider>();
+        box.size = size;
+        box.center = centre;
+        box.material = friction;
+        robotColliders.Add(box);
+    }
+
+    // Add a sphere collider
+    public void AddSphere(float radius, Vector3 centre, PhysicMaterial friction)
+    {
+        SphereCollider sphere = gameObject.AddComponent<SphereCollider>();
+        sphere.radius = radius;
+        sphere.center = centre;
+        sphere.material = friction;
+        robotColliders.Add(sphere);
+    }
+
+    // Add a capsule collider
+    public void AddCapsule(float radius, float height, Vector3 centre, PhysicMaterial friction)
+    {
+        CapsuleCollider cap = gameObject.AddComponent<CapsuleCollider>();
+        cap.radius = radius;
+        cap.height = height;
+        cap.center = centre;
+        cap.material = friction;
+        robotColliders.Add(cap);
     }
 
     public void ConfigureModel(GameObject newModel, Vector3 pos, Vector3 rot)
@@ -89,10 +120,9 @@ public class BaseOmniDrive : Robot, IMotors,
     // Configure axel height (vertical into robot) and position along z-axis (forward)
     public void ConfigureAxel(float axelHeight, float axelPos, AxelType type)
     {
-
     }
 
-    public void ConfigureWheels(float diameter, float maxVel, int ticksPerRev, float track)
+    public void ConfigureWheels(float diameter, float maxVel, int ticksPerRev, float track, AxelType type)
     {
 
     }
@@ -125,6 +155,15 @@ public class BaseOmniDrive : Robot, IMotors,
         servoController.servos[1].minAngle = -maxTilt;
         camEnabled = true;
     }
+
+    public void ConfigureLidar(int numPoints, int tilt)
+    {
+        laserScanController.numPoints = numPoints;
+        laserScanController.rot = (float) -360.0 / numPoints;
+        laserScanController.laserScanner.localRotation = Quaternion.Euler(new Vector3(-tilt, 0, 0));
+    }
+
+    /* ----- Driving Commands ----- */
 
     public void DriveDoneCallback()
     {

@@ -10,11 +10,22 @@ public class OmniWheelController : MonoBehaviour
     public float wheelRadius;
     private Matrix4x4 omniMatrix;
 
+    public int ticksPerRev;
+
     // Wheel rotational velocities
     public float FL, FR, BL, BR;
+    // Wheel encoder values;
+    public int EFL, EFR, EBL, EBR;
+    // Maximum motor power
     [SerializeField]
-    private float maxPosForce, maxRotForce;
     private float maxSpeed = 200f;
+    // Multiplier for translational force
+    public float transForceMulti = 10f;
+    // Multiplier for rotational force
+    public float rotForceMulti = 0.5f;
+
+    Vector4 velocity;
+
     public Rigidbody rb;
 
 	// Use this for initialization
@@ -41,7 +52,6 @@ public class OmniWheelController : MonoBehaviour
     // 3 - BR
     public void SetMotorSpeed(int motor, int speed)
     {
-        Debug.Log("SET MOTOR SPEED: " + motor + "  " + speed);
         float mSpeed = Mathf.Clamp(speed, -100f, 100f) / 100f * maxSpeed;
         switch(motor)
         {
@@ -58,19 +68,12 @@ public class OmniWheelController : MonoBehaviour
                 BR = mSpeed;
                 break;
         }
+        velocity = omniMatrix * new Vector4(FL, FR, BL, BR);
     }
 
-    // Update is called once per frame
     void Update ()
-    {
-        Vector4 velocity = omniMatrix * new Vector4(FL, FR, BL, BR);
-        rb.AddForce((transform.forward * velocity[0]) - (transform.right * velocity[1]));
-        rb.AddTorque(transform.up * velocity[2]);
+    {   
+        rb.AddForce(transForceMulti * ((transform.forward * velocity[0]) - (transform.right * velocity[1])));
+        rb.AddTorque(rotForceMulti * transform.up * velocity[2]);
 	}
-
-    public void TestDirection()
-    {
-        Vector4 result = omniMatrix * new Vector4(FL, FR, BL, BR);
-        Debug.Log(result);
-    }
 }

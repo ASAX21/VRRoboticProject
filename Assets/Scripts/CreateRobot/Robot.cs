@@ -128,13 +128,16 @@ public enum AxelType { None, Drive, Turn, Omni };
 
 public interface ConfigureableRobot
 {
-    void ConfigureSize(float length, float width, float height);
+    void AddBox(Vector3 size, Vector3 centre, PhysicMaterial friction);
+    void AddSphere(float radius, Vector3 centre, PhysicMaterial friction);
+    void AddCapsule(float radius, float height, Vector3 centre, PhysicMaterial friction);
     void ConfigureMass(float mass, Vector3 com);
     void ConfigureAxel(float axelHeight, float axelPos, AxelType type);
-    void ConfigureWheels(float diameter, float maxVel, int ticksPerRev, float track);
+    void ConfigureWheels(float diameter, float maxVel, int ticksPerRev, float track, AxelType type);
     bool AddPSDSensor(int id, string name, Vector3 pos, float rot);
     void ConfigureCamera(Vector3 pos, float pan, float tilt, float maxPan, float maxTilt);
     void ConfigureModel(GameObject model, Vector3 pos, Vector3 rot);
+    void ConfigureLidar(int numPoints, int tilt);
 }
 
 // Abstract robot

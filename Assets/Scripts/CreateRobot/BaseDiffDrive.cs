@@ -16,7 +16,7 @@ public class BaseDiffDrive : Robot, IMotors,
 {
     // Components of the robot
     [Header("Physical Components")]
-    public BoxCollider robotBody;
+    public List<Collider> robotColliders;
     public CapsuleCollider robotBunt;
     public Rigidbody robotRigidbody;
     public Transform axel;
@@ -66,6 +66,8 @@ public class BaseDiffDrive : Robot, IMotors,
         ConfigureCamera(new Vector3(0, 50/Eyesim.Scale, 70/ Eyesim.Scale), 0f, 0f, 90f, 90f);
     }
 
+    /* ----- Robot Configuration ----- */
+
     public void ConfigureModel(GameObject newModel, Vector3 pos, Vector3 rot)
     {
         if (robotModel != null)
@@ -81,11 +83,35 @@ public class BaseDiffDrive : Robot, IMotors,
         robotModel.transform.localRotation = Quaternion.identity;
     }
 
-    // Configure size of robot - single box collider, and position of the slider located at the back
-    public void ConfigureSize(float length, float width, float height)
+    // Add a box collider
+    public void AddBox(Vector3 size, Vector3 centre, PhysicMaterial friction)
     {
-        robotBody.size = new Vector3(width / Eyesim.Scale, height / Eyesim.Scale, length / Eyesim.Scale);
-        robotBunt.center = new Vector3(0f, 0.025f, 0.5f * length / Eyesim.Scale * 0.6f);
+        BoxCollider box = gameObject.AddComponent<BoxCollider>();
+        box.size = size;
+        box.center = centre;
+        box.material = friction;
+        robotColliders.Add(box);
+    }
+
+    // Add a sphere collider
+    public void AddSphere(float radius, Vector3 centre, PhysicMaterial friction)
+    {
+        SphereCollider sphere = gameObject.AddComponent<SphereCollider>();
+        sphere.radius = radius;
+        sphere.center = centre;
+        sphere.material = friction;
+        robotColliders.Add(sphere);
+    }
+
+    // Add a capsule collider
+    public void AddCapsule(float radius, float height, Vector3 centre, PhysicMaterial friction)
+    {
+        CapsuleCollider cap = gameObject.AddComponent<CapsuleCollider>();
+        cap.radius = radius;
+        cap.height = height;
+        cap.center = centre;
+        cap.material = friction;
+        robotColliders.Add(cap);
     }
 
     public void ConfigureMass(float mass, Vector3 com)
@@ -98,22 +124,22 @@ public class BaseDiffDrive : Robot, IMotors,
     // Configure axel height (vertical into robot) and position along z-axis (forward)
     public void ConfigureAxel(float axelHeight, float axelPos, AxelType type)
     {
-        axel.localPosition = new Vector3(0f, axelHeight / Eyesim.Scale, axelPos / Eyesim.Scale);
+        axel.localPosition = new Vector3(0f, axelHeight, axelPos);
     }
 
-    public void ConfigureWheels(float diameter, float maxVel, int ticksPerRev, float track)
+    public void ConfigureWheels(float diameter, float maxVel, int ticksPerRev, float track, AxelType type)
     {
         Wheel leftWheel = wheelController.wheels[0];
-        leftWheel.GetComponent<HingeJoint>().connectedAnchor = new Vector3(-track / Eyesim.Scale, axel.localPosition.y, axel.localPosition.z);
-        leftWheel.transform.localPosition = new Vector3(-track / Eyesim.Scale, 0f, 0f);
-        leftWheel.transform.localScale = new Vector3(diameter / Eyesim.Scale, diameter / Eyesim.Scale, diameter / Eyesim.Scale);
+        leftWheel.GetComponent<HingeJoint>().connectedAnchor = new Vector3(-track, axel.localPosition.y, axel.localPosition.z);
+        leftWheel.transform.localPosition = new Vector3(-track, 0f, 0f);
+        leftWheel.transform.localScale = new Vector3(diameter, diameter, diameter);
         leftWheel.encoderRate = ticksPerRev;
         leftWheel.maxSpeed = maxVel;
 
         Wheel rightWheel = wheelController.wheels[1];
-        rightWheel.GetComponent<HingeJoint>().connectedAnchor = new Vector3(track / Eyesim.Scale, axel.localPosition.y, axel.localPosition.z);
-        rightWheel.transform.localPosition = new Vector3(track / Eyesim.Scale, 0f, 0f);
-        rightWheel.transform.localScale = new Vector3(diameter / Eyesim.Scale, diameter / Eyesim.Scale, diameter / Eyesim.Scale);
+        rightWheel.GetComponent<HingeJoint>().connectedAnchor = new Vector3(track, axel.localPosition.y, axel.localPosition.z);
+        rightWheel.transform.localPosition = new Vector3(track, 0f, 0f);
+        rightWheel.transform.localScale = new Vector3(diameter, diameter, diameter);
         rightWheel.encoderRate = ticksPerRev;
         rightWheel.maxSpeed = maxVel;
     }
@@ -155,6 +181,7 @@ public class BaseDiffDrive : Robot, IMotors,
         laserScanController.laserScanner.localRotation = Quaternion.Euler(new Vector3(-tilt, 0, 0));
     }
 
+    /* ----- Driving Commands ----- */
 
     public void DriveDoneCallback()
     {

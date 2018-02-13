@@ -31,6 +31,8 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     [Header("Prefab Robots")]
     public GameObject labBotPrefab;
 	public GameObject S4Prefab;
+    public GameObject AckermannPrefab;
+    public GameObject OmniPrefab;
 
     // Environment Prefabs
     [Header("Prefab Environment Objects")]
@@ -202,6 +204,14 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
                 newObj = Instantiate(S4Prefab).GetComponent<PlaceableObject>();
                 newObj.name = "S4";
                 break;
+            case "ackermann":
+                newObj = Instantiate(AckermannPrefab).GetComponent<PlaceableObject>();
+                newObj.name = "Ackermann";
+                break;
+            case "omni":
+                newObj = Instantiate(OmniPrefab).GetComponent<PlaceableObject>();
+                newObj.name = "OmniDrive";
+                break;
             default:
                 // Check if it is a custom type
                 GameObject newGO = customObjects.Find(x => x.name == type);
@@ -333,6 +343,39 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
             AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
         }
     }
+
+    public void AddAckermannToScene(string args)
+    {
+        if(isMouseOccupied)
+            FreeMouse();
+
+        PlaceableObject newObj = Instantiate(AckermannPrefab).GetComponent<PlaceableObject>();
+        newObj.name = "Ackermann";
+        if(args.Length == 0)
+            AddObjectToSceneOnMouse(newObj);
+        else
+        {
+            string[] pos = args.Split(':');
+            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
+        }
+    }
+
+        public void AddOmniToScene(string args)
+    {
+        if(isMouseOccupied)
+            FreeMouse();
+
+        PlaceableObject newObj = Instantiate(OmniPrefab).GetComponent<PlaceableObject>();
+        newObj.name = "Ackermann";
+        if(args.Length == 0)
+            AddObjectToSceneOnMouse(newObj);
+        else
+        {
+            string[] pos = args.Split(':');
+            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
+        }
+    }
+
 
     public void DeleteObjectOnMouse()
     {

@@ -59,10 +59,18 @@ namespace RobotComponents
         {
             if (!canTurn)
                 return;
-            Debug.Log("setting spring to " + angle);
             JointSpring newSpring = turnHinge.spring;
             newSpring.targetPosition = angle;
             turnHinge.spring = newSpring;
+        }
+
+        public void SetTrack(float pos, float axelY, float axelZ)
+        {
+            if(canTurn)
+            {
+                turnHinge.transform.position = new Vector3(pos, 0f, 0f);
+                turnHinge.connectedAnchor = new Vector3(pos, axelY, axelZ);
+            }
         }
 
         // Apply wheel rotation to visual representation
