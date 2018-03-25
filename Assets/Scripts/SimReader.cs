@@ -232,11 +232,12 @@ public class SimReader: MonoBehaviour, IFileReceiver
                 break;
 
             case "marker":
-                string pos;
-                if (args.Length == 3)
-                    pos = args[1] + ":" + args[2];
-                else if (args.Length == 6)
-                    pos = args[1] + ":" + args[2] + ":" + args[3] + ":" + args[4] + ":" + args[5];
+                string pos = args[1];
+                if(args.Length == 3 || args.Length == 6 || args.Length == 7)
+                {
+                    for(int i = 2; i < args.Length; i++)
+                        pos += (":" + args[i]);
+                }
                 else
                 {
                     Debug.Log("Load Sim: Invalid number of arguments for marker: " + args.Length);
@@ -268,15 +269,18 @@ public class SimReader: MonoBehaviour, IFileReceiver
                 index = ObjectManager.instance.customRobots.FindIndex(x => x.name == args[0]);
                 if(index != -1)
                 {
-                    if (args.Length == 5)
+                    if (args.Length == 4 || args.Length == 5)
                     {
                         string robPos = args[1] + ":" + args[2] + ":" + args[3];
                         ObjectManager.instance.AddCustomRobotToScene(index, robPos);
-                        string execPath = io.SearchForFile(args[4], "");
-                        if (execPath != "")
-                            executables.Add(execPath);
-                        else
-                            EyesimLogger.instance.Log("Failed to find robot executable for " + args[5] + " on line " + io.LineNum);
+                        if(args.Length == 5)
+                        {
+                            string execPath = io.SearchForFile(args[4], "");
+                            if(execPath != "")
+                                executables.Add(execPath);
+                            else
+                                EyesimLogger.instance.Log("Failed to find robot executable for " + args[5] + " on line " + io.LineNum);
+                        }
                         break;
                     }
                     else

@@ -1,0 +1,5 @@
+# world description file (either one maze one world)
+maze	%sim%/worlds/mazes/maze1.maz
+
+# robi description file
+robi	%sim%/robots/Eve/Eve.robi  maze.dll

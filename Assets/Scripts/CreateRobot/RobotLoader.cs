@@ -27,7 +27,7 @@ public class RobotLoader: MonoBehaviour, IFileReceiver
     private bool robotDrive;
     public GameObject diffDriveBase;
     public GameObject ackDriveBase;
-    public GameObject baseOmniDrive;
+    public GameObject omniDriveBase;
     public PhysicMaterial noFriction;
     public PhysicMaterial highFriction;
 
@@ -59,7 +59,7 @@ public class RobotLoader: MonoBehaviour, IFileReceiver
         {
             if (!process(args))
             {
-                Debug.Log("Error processing.");
+                Debug.Log("Error processing: " + args[0]);
                 robotConfig = null;
                 Destroy(robotObject);
                 robotObject = null;
@@ -126,7 +126,8 @@ public class RobotLoader: MonoBehaviour, IFileReceiver
                                 break;
                             case "OMNI_DRIVE":
                                 driveType = RobotDriveType.Omni;
-                                Debug.Log("Omni drive not implemented");
+                                robotObject = Instantiate(omniDriveBase);
+                                Debug.Log("Omni Drive");
                                 return false;
                             default:
                                 Debug.Log("Unknown Drive received: " + args[1]);

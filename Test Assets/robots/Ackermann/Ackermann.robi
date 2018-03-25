@@ -1,0 +1,46 @@
+# robi description file for the EyeBot simulator EyeSim 6.0
+# by Andreas Koestler, Thomas Braunl, 2004
+
+# EyeSim 5.0 by Axel Waggershauser, Thomas Braunl, 2002
+# inspired by the parameter file for EyeSim 1.0 by
+# Thomas Braunl - Ghee Ong - Nicholas Tay, 1998
+
+# the format: valid lines contain a keyword followed by a list of
+# parameters seperated by white space. every line not starting with
+# a keyword is ignored.
+
+# every parameter describing a length is specified in milli meter
+# every parameter describing a angle is specified in degree
+
+drive ACKERMANN_DRIVE
+
+# the name of the robi, the used string is the rest of the line
+# behind the keyword without the surrounding white space
+name Ackermann2
+
+# the file name of the OpenInventor model used for this robi
+model Ackermann.obj 0 0 0 0 180 0
+
+collider box 100 82 200 0 82 0
+collider box 100 5 30 0 6 104
+
+# psd sensor definition: (psd names are followed by id-number from "hdt_sem.h")
+# "psd", name, id, relative position to robi center(x,y,z) in mm, angle in x-y plane in deg
+#psd PSD_FRONT  -200   60   20	30      0
+#psd PSD_LEFT   -205   56   45   30     90
+#psd PSD_RIGHT  -210   56  -45   30    -90
+
+# color camera sensor definition:
+# "camera", relative position to the robi center (x,y,z), default
+# pan-tilt-angle (pan, tilt), maximum image width and height in pixel
+#camera  45  0  72    0  -5    80  60
+
+axel drive 22.7 -94
+axel turn 12.6 66.1
+
+# wheel diameter [mm], max. rotational velocity [deg/s], encoder ticks/rev., wheel-base distance [mm]
+wheel drive 40  7200  640  44.5
+wheel turn 28  7200  640  40.63
+
+# Ackermann: Using motor for driving, servo for steering (0=45 d.left, 127=straight, 255=45 d.right)
+

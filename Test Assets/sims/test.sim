@@ -1,0 +1,10 @@
+# World File - keyword "world" and path to .wld file
+world ../worlds/Soccer1998.wld
+
+# Robi files to load custom robots
+robi ../robots/S4/S4.robi
+
+S4Bot 1000 500 0
+
+# Objects
+can 150 150 0

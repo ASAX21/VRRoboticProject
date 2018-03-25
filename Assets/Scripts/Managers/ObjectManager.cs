@@ -126,18 +126,22 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
     }
 
     // ---- Add Objects -----
-    public void AddObjectToSceneAtPos(PlaceableObject newObj, float x, float y, float phi)
+    public void AddObjectToSceneAtPos(PlaceableObject newObj, float x, float y, float phi, Color color)
     {
         newObj.objectID = totalObjects++;
         newObj.transform.position = new Vector3(x/Eyesim.Scale, newObj.defaultVerticalOffset, y/Eyesim.Scale);
         newObj.transform.rotation = Quaternion.Euler(new Vector3(0f, Eyesim.UnityToEyeSimAngle(phi), 0f));
         newObj.isInit = true;
-        if (newObj is Robot)
+        if(newObj is Robot)
             SimManager.instance.AddRobotToScene(newObj as Robot);
-        else if (newObj is WorldObject)
+        else if(newObj is WorldObject)
             SimManager.instance.AddWorldObjectToScene(newObj as WorldObject);
-        else if (newObj is Marker)
+        else if(newObj is Marker)
+        {
+            SimManager.instance.AddMarkerToScene(newObj as Marker);
             newObj.transform.rotation = Quaternion.Euler(new Vector3(90f, 0f, 0f));
+            (newObj as Marker).SetColor(color);
+        }
         else
         {
             Debug.Log("Error adding objects: Unknown type");
@@ -167,7 +171,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         else
         {
             string[] pos = args.Split(':');
-            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
+            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]), Color.white);
         }
     }
 
@@ -238,7 +242,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         else
         {
             string[] pos = args.Split(':');
-            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
+            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]), Color.white);
         }
     }
 
@@ -270,23 +274,30 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
 
         PlaceableObject newObj = Instantiate(markerPrefab).GetComponent<PlaceableObject>();
         newObj.name = "Marker";
-        if (args.Length == 0)
+        if(args.Length == 0)
             AddObjectToSceneOnMouse(newObj);
         else
         {
             string[] pos = args.Split(':');
+            // Try set color of marker
             try
             {
-                if (pos.Length == 5)
+                float r = 1f;
+                float g = 1f;
+                float b = 1f;
+                float a = 1f;
+                if(pos.Length >= 5)
                 {
-                    float r = float.Parse(pos[2]) / 255;
-                    float g = float.Parse(pos[3]) / 255;
-                    float b = float.Parse(pos[4]) / 255;
-                    newObj.GetComponent<Marker>().SetColor(new Color(r, g, b));
+                    r = float.Parse(pos[2]) / 255;
+                    g = float.Parse(pos[3]) / 255;
+                    b = float.Parse(pos[4]) / 255;
                 }
-            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), 0);
+                if(pos.Length == 6)
+                    a = float.Parse(pos[5]) / 255;
+
+                AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), 0, new Color(r,g,b,a));
             }
-            catch (FormatException e)
+            catch(FormatException e)
             {
                 Debug.Log("Object Manager: Format exception whilst parsing Marker input parameters: " + e);
                 return;
@@ -308,7 +319,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         else
         {
             string[] pos = args.Split(':');
-            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
+            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]), Color.white);
         }
     }
     
@@ -324,7 +335,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         else
         {
             string[] pos = args.Split(':');
-            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
+            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]), Color.white);
         }
     }
 
@@ -340,7 +351,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         else
         {
             string[] pos = args.Split(':');
-            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
+            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]), Color.white);
         }
     }
 
@@ -356,7 +367,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         else
         {
             string[] pos = args.Split(':');
-            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
+            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]), Color.white);
         }
     }
 
@@ -372,7 +383,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         else
         {
             string[] pos = args.Split(':');
-            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]));
+            AddObjectToSceneAtPos(newObj, float.Parse(pos[0]), float.Parse(pos[1]), float.Parse(pos[2]), Color.white);
         }
     }
 
@@ -387,12 +398,12 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
         }
         else
         {
-            if (objectOnMouse is Robot)
+            if(objectOnMouse is Robot)
                 SimManager.instance.RemoveRobotFromScene(objectOnMouse as Robot);
-            else if (objectOnMouse is WorldObject)
+            else if(objectOnMouse is WorldObject)
                 SimManager.instance.RemoveWorldObjectFromScene(objectOnMouse as WorldObject);
-            else if (objectOnMouse is Marker)
-                Destroy(objectOnMouse.gameObject);
+            else if(objectOnMouse is Marker)
+                SimManager.instance.RemoveMarkerFromScene(objectOnMouse as Marker);
             else
             {
                 Debug.Log("Delete on mouse failed");
@@ -520,10 +531,12 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
             // If it is new object, add to sim manager
             if (!objectOnMouse.isInit)
             {
-                if (objectOnMouse is Robot)
+                if(objectOnMouse is Robot)
                     SimManager.instance.AddRobotToScene(objectOnMouse as Robot);
-                else if (objectOnMouse is WorldObject)
+                else if(objectOnMouse is WorldObject)
                     SimManager.instance.AddWorldObjectToScene(objectOnMouse as WorldObject);
+                else if(objectOnMouse is Marker)
+                    SimManager.instance.AddMarkerToScene(objectOnMouse as Marker);
             }
             // Place object physically
             objectOnMouse.PlaceObject();
@@ -564,7 +577,7 @@ public class ObjectManager : MonoBehaviour, IFileReceiver {
             if (Input.GetMouseButtonDown(0))
                 TryPlaceObject();
             // Escape - If object isn't initalized (has never been placed), destroy it.
-            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Delete))
+            else if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Delete) || Input.GetKeyDown(KeyCode.Backspace))
                 DeleteObjectOnMouse();
             // Rotate using - and + keys
             else

@@ -1,0 +1,5 @@
+# world description file (either one maze one world)
+world	%sim%/worlds/worlds/Soccer1998.wld
+
+# robi description file
+robi	%sim%/robots/ModelCar/ModelCar.robi  acker-drive.dll  600 500 0

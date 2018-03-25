@@ -16,7 +16,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
     public GameObject wallPrefab;
 
     public GameObject world;
-	public string filepath;
+    public string floorTexPath;
     private Texture2D floorTex;
 
 	private IO io;
@@ -26,6 +26,11 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
 
     public bool isStartSpecified = false;
     public float robotStartX = 0, robotStartY = 0;
+    public string robotStartPhi = "90";
+
+    // Store the locations of 
+    public List<float[]> golfBalls;
+    public List<float[]> boxes;
 
     private void Awake()
     {
@@ -38,7 +43,6 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
     public GameObject ReceiveFile(string filepath)
     {
         SimManager.instance.DestroyWorld();
-		this.filepath = filepath;
         floorTex = null;
         EyesimLogger.instance.Log("Loading world: " + filepath);
         world = new GameObject();
@@ -56,6 +60,8 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
                 isStartSpecified = false;
                 robotStartX = 0;
                 robotStartY = 0;
+                golfBalls = new List<float[]>();
+                boxes = new List<float[]>();
                 float size;
                 string last = File.ReadAllLines(filepath).Last();
                 if (float.TryParse(last, out size))
@@ -64,6 +70,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
                     size = 0.36f;
 			    processmaz (size);
                 world.transform.position = new Vector3(0, 0, floorMazeOffset);
+                AddObjectsToMaze();
                 if(isStartSpecified)
                     AddRobotToMaze();
                 break;
@@ -79,6 +86,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
         }
         SimManager.instance.world = world;
         SimManager.instance.worldChanged = true;
+        SimManager.instance.worldFilepath = filepath;
         io = null;
         return world;
 	}
@@ -93,6 +101,7 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
             imageData = File.ReadAllBytes(filename);
             tex = new Texture2D(2, 2);
             tex.LoadImage(imageData);
+            floorTexPath = filename;
         }
         floorTex = tex;
     }
@@ -234,13 +243,45 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
                     {
                         AddWall(new Vector2(xpos - size, ypos), new Vector2(xpos, ypos));
                     }
+                    else if(char.ToLower(line[i]) == 'o')
+                    {
+                        golfBalls.Add(new float[2] { (xpos - size / 2f), (ypos + size / 2f) });
+                        if(line[i] == 'O')
+                            AddWall(new Vector2(xpos - size, ypos), new Vector2(xpos, ypos));
+                    }
+                    else if(char.ToLower(line[i]) == 'x')
+                    {
+                        boxes.Add(new float[2] { (xpos - size / 2f), (ypos + size / 2f) });
+                        if(line[i] == 'X')
+                            AddWall(new Vector2(xpos - size, ypos), new Vector2(xpos, ypos));
+                    }
                     // Start position of robot
-                    else if(line[i] == 'S' || line[i] == 's')
+                    else if("uldrs".Contains(char.ToLower(line[i])))
                     {
                         isStartSpecified = true;
                         robotStartX = (xpos - size/2f);
                         robotStartY = (ypos + size/2f);
-                        AddWall(new Vector2(xpos - size, ypos), new Vector2(xpos, ypos));
+                        switch(char.ToLower(line[i]))
+                        {
+                            case 's':
+                            case 'u':
+                                robotStartPhi = "90";
+                                break;
+                            case 'l':
+                                robotStartPhi = "180";
+                                break;
+                            case 'd':
+                                robotStartPhi = "270";
+                                break;
+                            case 'r':
+                                robotStartPhi = "0";
+                                break;
+                            default:
+                                Debug.Log("Error reading maze: robot orientation");
+                                break;             
+                        }
+                        if(char.IsUpper(line[i]))
+                            AddWall(new Vector2(xpos - size, ypos), new Vector2(xpos, ypos));
                     }
                     xmax = Mathf.Max(xmax, xpos);
 				}
@@ -290,10 +331,24 @@ public class WorldBuilder : MonoBehaviour, IFileReceiver
         floorMazeOffset = -2f * floor.transform.position.z;
     }
 
+    // Add specified objects to the scene
+    void AddObjectsToMaze()
+    {
+        foreach(float[] pos in golfBalls)
+        {
+            ObjectManager.instance.AddGolfBallToScene((pos[0] * Eyesim.Scale).ToString() + ":" + ((pos[1] + floorMazeOffset) * Eyesim.Scale).ToString() + ":0");
+        }
+
+        foreach(float[] pos in boxes)
+        {
+            ObjectManager.instance.AddBoxToScene((pos[0] * Eyesim.Scale).ToString() + ":" + ((pos[1] + floorMazeOffset) * Eyesim.Scale).ToString() + ":0");
+        }
+    }
+
     // Add the robot to the maze if specified starting position given if not loaded from sim file
     void AddRobotToMaze()
     {
         if(!SimReader.instance.readingSimFile)
-            ObjectManager.instance.AddS4ToScene((robotStartX*Eyesim.Scale).ToString() + ":" + ((robotStartY + floorMazeOffset)*Eyesim.Scale).ToString() + ":0");
+            ObjectManager.instance.AddS4ToScene((robotStartX*Eyesim.Scale).ToString() + ":" + ((robotStartY + floorMazeOffset)*Eyesim.Scale).ToString() + ":" + robotStartPhi);
     }
 }

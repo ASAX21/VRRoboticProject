@@ -83,7 +83,7 @@ public class UIManager : MonoBehaviour {
         EyesimLogger.instance.logUpdatedEvent += logWindow.UpdateLogDisplay;
     }
 
-	public void openWindow(BlockingType type){
+	public void OpenWindow(BlockingType type){
 		windowOpen = true;
         if (type == BlockingType.UI)
             blockUIPanel.SetActive(true);
@@ -91,7 +91,7 @@ public class UIManager : MonoBehaviour {
             blockScenePanel.SetActive(true);
 	}
 
-	public void closeWindow(){
+	public void CloseWindow(){
 		windowOpen = false;
         blockUIPanel.SetActive(false);
 		blockScenePanel.SetActive(false);
@@ -101,13 +101,13 @@ public class UIManager : MonoBehaviour {
 
     public void LoadSimFile()
     {
-        fileFinder.Initialise("*", "Select Sim File", FileBrowserType.File, SimReader.instance);
+        fileFinder.Initialise("*.sim", "Select Sim File", FileBrowserType.File, SimReader.instance);
         fileFinder.OpenFileSelection(SettingsManager.instance.simDirectory);
     }
 
     public void LoadWorldFile()
     {
-        fileFinder.Initialise("*", "Select Control Program", FileBrowserType.File, WorldBuilder.instance);
+        fileFinder.Initialise("*", "Select World File", FileBrowserType.File, WorldBuilder.instance);
         fileFinder.OpenFileSelection(SettingsManager.instance.worldDirectory);
     }
 
@@ -119,7 +119,7 @@ public class UIManager : MonoBehaviour {
 
     public void LoadRobotFile()
     {
-        fileFinder.Initialise("*", "Select Sim File", FileBrowserType.File, RobotLoader.instance);
+        fileFinder.Initialise("*.robi", "Select Robot File", FileBrowserType.File, RobotLoader.instance);
         fileFinder.OpenFileSelection(SettingsManager.instance.homeDirectory);
     }
 
@@ -155,7 +155,7 @@ public class UIManager : MonoBehaviour {
     public void OpenSettings()
     {
         settingsWindow.Open();
-        openWindow(BlockingType.Scene);
+        OpenWindow(BlockingType.Scene);
     }
 
     // Simulation Menu

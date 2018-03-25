@@ -1,0 +1,10 @@
+# Sim file created 03/17/2018 3:13 PM
+
+# World File 
+world 		"C:\University\EyeSim\RobotVR\Test Assets\MySim_world.wld"
+
+
+# Robots
+ LabBot   847	 526 123
+
+# Objects

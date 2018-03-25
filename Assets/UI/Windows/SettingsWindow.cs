@@ -330,7 +330,7 @@ public class SettingsWindow : TabWindow, IFileReceiver
     // Close Window
     public override void Close()
     {
-        UIManager.instance.closeWindow();
+        UIManager.instance.CloseWindow();
         base.Close();
     }
 }

@@ -19,7 +19,7 @@ public class MarkerWindow : Window {
     {
         marker = newMarker;
         rend = marker.GetComponent<SpriteRenderer>();
-        myColor = rend.color;
+        SetMarkerColor(newMarker.mColor);
     }
 
     public void CloseColorPicker()
@@ -42,6 +42,7 @@ public class MarkerWindow : Window {
     public void SetMarkerColor(Color color)
     {
         myColor = color;
+        marker.mColor = color;
         colorDisplay.color = myColor;
         rend.color = myColor;
     }

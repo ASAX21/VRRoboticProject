@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LaserScanController : MonoBehaviour {
-
+public class LaserScanController : MonoBehaviour
+{
     public Transform laserScanner;
     public Transform robot;
 
     public int numPoints = 360;
+    public int angRange = 360;
     public float rot = -1.0f;
+    private float startRot = -180.0f;
     public LayerMask mask;
 
     public LineRenderer lineRend;
@@ -23,6 +25,12 @@ public class LaserScanController : MonoBehaviour {
             lineRend.enabled = false;
         else if (visTime > float.Epsilon)
             visTime -= Time.deltaTime;
+    }
+
+    // Centre is always middle point
+    public void SetAngularRange(int angRange)
+    {
+        startRot = -(angRange / 2f);
     }
 
     // Do a 360 scan , determine distance in one degree increments

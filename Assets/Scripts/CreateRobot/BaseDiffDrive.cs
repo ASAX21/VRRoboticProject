@@ -135,6 +135,7 @@ public class BaseDiffDrive : Robot, IMotors,
         leftWheel.transform.localScale = new Vector3(diameter, diameter, diameter);
         leftWheel.encoderRate = ticksPerRev;
         leftWheel.maxSpeed = maxVel;
+        leftWheel.diameter = diameter;
 
         Wheel rightWheel = wheelController.wheels[1];
         rightWheel.GetComponent<HingeJoint>().connectedAnchor = new Vector3(track, axel.localPosition.y, axel.localPosition.z);
@@ -142,6 +143,9 @@ public class BaseDiffDrive : Robot, IMotors,
         rightWheel.transform.localScale = new Vector3(diameter, diameter, diameter);
         rightWheel.encoderRate = ticksPerRev;
         rightWheel.maxSpeed = maxVel;
+        rightWheel.diameter = diameter;
+
+        wheelController.wheelDist = Mathf.Abs(track * 2f);
     }
 
     public bool AddPSDSensor(int id, string name, Vector3 pos, float rot)

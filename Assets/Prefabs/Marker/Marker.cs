@@ -9,6 +9,13 @@ public class Marker : PlaceableObject, IPointerClickHandler
 
     [SerializeField]
     private SpriteRenderer rend;
+    public Color mColor;
+
+    internal override void Awake()
+    {
+        mColor = Color.white;
+        base.Awake();
+    }
 
     override public void OpenInfoWindow()
     {
@@ -27,7 +34,6 @@ public class Marker : PlaceableObject, IPointerClickHandler
 
     override public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("hello");
         if (eventData.clickCount > 1 && !isWindowOpen)
             OpenInfoWindow();
         base.OnPointerClick(eventData);
@@ -45,6 +51,7 @@ public class Marker : PlaceableObject, IPointerClickHandler
 
     public void SetColor(Color color)
     {
+        mColor = color;
         rend.color = color;
     }
 }

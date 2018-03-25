@@ -46,6 +46,16 @@ public static class Eyesim
     {
         return ((-angle + 90f) + 360f) % 360f;
     }
+
+    public static string GeneratePositionString(float x, float y, float phi)
+    {
+        return ((x * Eyesim.Scale).ToString() + ":" + (y * Eyesim.Scale).ToString() + ":" + UnityToEyeSimAngle(phi).ToString());
+    }
+
+    public static string GeneratePositionStringFromTransform(Transform transform)
+    {
+        return GeneratePositionString(transform.position.x, transform.position.z, transform.localRotation.y);
+    }
 }
 
 public static class EyesimDebug

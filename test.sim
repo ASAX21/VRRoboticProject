@@ -1,0 +1,13 @@
+# Sim file created 03/20/2018 5:18 PM
+
+# World File 
+world "C:\University\EyeSim\RobotVR\Test Assets\worlds\worlds\Soccer1998.wld"
+
+
+# Robots
+LabBot 820 1003 21
+LabBot 2388 1099 155
+
+# Objects
+Can 1229 511 90
+# Markers

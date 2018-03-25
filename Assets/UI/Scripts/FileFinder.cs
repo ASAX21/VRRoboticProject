@@ -44,7 +44,7 @@ public class FileFinder : MonoBehaviour
     }
 
 	public void OpenFileSelection(string dirpath){
-		uiManager.openWindow(BlockingType.UI);
+		uiManager.OpenWindow(BlockingType.UI);
 		m_fileBrowser = new FileBrowser(
 			new Rect(100, 100, 600, 500),
             windowTitle,
@@ -67,6 +67,6 @@ public class FileFinder : MonoBehaviour
         m_textPath = path;
         if(m_textPath != null)
             m_fileReceiver.ReceiveFile(m_textPath);
-		uiManager.closeWindow();
+		uiManager.CloseWindow();
     }
 }

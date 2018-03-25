@@ -10,12 +10,21 @@ public class AckermannController : MonoBehaviour
     public List<Wheel> driveWheels;
     public List<Wheel> turnWheels;  
     public float maxMotorTorque;
+
+    // Turning variables
     public float maxSteeringAngle;
     public float wheelDist;
+    public float track;
+    private float turnRadius = 0f;
+
+    // Current status variables
     public float Rot;
     public float w;
     public Vector3 Pos;
     public float v;
+
+    public enum TurnDirection { Straight, Left, Right};
+    public TurnDirection mTurnDir = TurnDirection.Straight;
 
     // Latest SetPosition data
     public bool realCoords = false;
@@ -56,10 +65,44 @@ public class AckermannController : MonoBehaviour
     public void SetTurnAngle(int angle)
     {
 
-        float ratio = 128f - Mathf.Clamp(angle, 0, 255);
-        targetTurnAngle = ratio / 128f * maxSteeringAngle;
-        turnWheels[0].SetAngle(targetTurnAngle);
-        turnWheels[1].SetAngle(targetTurnAngle);
+        float cAngle = 128f - Mathf.Clamp(angle, 0, 255);
+        float insideTurnAngle = 0f;
+        float outsideTurnAngle = 0f;
+        turnRadius = 0f;
+
+        // Determine direction of turn;
+        if(cAngle < 0 - Mathf.Epsilon)
+        {
+            Debug.Log("TURN RIGHT");
+            mTurnDir = TurnDirection.Right;
+            insideTurnAngle = cAngle / 128f * maxSteeringAngle;
+            turnRadius = wheelDist / Mathf.Tan(Mathf.Abs(insideTurnAngle) * Mathf.PI / 180f) + track / 2;
+            outsideTurnAngle = -Mathf.Atan(wheelDist / (turnRadius + track / 2)) * 180f / Mathf.PI;
+            turnWheels[1].SetAngle(insideTurnAngle);
+            turnWheels[0].SetAngle(outsideTurnAngle);
+        }
+        else if(cAngle > 0 + Mathf.Epsilon)
+        {
+            Debug.Log("TURN LEFT");
+            mTurnDir = TurnDirection.Left;
+            insideTurnAngle = cAngle / 128f * maxSteeringAngle;
+            turnRadius = wheelDist / Mathf.Tan(Mathf.Abs(insideTurnAngle) * Mathf.PI / 180f) + track / 2;
+            outsideTurnAngle = Mathf.Atan(wheelDist / (turnRadius + track / 2)) * 180f / Mathf.PI;
+            turnWheels[0].SetAngle(insideTurnAngle);
+            turnWheels[1].SetAngle(outsideTurnAngle);
+        }
+        else
+        {
+            mTurnDir = TurnDirection.Straight;
+            turnWheels[1].SetAngle(0f);
+            turnWheels[0].SetAngle(0f);
+        }
+        Debug.Log("INSIDE TURN: " + insideTurnAngle + "   OUTSIDE TURN: " + outsideTurnAngle);
+        //turnWheels[0].SetAngle(targetTurnAngle);
+        //turnWheels[1].SetAngle(targetTurnAngle);
+
+        // Recalculate drive speed
+        SetDriveSpeed(vSpeed * 100f / maxStraightSpeed);
     }
 
     // Set the speed of a single motor
@@ -93,9 +136,28 @@ public class AckermannController : MonoBehaviour
     //set translational and rotational target velocities
     public void SetDriveSpeed(float vel)
     {
-        vSpeed = Mathf.Clamp(vel, -maxStraightSpeed, maxStraightSpeed);
-        driveWheels[0].SetSpeed(vSpeed);
-        driveWheels[1].SetSpeed(vSpeed);
+        vSpeed = Mathf.Clamp(vel, -100f, 100f) / 100f * maxStraightSpeed;
+        float insideVel = vSpeed * (1 - (track / 2 * turnRadius));
+        float outsideVel = vSpeed * (1 + (track / 2 * turnRadius));
+        Debug.Log("vspeed: " + vSpeed + "   INSIDE VEL: " + insideVel + "  OUTSIDE VEL: " + outsideVel);
+        // Right inside wheel
+        if(mTurnDir == TurnDirection.Right)
+        {
+            driveWheels[0].SetSpeed(outsideVel);
+            driveWheels[1].SetSpeed(insideVel);
+        }
+        // Left inside wheel
+        else if(mTurnDir == TurnDirection.Left)
+        {
+            driveWheels[1].SetSpeed(outsideVel);
+            driveWheels[0].SetSpeed(insideVel);
+        }
+        // Going straight
+        else
+        {
+            driveWheels[1].SetSpeed(vSpeed);
+            driveWheels[0].SetSpeed(vSpeed);
+        }
     }
 
     private void updatePosition()

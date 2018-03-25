@@ -1,0 +1,4 @@
+# Sample SIM file
+world "/Users/tb/eyesim/worlds/worlds/Soccer1998.wld"
+# robotname x y phi
+LabBot 400 400  0 /Users/tb/eyesim/examples/random/random.x

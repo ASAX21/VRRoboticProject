@@ -73,13 +73,13 @@ public class SaveSimWindow : Window, IFileReceiver
 
     public override void Open()
     {
-        UIManager.instance.openWindow(BlockingType.Scene);
+        UIManager.instance.OpenWindow(BlockingType.UI);
         base.Open();
     }
 
     public override void Close()
     {
-        UIManager.instance.closeWindow();
+        UIManager.instance.CloseWindow();
         base.Close();
     }
 

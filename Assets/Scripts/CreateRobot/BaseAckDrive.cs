@@ -120,6 +120,7 @@ public class BaseAckDrive : Robot, IMotors,
             axelDrive.localPosition = axel;
         else if(type == AxelType.Turn)
             axelTurn.localPosition = axel;
+        wheelController.wheelDist = Mathf.Abs(axelTurn.localPosition.z - axelDrive.localPosition.z);
     }
 
     public void ConfigureWheels(float diameter, float maxVel, int ticksPerRev, float track, AxelType type)
@@ -132,6 +133,7 @@ public class BaseAckDrive : Robot, IMotors,
             leftWheel.transform.localScale = new Vector3(diameter, diameter, diameter);
             leftWheel.encoderRate = ticksPerRev;
             leftWheel.maxSpeed = maxVel;
+            leftWheel.diameter = diameter;
 
             Wheel rightWheel = wheelController.driveWheels[1];
             rightWheel.GetComponent<HingeJoint>().connectedAnchor = new Vector3(track, axelDrive.localPosition.y, axelDrive.localPosition.z);
@@ -139,6 +141,7 @@ public class BaseAckDrive : Robot, IMotors,
             rightWheel.transform.localScale = new Vector3(diameter, diameter, diameter);
             rightWheel.encoderRate = ticksPerRev;
             rightWheel.maxSpeed = maxVel;
+            rightWheel.diameter = diameter;
         }
         else if(type == AxelType.Turn)
         {
@@ -153,6 +156,8 @@ public class BaseAckDrive : Robot, IMotors,
             rightWheel.transform.localScale = new Vector3(diameter, diameter, diameter);
             rightWheel.encoderRate = ticksPerRev;
             rightWheel.maxSpeed = maxVel;
+
+            wheelController.wheelDist = track;
         }
     }
 
@@ -206,7 +211,11 @@ public class BaseAckDrive : Robot, IMotors,
 
     public void DriveMotor(int motor, int speed)
     {
-        wheelController.SetMotorSpeed(motor, speed);
+        if(motor == 0)
+            wheelController.SetDriveSpeed(speed);
+        else
+            Debug.Log("Only one supported motor for ackermann");
+         //wheelController.SetMotorSpeed(motor, speed);
     }
 
     public void DriveMotorControlled(int motor, int ticks)

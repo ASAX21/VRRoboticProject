@@ -1,0 +1,8 @@
+# world description file (either one maze one world)
+world	%sim%/worlds/worlds/Soccer1998.wld
+
+# additional obstacles: x,y,theta, friction parameter, image file
+object  800 800   0  0.0 %sim%/worlds/objects/can/can.ms3d
+
+# robi description file
+robi	S4Y.robi servo.dll  400 800 0

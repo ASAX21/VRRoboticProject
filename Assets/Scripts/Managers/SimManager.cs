@@ -17,6 +17,7 @@ public class SimManager : MonoBehaviour {
     // Current robots, objects, and world
     public List<Robot> allRobots;
     public List<WorldObject> allWorldObjects;
+    public List<Marker> allMarkers;
     public GameObject world;
 
     [NonSerialized]
@@ -34,6 +35,8 @@ public class SimManager : MonoBehaviour {
 
     [NonSerialized]
     public bool worldChanged = false;
+    [NonSerialized]
+    public string worldFilepath = null;
 
     private void Awake()
     {
@@ -150,6 +153,18 @@ public class SimManager : MonoBehaviour {
         ViewWorldObjectsWindow.instance.UpdateWorldObjectsList();
     }
 
+    public void AddMarkerToScene(Marker marker)
+    {
+        allMarkers.Add(marker);
+    }
+
+    public void RemoveMarkerFromScene(Marker marker)
+    {
+        if(!allMarkers.Remove(marker))
+            Debug.Log("Failed to remove a marker from the scene!");
+        Destroy(marker.gameObject);
+    }
+
     // Remove all robots from the scene
     public void RemoveAllRobots()
     {
@@ -171,15 +186,16 @@ public class SimManager : MonoBehaviour {
 
     public void RemoveAllMarkers()
     {
-        foreach (GameObject mark in GameObject.FindGameObjectsWithTag("Marker"))
+        foreach (Marker marker in allMarkers)
         {
-            Destroy(mark);
+            Destroy(marker.gameObject);
         }
     }
 
     public void DestroyWorld()
     {
         worldChanged = true;
+        worldFilepath = null;
         RemoveAllWorldObjects();
         RemoveAllRobots();
         RemoveAllMarkers();
@@ -213,9 +229,7 @@ public class SimManager : MonoBehaviour {
             ObjectState state = new ObjectState();
             state.id = robot.objectID;
             state.type = robot.type;
-            state.pos = (robot.transform.position.x * Eyesim.Scale).ToString() + ":" +
-                (robot.transform.position.z * Eyesim.Scale).ToString() + ":" +
-                robot.transform.rotation.eulerAngles.y.ToString();
+            state.pos = Eyesim.GeneratePositionStringFromTransform(robot.transform);
             stateID = robot.objectID > stateID ? robot.objectID : stateID;
             defaultState.Add(state);
         }
@@ -224,10 +238,19 @@ public class SimManager : MonoBehaviour {
             ObjectState state = new ObjectState();
             state.id = wObj.objectID;
             state.type = wObj.type;
-            state.pos = (wObj.transform.position.x * Eyesim.Scale).ToString() + ":" +
-                (wObj.transform.position.z * Eyesim.Scale).ToString() + ":" +
-                wObj.transform.rotation.eulerAngles.y.ToString();
+            state.pos = Eyesim.GeneratePositionStringFromTransform(wObj.transform);
             stateID = wObj.objectID > stateID ? wObj.objectID : stateID;
+            defaultState.Add(state);
+        }
+        foreach(Marker mark in allMarkers)
+        {
+            ObjectState state = new ObjectState();
+            state.type = "marker";
+            state.pos = Eyesim.GeneratePositionString(mark.transform.position.x, mark.transform.position.z, mark.mColor.r) + 
+                ":" + mark.mColor.g + 
+                ":" + mark.mColor.b + 
+                ":" + mark.mColor.a;
+            state.color = mark.mColor;
             defaultState.Add(state);
         }
     }
@@ -242,10 +265,19 @@ public class SimManager : MonoBehaviour {
         ObjectManager.instance.FreeMouse();
         RemoveAllWorldObjects();
         RemoveAllRobots();
+        RemoveAllMarkers();
         foreach(ObjectState state in defaultState)
         {
-            totalObjects = state.id - 1;
-            ObjectManager.instance.AddPredefinedObjectToScene(state.type, state.pos);
+            if(state.type == "marker")
+            {
+                ObjectManager.instance.AddMarkerToScene(state.pos);
+            }
+            else
+            {
+                totalObjects = state.id - 1;
+                ObjectManager.instance.AddPredefinedObjectToScene(state.type, state.pos);
+            }
+            
         }
         totalObjects = stateID;
     }
@@ -286,27 +318,43 @@ public class SimManager : MonoBehaviour {
     public void SaveSim(string filepath)
     {
         PauseSimulation();
-        string worldPath = Path.Combine(Path.GetDirectoryName(filepath), Path.GetFileNameWithoutExtension(filepath) + "_world.wld");
-        Debug.Log(worldPath);
-        SaveWorld(worldPath);
-        FileStream fs = File.Open(filepath, FileMode.Create);
+        string worldPath;
+        if(worldFilepath == null)
+        {
+            worldPath = Path.Combine(Path.GetDirectoryName(filepath), Path.GetFileNameWithoutExtension(filepath) + "_world.wld");
+            SaveWorld(worldPath);
+        }
+        else
+            worldPath = worldFilepath;           
+        FileStream fs = File.Open(filepath, FileMode.Create); 
         using (StreamWriter writer = new StreamWriter(fs, System.Text.Encoding.ASCII))
         {
             // Save world, and link to default save location
             writer.WriteLine("# Sim file created " + DateTime.Now.ToString(@"MM\/dd\/yyyy h\:mm tt") + Environment.NewLine);
-            writer.WriteLine("# World File " + Environment.NewLine + "world " + worldPath);
+            writer.WriteLine("# World File " + Environment.NewLine + "world " +  "\"" + worldPath + "\"");
             writer.Write(Environment.NewLine + Environment.NewLine);
 
             // Save robot locations
             writer.WriteLine("# Robots");
             foreach(Robot rob in allRobots)
-                writer.WriteLine(rob.type + " " + (int)Math.Floor(rob.transform.position.x * Eyesim.Scale) + " " + (int)Math.Floor(rob.transform.position.z * Eyesim.Scale) + " " + (int)Math.Floor(rob.transform.eulerAngles.y));
+                writer.WriteLine(rob.type + " " + (int)Math.Floor(rob.transform.position.x * Eyesim.Scale) + " " + (int)Math.Floor(rob.transform.position.z * Eyesim.Scale) + " " + (int)Math.Floor(Eyesim.UnityToEyeSimAngle(rob.transform.eulerAngles.y)));
             writer.WriteLine();
 
             // Save object locations
             writer.WriteLine("# Objects");
             foreach(WorldObject wObj in allWorldObjects)
-                writer.WriteLine(wObj.type + " " + (int)Math.Floor(wObj.transform.position.x * Eyesim.Scale) + " " + (int)Math.Floor(wObj.transform.position.z * Eyesim.Scale) + " " + (int)Math.Floor(wObj.transform.eulerAngles.y));
+                writer.WriteLine(wObj.type + " " + (int)Math.Floor(wObj.transform.position.x * Eyesim.Scale) + " " + (int)Math.Floor(wObj.transform.position.z * Eyesim.Scale) + " " + (int)Math.Floor(Eyesim.UnityToEyeSimAngle(wObj.transform.eulerAngles.y)));
+
+            // Save markers
+            writer.WriteLine("# Markers");
+            foreach(Marker mark in allMarkers)
+            {
+                writer.WriteLine("marker " + (int) Math.Floor(mark.transform.position.x * Eyesim.Scale) + " " + (int) Math.Floor(mark.transform.position.z * Eyesim.Scale) + " " +
+                    (int) Math.Round(mark.mColor.r * 255) + " " +
+                    (int) Math.Round(mark.mColor.g * 255) + " " +
+                    (int) Math.Round(mark.mColor.b * 255) + " " +
+                    (int) Math.Round(mark.mColor.a * 255));
+            }
             ResumeSimulation();
         }
         EyesimLogger.instance.Log("Saved sim to file " + filepath);
@@ -371,10 +419,11 @@ public class SimManager : MonoBehaviour {
     }
 }
 
-// Helper class to save and restore object states
+// Container class to save and restore object states
 internal class ObjectState
 {
     public int id;
     public string type;
     public string pos;
+    public Color color;
 }

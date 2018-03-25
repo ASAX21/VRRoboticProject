@@ -1,0 +1,72 @@
+EyeBot simulator EyeSimVR 0.9 .robi file documentation
+
+Each line in the robi file is a keyword, followed by the parameters. A line beginning with # is treated as a comment
+Parameters are either options, lengths in millimetres, or angles in degrees. 
+
+The first non comment line of any .robi file MUST be the "drive" keyword.
+
+#######################################
+KEYWORDS:
+
+# Specifies the type of driving mechanism. Only one option can be chosen. Do not include the brackets [] in actual robi file
+
+drive [DIFFERENTIAL_DRIVE | ACKERMANN_DRIVE | OMNI_DRIVE]
+
+# Gives a name to the robot. The custom robot will appear in the "Add Robots" menu, with the given name. 
+# If the name contains white space, it must be enclosed in double quotes
+name "Robot Name"
+
+# Specify the path to a .obj file to use as the robot's model. The simulator will search directories in the following order:
+# Full Path, Relative path from .robi file, Relative path from EyeSimVR home directory
+model "Path/To/Model.obj"
+
+# Set the physical colliders of the robot using either box, sphere, or capsule shapes.
+# Box is specified by its centre and size in each axis
+# Sphere is specified by its radius and centre
+# Capsule is specified by radius, height, and centre
+# All values are in millimetres, and are in model space. (Z is the forwards, X is right, Y is up)
+collider box x_size y_size z_size x_centre y_centre z_centre
+collider sphere radius x_centre y_centre z_centre
+collider capsule radius height x_centre y_centre z_centre
+
+# Specify the mass of the robot, and the centre of mass in model space
+mass kg x_centre y_centre z_centre
+
+# Specify the location of the driving axis for a DIFFERENTIAL DRIVE robot only.
+# Up and forwards are positive values for the offset.
+axis vertical_offset horizontal_offset
+
+# Specify the location of the axels for a ACKERMANN DRIVE robot
+# Same as axis, except an option is provided as the first argument
+# to select which axel to set
+axel [drive | turn] vertical_offset horizontal_offset
+
+# Add a PSD Sensor to a robot. ID is used to access at run time (PSDGet(id))
+# x, y, and z offset is the location in model space
+# rotation is about the vertical axis (left is positive)
+psd "psd_name" id x_offset y_offset z_offset rotation
+
+# Set the wheel parameters.
+# The drive or turn option is ONLY SPECIFIED FOR ACKERMANN
+# Diameter is of the wheel
+# Max rotational velocity is in degrees per second
+# Encoder ticks per rev sets the encoder rate
+# Wheel distance is the distance of the wheel from the centre of the axel (half the distance between the wheels)
+wheel [drive | turn] diameter max_rot_velocity encoder_ticks_per_rev wheel_distance
+
+# Set the camera parameters
+# x, y, and z offset are in model space
+# Start pan and Start tilt are the initial values in degrees
+# Max pan and Max tilt are the maximum values in degrees
+camera x_offset y_offset z_offset start_pan start_tilt max_pan max_tilt
+
+# Set the lidar parameters
+# Points is the total number of points to return
+# Angle to driving plane is the angle between the horizontal plane, and the plane of the lidar scan
+lidar points angle_to_driving_plane
+
+#######################################
+
+Care must be given when setting many of the physical parameters
+Due to the use of the physics engine, unexpected behaviour can occur especially if the colliders are
+improperly configured. Any overlap of colliders with the wheels, or sensors can cause bad results.

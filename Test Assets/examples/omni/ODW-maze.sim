@@ -1,0 +1,5 @@
+# maze description file
+maze	maze.maz
+
+# robi description file
+robi	odw.robi odw.dll
