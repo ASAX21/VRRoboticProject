@@ -22,6 +22,9 @@ public class RobotInspectorWindow : TabWindow {
     public Text psdLeftValue;
     public Text psdRightValue;
 
+    [SerializeField]
+    private Toggle visualiseToggle;
+
     private bool useGlobalError;
     public Toggle globalError;
     [SerializeField]
@@ -105,6 +108,7 @@ public class RobotInspectorWindow : TabWindow {
             useGlobalError = (robot as IPSDSensors).UseGlobalError;
         }
 
+        visualiseToggle.isOn = SimManager.instance.defaultVis;
         SaltPepperNoiseToggle(false);
         GaussianNoiseToggle(false);
         PSDErrorEnabled(false);

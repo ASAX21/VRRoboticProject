@@ -304,9 +304,9 @@ public class RobotLoader: MonoBehaviour, IFileReceiver
                     return true;
                 case "lidar":
                     {
-                        if(!CheckArguments(args, 3, "lidar"))
+                        if(!CheckArguments(args, 4, "lidar"))
                             return false;
-                        robotConfig.ConfigureLidar(int.Parse(args[1]), int.Parse(args[2]));
+                        robotConfig.ConfigureLidar(int.Parse(args[1]), int.Parse(args[2]), int.Parse(args[3]));
                     }
                     return true;
                 default:

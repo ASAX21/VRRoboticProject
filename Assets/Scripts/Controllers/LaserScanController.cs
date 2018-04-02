@@ -7,15 +7,24 @@ public class LaserScanController : MonoBehaviour
     public Transform laserScanner;
     public Transform robot;
 
-    public int numPoints = 360;
-    public int angRange = 360;
-    public float rot = -1.0f;
+    [SerializeField]
+    private int numPoints = 360;
+    [SerializeField]
+    private int angRange = 360;
+    [SerializeField]
+    private float rot = 1.0f;
+    [SerializeField]
     private float startRot = -180.0f;
     public LayerMask mask;
 
     public LineRenderer lineRend;
     public bool showRaycast = false;
     private float visTime = 0f;
+
+    private void Start()
+    {
+        showRaycast = SimManager.instance.defaultVis;
+    }
 
     private void Update()
     {
@@ -28,20 +37,23 @@ public class LaserScanController : MonoBehaviour
     }
 
     // Centre is always middle point
-    public void SetAngularRange(int angRange)
+    public void SetAngularRange(int range, int points)
     {
+        angRange = range;
+        numPoints = points;
+        rot = (float) angRange / numPoints;
         startRot = -(angRange / 2f);
+        lineRend.positionCount = numPoints * 2;
     }
-
-    // Do a 360 scan , determine distance in one degree increments
-    // 0 degrees is in the direction of the robot, then rotate LEFT
+    
+    // Scan from left to right, with dists[numPoints/2] being directly infront of the robot
     public int[] Scan()
     {
         if(showRaycast)
             visTime = 0.5f;
 
         int[] dists = new int[numPoints];
-        laserScanner.rotation = Quaternion.Euler(0, robot.eulerAngles.y, 0);
+        laserScanner.rotation = Quaternion.Euler(0, startRot, 0);
         for(int i = 0; i < numPoints; i++)
         {
             laserScanner.Rotate(laserScanner.up, rot);

@@ -26,6 +26,11 @@ public class PSDController : MonoBehaviour {
     public float normalMean = 0f;
     public float normalStdDev = 10f;
 
+    private void Start()
+    {
+        VisualiseAllSensors(SimManager.instance.defaultVis);
+    }
+
     // Accessors for the error variables
     public void SetErrorMean(float mean)
     {

@@ -137,7 +137,7 @@ public interface ConfigureableRobot
     bool AddPSDSensor(int id, string name, Vector3 pos, float rot);
     void ConfigureCamera(Vector3 pos, float pan, float tilt, float maxPan, float maxTilt);
     void ConfigureModel(GameObject model, Vector3 pos, Vector3 rot);
-    void ConfigureLidar(int numPoints, int tilt);
+    void ConfigureLidar(int angRange, int numPoints, int tilt);
 }
 
 // Abstract robot
@@ -157,6 +157,13 @@ public abstract class Robot : PlaceableObject, IPointerClickHandler, IFileReceiv
 
     // Robot Info Window
     public RobotInspectorWindow myWindow;
+
+    // Set the trail setting dependant on the default
+    internal override void Start()
+    {
+        base.Start();
+        trail.enabled = SimManager.instance.defaultTrace;
+    }
 
     // Set the robots absolute position along the ground plane
     // Dangerous: Could result in extreme behaviour with physics engine

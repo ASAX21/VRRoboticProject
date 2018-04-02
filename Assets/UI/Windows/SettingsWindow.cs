@@ -40,6 +40,8 @@ public class SettingsWindow : TabWindow, IFileReceiver
 
     [Header("Error")]
     public GaussianDrawer gaussDrawer;
+    public Toggle sensorToggle;
+    public Toggle trailToggle;
 
     private SetDirectory dirSet;
 
@@ -82,6 +84,10 @@ public class SettingsWindow : TabWindow, IFileReceiver
         worldDirInput.text = SettingsManager.instance.worldDirectory;
         simDirInput.text = SettingsManager.instance.simDirectory;
         defaultSimDirInput.text = SettingsManager.instance.defaultSim;
+
+        // Error settings
+        sensorToggle.isOn = SimManager.instance.defaultVis;
+        trailToggle.isOn = SimManager.instance.defaultTrace;
     }
 	
     // ----- Camera Settings -----
@@ -325,6 +331,16 @@ public class SettingsWindow : TabWindow, IFileReceiver
             PSDController.globalStdDev = sdev;
             gaussDrawer.DrawPSDGaussian(PSDController.globalMean, sdev);
         }
+    }
+
+    public void DefaultSensorVis(bool val)
+    {
+        SimManager.instance.defaultVis = val;
+    }
+
+    public void DefaultTraceVis(bool val)
+    {
+        SimManager.instance.defaultTrace = val;
     }
 
     // Close Window

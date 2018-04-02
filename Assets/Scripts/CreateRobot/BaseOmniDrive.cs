@@ -156,10 +156,9 @@ public class BaseOmniDrive : Robot, IMotors,
         camEnabled = true;
     }
 
-    public void ConfigureLidar(int numPoints, int tilt)
+    public void ConfigureLidar(int angRange, int numPoints, int tilt)
     {
-        laserScanController.numPoints = numPoints;
-        laserScanController.rot = (float) -360.0 / numPoints;
+        laserScanController.SetAngularRange(angRange, numPoints);
         laserScanController.laserScanner.localRotation = Quaternion.Euler(new Vector3(-tilt, 0, 0));
     }
 

@@ -153,8 +153,7 @@ public class CameraControl: MonoBehaviour
                 }
 
                 // Zoom
-                if (UIManager.instance.preventMouseZoom == 0)
-                    transform.position += transform.forward * zoomSens * Input.GetAxis("Mouse ScrollWheel") * speedMod;
+                transform.position += transform.forward * zoomSens * Input.GetAxis("Mouse ScrollWheel") * speedMod;
                 if (Input.GetAxis("Keyboard Zoom") != 0)
                 {
                     transform.position += transform.forward * zoomSens * Input.GetAxis("Keyboard Zoom") * speedMod;

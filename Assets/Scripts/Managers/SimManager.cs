@@ -38,6 +38,10 @@ public class SimManager : MonoBehaviour {
     [NonSerialized]
     public string worldFilepath = null;
 
+    // Whether or not vis/trace should be on by default
+    public bool defaultVis = false;
+    public bool defaultTrace = false;
+
     private void Awake()
     {
         if (instance == null || instance == this)

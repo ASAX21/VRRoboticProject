@@ -39,6 +39,9 @@ public class SimReader: MonoBehaviour, IFileReceiver
 		if (!io.Load (path))
 			return null;
 
+        SimManager.instance.defaultVis = false;
+        SimManager.instance.defaultTrace = false;
+
         readingSimFile = true;
         string[] args;
         while ((args = io.ReadNextArguments())[0] != "ENDOFFILE")
@@ -247,6 +250,16 @@ public class SimReader: MonoBehaviour, IFileReceiver
                 ObjectManager.instance.AddMarkerToScene(pos);       
                 break;
 
+            case "settings":
+                foreach(string s in args)
+                {
+                    if(s == "VIS")
+                        SimManager.instance.defaultVis = true;
+                    if(s == "TRACE")
+                        SimManager.instance.defaultTrace = true;
+                }
+                break;
+
             // Check if string is a custom object or robot
             default:
                 // Check for object
@@ -289,7 +302,8 @@ public class SimReader: MonoBehaviour, IFileReceiver
                         break;
                     }
                 }
-			    break;
+                EyesimLogger.instance.Log("Error parsing sim file line " + io.LineNum + ": Unknown keyword " + args[0]);
+                break;
 		}
         return true;
 	}
